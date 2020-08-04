@@ -9,7 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.Live2D", "HoloTra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.Resources", "HoloTrack.Resources\HoloTrack.Resources.csproj", "{BE87B172-8BB8-4945-939D-5C94A3C06987}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.FaceRecognition", "HoloTrack.FaceRecognition\HoloTrack.FaceRecognition.csproj", "{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.Vision", "HoloTrack.Vision\HoloTrack.Vision.csproj", "{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F94DC293-4ED2-4FB3-917C-6A1B1AA51E18}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
