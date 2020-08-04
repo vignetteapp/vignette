@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Ayane Satomi and the HoloTrack Authors</Authors>
+    <Product>HoloTrack Resources</Product>
+    <Description>Resources used by HoloTrack for OpenCV and other things.</Description>
+    <Copyright />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Fonts\" />
+    <Folder Include="Icons\" />
+  </ItemGroup>
 
 </Project>
