@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30323.103
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack", "HoloTrack.csproj", "{C4948D1A-920A-4B56-8354-59F9AA43E2CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.Live2D", "HoloTrack.Live2D\HoloTrack.Live2D.csproj", "{DF342CC5-780E-45FB-B9F2-0FD142725D5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.Resources", "HoloTrack.Resources\HoloTrack.Resources.csproj", "{BE87B172-8BB8-4945-939D-5C94A3C06987}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.FaceRecognition", "HoloTrack.FaceRecognition\HoloTrack.FaceRecognition.csproj", "{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4948D1A-920A-4B56-8354-59F9AA43E2CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4948D1A-920A-4B56-8354-59F9AA43E2CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4948D1A-920A-4B56-8354-59F9AA43E2CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4948D1A-920A-4B56-8354-59F9AA43E2CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF342CC5-780E-45FB-B9F2-0FD142725D5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF342CC5-780E-45FB-B9F2-0FD142725D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF342CC5-780E-45FB-B9F2-0FD142725D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF342CC5-780E-45FB-B9F2-0FD142725D5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC1403CB-F865-4550-9FE2-71C5654259C1}
+	EndGlobalSection
+EndGlobal
