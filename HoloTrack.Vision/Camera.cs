@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using OpenCvSharp;
-using osu.Framework;
 using osu.Framework.Graphics.Textures;
 
 namespace HoloTrack.Vision
@@ -20,7 +19,7 @@ namespace HoloTrack.Vision
         /// Gets the camera stream from the camera.
         /// </summary>
         /// <returns>Video Stream in a Mat - you will need to convert this.</returns>
-        public static Mat GetRawCameraStream ()
+        internal static Mat GetRawCameraStream ()
         {
             capture.Open(0, VideoCaptureAPIs.ANY);
 
@@ -38,7 +37,7 @@ namespace HoloTrack.Vision
         /// </summary>
         public static CameraTexture CreateCameraTexture ()
         {
-            var rawStream = GetRawCameraStream();
+            Mat rawStream = GetRawCameraStream();
 
             // we need to convert this to a byte array first.
             var byteStream = rawStream.ToBytes();
@@ -51,6 +50,14 @@ namespace HoloTrack.Vision
 
             return new CameraTexture(cameraTexture);
 
+        }
+
+        /// <summary>
+        /// Returns a camera stream into a valid video format.
+        /// </summary>
+        public static byte[] CreateCameraVideoByte ()
+        {
+            return GetRawCameraStream().ToBytes();
         }
 
         /// <summary>
