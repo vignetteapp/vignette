@@ -19,7 +19,7 @@ namespace HoloTrack.Vision
         /// Gets the camera stream from the camera.
         /// </summary>
         /// <returns>Video Stream in a Mat - you will need to convert this.</returns>
-        internal static Mat GetRawCameraStream ()
+        internal static Mat GetRawCameraStream()
         {
             capture.Open(0, VideoCaptureAPIs.ANY);
 
@@ -35,7 +35,7 @@ namespace HoloTrack.Vision
         /// <summary>
         /// Returns a Camera Stream in a osu! OpenGL Texture.
         /// </summary>
-        public static CameraTexture CreateCameraTexture ()
+        public static CameraTexture CreateCameraTexture()
         {
             Mat rawStream = GetRawCameraStream();
 
@@ -55,7 +55,7 @@ namespace HoloTrack.Vision
         /// <summary>
         /// Returns a camera stream into a byte array.
         /// </summary>
-        public static byte[] CreateCameraVideoByte ()
+        public static byte[] CreateCameraVideoByte()
         {
             return GetRawCameraStream().ToBytes();
         }
@@ -63,7 +63,7 @@ namespace HoloTrack.Vision
         /// <summary>
         /// Disposes the camera stream. Usually you wouldn't need to use this unless you're going to terminate capture to switch to a new camera.
         /// </summary>
-        public static void DestroyCameraStream ()
+        public static void DestroyCameraStream()
         {
             capture.Dispose();
         }

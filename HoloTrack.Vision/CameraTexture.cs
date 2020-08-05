@@ -9,12 +9,12 @@ namespace HoloTrack.Vision
     {
         private Texture texture;
 
-        public CameraTexture (int width, int height)
+        public CameraTexture(int width, int height)
         {
             texture = new Texture(width, height);
         }
 
-        public CameraTexture (Texture texture)
+        public CameraTexture(Texture texture)
         {
             this.texture = texture;
         }
