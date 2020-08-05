@@ -53,7 +53,7 @@ namespace HoloTrack.Vision
         }
 
         /// <summary>
-        /// Returns a camera stream into a valid video format.
+        /// Returns a camera stream into a byte array.
         /// </summary>
         public static byte[] CreateCameraVideoByte ()
         {
