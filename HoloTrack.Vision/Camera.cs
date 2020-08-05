@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using OpenCvSharp;
+using osu.Framework;
+using osu.Framework.Graphics.Textures;
 
 namespace HoloTrack.Vision
 {
@@ -7,7 +10,7 @@ namespace HoloTrack.Vision
     /// A Class that manages camera input from OpenCV, and feeds it to DLib for classification.
     /// </summary>
     /// TODO: handle multiple cameras!
-    class Camera
+    internal class Camera
     {
         private static VideoCapture capture;
 
@@ -17,7 +20,7 @@ namespace HoloTrack.Vision
         /// Gets the camera stream from the camera.
         /// </summary>
         /// <returns>Video Stream in a Mat - you will need to convert this.</returns>
-        public static Mat GetCameraStream ()
+        public static Mat GetRawCameraStream ()
         {
             capture.Open(0, VideoCaptureAPIs.ANY);
 
@@ -27,6 +30,26 @@ namespace HoloTrack.Vision
             }
 
             return capture.RetrieveMat();
+
+        }
+
+        /// <summary>
+        /// Returns a Camera Stream in a osu! OpenGL Texture.
+        /// </summary>
+        public static CameraTexture CreateCameraTexture ()
+        {
+            var rawStream = GetRawCameraStream();
+
+            // we need to convert this to a byte array first.
+            var byteStream = rawStream.ToBytes();
+            var upload = new TextureUpload(new MemoryStream(byteStream));
+            var cameraTexture = new Texture(upload.Width, upload.Height);
+
+            //set the texture then we return it. We'll let the entire stuff do the rest.
+            cameraTexture.SetData(upload);
+
+
+            return new CameraTexture(cameraTexture);
 
         }
 
