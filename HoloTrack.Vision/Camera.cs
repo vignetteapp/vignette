@@ -9,11 +9,9 @@ namespace HoloTrack.Vision
     /// A Class that manages camera input from OpenCV, and feeds it to DLib for classification.
     /// </summary>
     /// TODO: handle multiple cameras!
-    internal class Camera
+    internal class Camera : IDisposable
     {
-        private static VideoCapture capture;
-
-        public Camera() => capture = new VideoCapture();
+        private static readonly VideoCapture capture;
 
         /// <summary>
         /// Gets the camera stream from the camera.
@@ -21,6 +19,8 @@ namespace HoloTrack.Vision
         /// <returns>Video Stream in a Mat - you will need to convert this.</returns>
         internal static Mat GetRawCameraStream()
         {
+            var capture = new VideoCapture();
+
             capture.Open(0, VideoCaptureAPIs.ANY);
 
             if (!capture.IsOpened())
@@ -63,7 +63,7 @@ namespace HoloTrack.Vision
         /// <summary>
         /// Disposes the camera stream. Usually you wouldn't need to use this unless you're going to terminate capture to switch to a new camera.
         /// </summary>
-        public static void DestroyCameraStream()
+        public void Dispose()
         {
             capture.Dispose();
         }

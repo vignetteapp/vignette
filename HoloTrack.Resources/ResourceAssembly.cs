@@ -2,8 +2,8 @@
 
 namespace HoloTrack.Resources
 {
-    public static class HoloTrackInternalResources
+    public static class HoloTrackResource
     {
-        public static Assembly ResourceAssembly => typeof(HoloTrackInternalResources).Assembly;
+        public static Assembly ResourceAssembly => typeof(HoloTrackResource).Assembly;
     }
 }
