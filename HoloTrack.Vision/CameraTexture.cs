@@ -7,7 +7,7 @@ namespace HoloTrack.Vision
 {
     public class CameraTexture
     {
-        private Texture texture;
+        private readonly Texture texture;
 
         public CameraTexture(int width, int height)
         {
