@@ -14,4 +14,8 @@
     <PackageReference Include="ppy.osu.Framework" Version="2020.804.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HoloTrack.Resources\HoloTrack.Resources.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -31,7 +31,7 @@ namespace HoloTrack.Vision
         /// Perform Inference and get all valid targets. Note that you must execute this asynchronously otherwise this will block the main thread.
         /// </summary>
         /// <param name="model">the name of the model as defined in HoloTrack.Resources.</param>
-        public static FaceEncoding[] GetTargets()
+        public static Location[] GetTargets()
         {
             var cameraStream = Camera.CreateCameraVideoByte();
 
@@ -42,7 +42,24 @@ namespace HoloTrack.Vision
                 var image = FaceRecognition.LoadImage(imageFromByte);
 
                 // now we have the stream loaded from the camera, now let's return the amount of faces we detected!
-                return faceRecognition.FaceEncodings(image).ToArray();
+                return faceRecognition.FaceLocations(image).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets all the Landmark data from a target.
+        /// </summary>
+        /// <param name="faceTarget">the target face location.</param>
+        public static void GetLandmarks(Location faceTarget)
+        {
+            // We'll need to get the index of our matching target. We'll use this later.
+            var faceTargets = GetTargets();
+            int target = Array.BinarySearch(faceTargets, faceTarget);
+
+            // A little sanity check so we don't encounter nasty stuff on the long run.
+            if (faceTargets[target] !=  faceTarget)
+            {
+                throw new ArgumentOutOfRangeException("Error: FaceTarget value is not the same as target!");
             }
         }
     }

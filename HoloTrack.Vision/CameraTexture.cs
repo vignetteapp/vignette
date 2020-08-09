@@ -1,7 +1,4 @@
 ﻿using osu.Framework.Graphics.Textures;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HoloTrack.Vision
 {
