@@ -33,31 +33,26 @@ namespace HoloTrack.Vision
         }
 
         /// <summary>
-        /// Returns a Camera Stream in a osu! OpenGL Texture.
-        /// </summary>
-        public static CameraTexture CreateCameraTexture()
-        {
-            Mat rawStream = GetRawCameraStream();
-
-            // we need to convert this to a byte array first.
-            var byteStream = rawStream.ToBytes();
-            var upload = new TextureUpload(new MemoryStream(byteStream));
-            var cameraTexture = new Texture(upload.Width, upload.Height);
-
-            //set the texture then we return it. We'll let the entire stuff do the rest.
-            cameraTexture.SetData(upload);
-
-
-            return new CameraTexture(cameraTexture);
-
-        }
-
-        /// <summary>
         /// Returns a camera stream into a byte array.
         /// </summary>
         public static byte[] CreateCameraVideoByte()
         {
             return GetRawCameraStream().ToBytes();
+        }
+
+        /// <summary>
+        /// Returns a Camera Stream in a osu! OpenGL Texture.
+        /// </summary>
+        public static CameraTexture CreateCameraTexture()
+        {
+            var cameraStream = CreateCameraVideoByte();
+            var upload = new TextureUpload(new MemoryStream(cameraStream));
+            var cameraTexture = new Texture(upload.Width, upload.Height);
+
+            //set the texture then return it. We'll let the entire stuff do the rest.
+            cameraTexture.SetData(upload);
+
+            return new CameraTexture(cameraTexture);
         }
 
         /// <summary>

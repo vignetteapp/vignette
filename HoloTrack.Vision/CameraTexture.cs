@@ -2,6 +2,9 @@
 
 namespace HoloTrack.Vision
 {
+    /// <summary>
+    /// A class that represents a osu! GL texture based on the OpenCV data.
+    /// </summary>
     public class CameraTexture
     {
         private readonly Texture texture;
