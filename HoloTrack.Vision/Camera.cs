@@ -17,7 +17,7 @@ namespace HoloTrack.Vision
         /// Gets the camera stream from the camera.
         /// </summary>
         /// <returns>Video Stream in a Mat - you will need to convert this.</returns>
-        internal static Mat GetRawCameraStream()
+        public static Mat GetRawCameraStream()
         {
             var capture = new VideoCapture();
 

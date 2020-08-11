@@ -14,6 +14,7 @@ namespace HoloTrack.Vision
     public class Face
     {
         private static readonly FaceRecognition faceRecognition;
+        private static readonly Camera camera;
 
         /// <summary>
         /// Loads the Appropriate DLib Model for inference.
@@ -38,7 +39,7 @@ namespace HoloTrack.Vision
             using (var ms = new MemoryStream(cameraStream))
             {
                 // load our camera stream into a Bitmap, then load it for inference.
-                var imageFromByte = new Bitmap(System.Drawing.Image.FromStream(ms));
+                var imageFromByte = (Bitmap)System.Drawing.Image.FromStream(ms);
                 var image = FaceRecognition.LoadImage(imageFromByte);
 
                 // now we have the stream loaded from the camera, now let's return the amount of faces we detected!
@@ -50,7 +51,7 @@ namespace HoloTrack.Vision
         /// Gets all the Landmark data from a target.
         /// </summary>
         /// <param name="faceTarget">the target face location.</param>
-        public static void GetLandmarks(Location faceTarget)
+        public static System.Collections.Generic.IDictionary<FacePart, System.Collections.Generic.IEnumerable<FacePoint>>[] GetLandmarks(Location faceTarget)
         {
             // We'll need to get the index of our matching target. We'll use this later.
             var faceTargets = GetTargets();
@@ -62,7 +63,22 @@ namespace HoloTrack.Vision
                 throw new ArgumentOutOfRangeException("Error: FaceTarget value is not the same as target!");
             }
 
+            // FIXME: use only the faceTarget provided to reduce noise!
+            // we can only invocate new data while we're on a loop, so we're going to run a infinite loop so we always get new data.
+            while (true)
+            {
+                byte[] cameraStream = Camera.CreateCameraVideoByte();
+                
+                using (var ms = new MemoryStream(cameraStream))
+                {
+                    var image = (Bitmap)System.Drawing.Image.FromStream(ms);
 
+                    using (var faceLandmarks = FaceRecognition.LoadImage(image))
+                    {
+                        return faceRecognition.FaceLandmark(faceLandmarks).ToArray();
+                    }
+                }
+            }
         }
     }
 }
