@@ -2,7 +2,6 @@
 using FaceRecognitionDotNet;
 using osu.Framework.IO.Stores;
 using HoloTrack.Resources;
-using System.IO;
 using System.Drawing;
 using System.Linq;
 
@@ -14,7 +13,6 @@ namespace HoloTrack.Vision
     public class Face
     {
         private static readonly FaceRecognition faceRecognition;
-        private static readonly Camera camera;
 
         /// <summary>
         /// Loads the Appropriate DLib Model for inference.
@@ -23,7 +21,7 @@ namespace HoloTrack.Vision
         /// <returns>The byte array for the model.</returns>
         internal static byte[] LoadModel(string model)
         {
-            var storage = new DllResourceStore(typeof(HoloTrackResource).Assembly);
+            DllResourceStore storage = new DllResourceStore(typeof(HoloTrackResource).Assembly);
 
             return storage.Get($"Models/{model}.dat");
         }
@@ -34,27 +32,20 @@ namespace HoloTrack.Vision
         /// <param name="model">the name of the model as defined in HoloTrack.Resources.</param>
         public static Location[] GetTargets()
         {
-            var cameraStream = Camera.CreateCameraVideoByte();
+            Bitmap imageFromCamera = Camera.CreateCameraImage();
+            FaceRecognitionDotNet.Image image = FaceRecognition.LoadImage(imageFromCamera);
 
-            using (var ms = new MemoryStream(cameraStream))
-            {
-                // load our camera stream into a Bitmap, then load it for inference.
-                var imageFromByte = (Bitmap)System.Drawing.Image.FromStream(ms);
-                var image = FaceRecognition.LoadImage(imageFromByte);
-
-                // now we have the stream loaded from the camera, now let's return the amount of faces we detected!
-                return faceRecognition.FaceLocations(image).ToArray();
-            }
+            return faceRecognition.FaceLocations(image).ToArray();
         }
 
         /// <summary>
-        /// Gets all the Landmark data from a target.
+        /// Gets all the Landmark data from a target face location.
         /// </summary>
         /// <param name="faceTarget">the target face location.</param>
         public static System.Collections.Generic.IDictionary<FacePart, System.Collections.Generic.IEnumerable<FacePoint>>[] GetLandmarks(Location faceTarget)
         {
             // We'll need to get the index of our matching target. We'll use this later.
-            var faceTargets = GetTargets();
+            Location[] faceTargets = GetTargets();
             int target = Array.BinarySearch(faceTargets, faceTarget);
 
             // A little sanity check so we don't encounter nasty stuff on the long run.
@@ -63,21 +54,11 @@ namespace HoloTrack.Vision
                 throw new ArgumentOutOfRangeException("Error: FaceTarget value is not the same as target!");
             }
 
-            // FIXME: use only the faceTarget provided to reduce noise!
-            // we can only invocate new data while we're on a loop, so we're going to run a infinite loop so we always get new data.
-            while (true)
+            // FIXME: Use provided FaceTarget only! We may crop the canvas to only use that face target. Not use the entirety of it.
+            Bitmap image = Camera.CreateCameraImage();
+            using (var faceLandmarks = FaceRecognition.LoadImage(image))
             {
-                byte[] cameraStream = Camera.CreateCameraVideoByte();
-                
-                using (var ms = new MemoryStream(cameraStream))
-                {
-                    var image = (Bitmap)System.Drawing.Image.FromStream(ms);
-
-                    using (var faceLandmarks = FaceRecognition.LoadImage(image))
-                    {
-                        return faceRecognition.FaceLandmark(faceLandmarks).ToArray();
-                    }
-                }
+                return faceRecognition.FaceLandmark(faceLandmarks).ToArray();
             }
         }
     }
