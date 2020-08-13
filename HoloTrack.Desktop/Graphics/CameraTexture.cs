@@ -1,6 +1,6 @@
 ﻿using osu.Framework.Graphics.Textures;
 
-namespace HoloTrack.Vision
+namespace HoloTrack.Desktop.Graphics
 {
     /// <summary>
     /// A class that represents a osu! GL texture based on the OpenCV data.
