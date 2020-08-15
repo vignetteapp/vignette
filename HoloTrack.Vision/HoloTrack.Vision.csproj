@@ -12,7 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EmguCV" Version="3.1.0.1" />
+    <None Remove="Camera.cs~RF6d00155.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DirectShowLib" Version="1.0.0" />
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0.2" />
     <PackageReference Include="OpenCvSharp4" Version="4.4.0.20200725" />
     <PackageReference Include="OpenCvSharp4.runtime.centos7-x64" Version="4.0.0.20190129" />

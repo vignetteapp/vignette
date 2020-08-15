@@ -15,7 +15,7 @@ namespace HoloTrack.Vision
     public class Camera : IDisposable
     {
         private static readonly VideoCapture capture;
-        public List<VideoDevice> videoDevices = new List<VideoDevice>();
+        public static List<VideoDevice> videoDevices = new List<VideoDevice>();
 
         public struct VideoDevice
         {
@@ -34,7 +34,6 @@ namespace HoloTrack.Vision
             OperatingSystem os = Environment.OSVersion;
             PlatformID platform = os.Platform;
             VideoDevice device;
-            List<VideoDevice> devices = new List<VideoDevice>();
 
             switch (platform)
             {
@@ -49,7 +48,7 @@ namespace HoloTrack.Vision
                         device.deviceName = systemCameras[i].Name;
                         device.deviceLocation = systemCameras[i].DevicePath;
 
-                        devices.Add(device);
+                        videoDevices.Add(device);
                     }
 
                     break;
@@ -70,7 +69,7 @@ namespace HoloTrack.Vision
                             device.deviceName = match.Value;
                             device.deviceLocation = match.Value;
 
-                            devices.Add(device);
+                            videoDevices.Add(device);
                         }
                     }
 
@@ -80,7 +79,7 @@ namespace HoloTrack.Vision
                     throw new NotImplementedException("OS not supported!");
             }
 
-            return devices;
+            return videoDevices;
         }
 
         /// <summary>
