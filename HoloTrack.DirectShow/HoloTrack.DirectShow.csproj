@@ -10,6 +10,7 @@ This one has been fixed to allow .NET Core targeting for HoloTrack.</Description
     <RepositoryUrl>https://github.com/holotrack/holotrack</RepositoryUrl>
     <PackageTags>directshow, dotnet, dotnet core</PackageTags>
     <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

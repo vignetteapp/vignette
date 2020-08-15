@@ -6,7 +6,7 @@
     <Product>HoloTrack Resources</Product>
     <Description>Resources used by HoloTrack for OpenCV and other things.</Description>
     <Copyright />
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
 </Project>
