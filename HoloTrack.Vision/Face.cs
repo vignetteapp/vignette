@@ -10,7 +10,7 @@ namespace HoloTrack.Vision
     /// </summary>
     public class Face
     {
-        private static readonly FaceRecognition faceRecognition;
+        public static FaceRecognition faceRecognition;
 
         /// <summary>
         /// Perform Inference and get all valid targets. Note that you must execute this asynchronously otherwise this will block the main thread.

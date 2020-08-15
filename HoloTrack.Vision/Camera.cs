@@ -14,7 +14,7 @@ namespace HoloTrack.Vision
     /// TODO: handle multiple cameras!
     public class Camera : IDisposable
     {
-        private static readonly VideoCapture capture;
+        internal static VideoCapture capture = new VideoCapture();
         public static List<VideoDevice> videoDevices = new List<VideoDevice>();
 
         public struct VideoDevice
@@ -89,8 +89,6 @@ namespace HoloTrack.Vision
         /// <returns>Video Stream in a Mat - you will need to convert this.</returns>
         public static Mat GetRawCameraStream(int cameraID = 0)
         {
-            VideoCapture capture = new VideoCapture();
-
             capture.Open(cameraID, VideoCaptureAPIs.ANY);
 
             if (!capture.IsOpened())
@@ -120,10 +118,8 @@ namespace HoloTrack.Vision
         {
             byte[] cameraStream = CreateCameraVideoByte(cameraID);
 
-            using (var ms = new MemoryStream(cameraStream))
-            {
-                return (Bitmap)Image.FromStream(ms);
-            }
+            using var ms = new MemoryStream(cameraStream);
+            return (Bitmap)Image.FromStream(ms);
         }
 
         /// <summary>
