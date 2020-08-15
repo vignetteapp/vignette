@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
-using DirectShowLib;
+using HoloTrack.DirectShow;
 using OpenCvSharp;
 
 namespace HoloTrack.Vision

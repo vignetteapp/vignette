@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Desktop", "HoloTr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Live2D", "HoloTrack.Live2D\HoloTrack.Live2D.csproj", "{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoloTrack.DirectShow", "HoloTrack.DirectShow\HoloTrack.DirectShow.csproj", "{35D06E96-FCDD-40E0-9381-20C06E4D78B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,14 @@ Global
 		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Release|x64.ActiveCfg = Release|x64
 		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Release|x64.Build.0 = Release|x64
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Debug|x64.Build.0 = Debug|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Release|x64.ActiveCfg = Release|Any CPU
+		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
