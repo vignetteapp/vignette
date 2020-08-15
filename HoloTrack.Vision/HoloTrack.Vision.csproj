@@ -9,11 +9,8 @@
 (NOTE: Not all OpenCV/DLib functionality is included, and are usually abstracted away by us!)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/holotrack/holotrack</PackageProjectUrl>
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>x64</Platforms>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -28,6 +25,7 @@
     <PackageReference Include="DlibDotNet" Version="19.20.0.20200725" />
     <PackageReference Include="DlibDotNet.ARM" Version="19.17.0.20190623" />
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0.2" />
+    <PackageReference Include="HoloTrack.DirectShow" Version="1.0.0" />
     <PackageReference Include="OpenCvSharp4" Version="4.4.0.20200725" />
     <PackageReference Include="OpenCvSharp4.runtime.centos7-x64" Version="4.0.0.20190129" />
     <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.4.0.20200725" />
