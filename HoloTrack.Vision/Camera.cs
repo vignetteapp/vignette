@@ -123,6 +123,14 @@ namespace HoloTrack.Vision
         }
 
         /// <summary>
+        /// Checks if Camera is still opened or not yet disposed.
+        /// </summary>
+        public bool IsCameraOpen ()
+        {
+            return capture.IsOpened();
+        }
+
+        /// <summary>
         /// Disposes the camera stream. Usually you wouldn't need to use this unless you're going to terminate capture to switch to a new camera.
         /// </summary>
         public void Dispose()
