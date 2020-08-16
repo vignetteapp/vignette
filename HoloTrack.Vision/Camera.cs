@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using HoloTrack.DirectShow;
 using OpenCvSharp;
@@ -54,6 +55,11 @@ namespace HoloTrack.Vision
                     break;
 
                 case PlatformID.Unix:
+                    // We might have a clueless macOS user trying to run HoloTrack.Vision. Let's fix that.
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        throw new NotImplementedException("macOS is not supported!");
+                    }
                     // FIXME: this is a basic form of enumerating how many devices are there. There's no basic info yet.
                     // FIXME: I only tested this on Linux, no idea if this will work on Darwin. Screw macOS anyways.
                     List<string> devDir = new List<string>(Directory.EnumerateDirectories("/dev/"));
