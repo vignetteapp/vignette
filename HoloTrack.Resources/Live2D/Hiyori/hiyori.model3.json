@@ -1,0 +1,15 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "hiyori.moc3",
+		"Textures": [
+			"hiyori.2048/texture_00.png",
+			"hiyori.2048/texture_01.png"
+		],
+		"Physics": "hiyori.physics3.json",
+		"DisplayInfo": "hiyori.cdi3.json"
+	},
+	"Groups": [
+
+	]
+}
