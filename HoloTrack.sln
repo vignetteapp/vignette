@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Desktop", "HoloTr
 		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D} = {E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Live2D", "HoloTrack.Live2D\HoloTrack.Live2D.csproj", "{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Core", "HoloTrack.Core\HoloTrack.Core.csproj", "{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.DirectShow", "HoloTrack.DirectShow\HoloTrack.DirectShow.csproj", "{35D06E96-FCDD-40E0-9381-20C06E4D78B6}"
 EndProject
