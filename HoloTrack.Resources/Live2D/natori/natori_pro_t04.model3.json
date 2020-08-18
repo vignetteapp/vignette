@@ -1,0 +1,116 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "natori_pro_t04.moc3",
+		"Textures": [
+			"natori_pro_t04.4096/texture_00.png"
+		],
+		"Physics": "natori_pro_t04.physics3.json",
+		"Pose": "natori.pose3.json",
+		"DisplayInfo": "natori_pro_t04.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "exp_00.exp3.json",
+				"File": "exp/exp_00.exp3.json"
+			},
+			{
+				"Name": "exp_01.exp3.json",
+				"File": "exp/exp_01.exp3.json"
+			},
+			{
+				"Name": "exp_02.exp3.json",
+				"File": "exp/exp_02.exp3.json"
+			},
+			{
+				"Name": "exp_03.exp3.json",
+				"File": "exp/exp_03.exp3.json"
+			},
+			{
+				"Name": "exp_04.exp3.json",
+				"File": "exp/exp_04.exp3.json"
+			},
+			{
+				"Name": "exp_05.exp3.json",
+				"File": "exp/exp_05.exp3.json"
+			},
+			{
+				"Name": "exp_06.exp3.json",
+				"File": "exp/exp_06.exp3.json"
+			},
+			{
+				"Name": "exp_07.exp3.json",
+				"File": "exp/exp_07.exp3.json"
+			},
+			{
+				"Name": "exp_08.exp3.json",
+				"File": "exp/exp_08.exp3.json"
+			},
+			{
+				"Name": "exp_09.exp3.json",
+				"File": "exp/exp_09.exp3.json"
+			},
+			{
+				"Name": "exp_10.exp3.json",
+				"File": "exp/exp_10.exp3.json"
+			}
+		],
+		"Motions": {
+			"": [
+				{
+					"File": "motions/mtn_00.motion3.json"
+				},
+				{
+					"File": "motions/mtn_01.motion3.json"
+				},
+				{
+					"File": "motions/mtn_02.motion3.json"
+				},
+				{
+					"File": "motions/mtn_03.motion3.json"
+				},
+				{
+					"File": "motions/mtn_04.motion3.json"
+				},
+				{
+					"File": "motions/mtn_05.motion3.json"
+				},
+				{
+					"File": "motions/mtn_06.motion3.json"
+				},
+				{
+					"File": "motions/mtn_07.motion3.json"
+				},
+				{
+					"File": "motions/mtn_08.motion3.json"
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"ParamMouthOpenY"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		}
+	],
+	"HitAreas": [
+		{
+			"Id": "HitAreaHead",
+			"Name": ""
+		},
+		{
+			"Id": "HitAreaBody",
+			"Name": ""
+		}
+	]
+}

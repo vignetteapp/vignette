@@ -1,0 +1,277 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "PARAM_ANGLE_X",
+			"GroupId": "",
+			"Name": "角度 X"
+		},
+		{
+			"Id": "PARAM_ANGLE_Y",
+			"GroupId": "",
+			"Name": "角度 Y"
+		},
+		{
+			"Id": "PARAM_ANGLE_Z",
+			"GroupId": "",
+			"Name": "角度 Z"
+		},
+		{
+			"Id": "PARAM_EYE_L_OPEN",
+			"GroupId": "",
+			"Name": "左眼　開閉"
+		},
+		{
+			"Id": "PARAM_EYE_L_SMILE",
+			"GroupId": "",
+			"Name": "左眼　笑顔"
+		},
+		{
+			"Id": "PARAM_EYE_R_OPEN",
+			"GroupId": "",
+			"Name": "右眼　開閉"
+		},
+		{
+			"Id": "PARAM_EYE_R_SMILE",
+			"GroupId": "",
+			"Name": "右眼　笑顔"
+		},
+		{
+			"Id": "PARAM_EYE_FORM",
+			"GroupId": "",
+			"Name": "眼　変形"
+		},
+		{
+			"Id": "PARAM_EYE_BALL_X",
+			"GroupId": "",
+			"Name": "目玉 X"
+		},
+		{
+			"Id": "PARAM_EYE_BALL_Y",
+			"GroupId": "",
+			"Name": "目玉 Y"
+		},
+		{
+			"Id": "PARAM_EYE_BALL_FORM",
+			"GroupId": "",
+			"Name": "目玉　収縮"
+		},
+		{
+			"Id": "PARAM_BROW_L_Y",
+			"GroupId": "",
+			"Name": "左眉　上下"
+		},
+		{
+			"Id": "PARAM_BROW_R_Y",
+			"GroupId": "",
+			"Name": "右眉　上下"
+		},
+		{
+			"Id": "PARAM_BROW_L_X",
+			"GroupId": "",
+			"Name": "左眉　左右"
+		},
+		{
+			"Id": "PARAM_BROW_R_X",
+			"GroupId": "",
+			"Name": "右眉　左右"
+		},
+		{
+			"Id": "PARAM_BROW_L_ANGLE",
+			"GroupId": "",
+			"Name": "左眉　角度"
+		},
+		{
+			"Id": "PARAM_BROW_R_ANGLE",
+			"GroupId": "",
+			"Name": "右眉　角度"
+		},
+		{
+			"Id": "PARAM_BROW_L_FORM",
+			"GroupId": "",
+			"Name": "左眉　変形"
+		},
+		{
+			"Id": "PARAM_BROW_R_FORM",
+			"GroupId": "",
+			"Name": "右眉　変形"
+		},
+		{
+			"Id": "PARAM_MOUTH_FORM",
+			"GroupId": "",
+			"Name": "口　変形"
+		},
+		{
+			"Id": "PARAM_MOUTH_OPEN_Y",
+			"GroupId": "",
+			"Name": "口　開閉"
+		},
+		{
+			"Id": "PARAM_TERE",
+			"GroupId": "",
+			"Name": "照れ"
+		},
+		{
+			"Id": "PARAM_BODY_ANGLE_X",
+			"GroupId": "",
+			"Name": "体の回転　X"
+		},
+		{
+			"Id": "PARAM_BODY_ANGLE_Y",
+			"GroupId": "",
+			"Name": "体の回転　Y"
+		},
+		{
+			"Id": "PARAM_BODY_ANGLE_Z",
+			"GroupId": "",
+			"Name": "体の回転　Z"
+		},
+		{
+			"Id": "PARAM_BREATH",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "PARAM_ARM_L_A",
+			"GroupId": "",
+			"Name": "左腕 A"
+		},
+		{
+			"Id": "PARAM_ARM_R_A",
+			"GroupId": "",
+			"Name": "右腕 A"
+		},
+		{
+			"Id": "PARAM_ARM_L_B",
+			"GroupId": "",
+			"Name": "左腕 B"
+		},
+		{
+			"Id": "PARAM_ARM_R_B",
+			"GroupId": "",
+			"Name": "右腕 B"
+		},
+		{
+			"Id": "PARAM_BUST_Y",
+			"GroupId": "",
+			"Name": "胸　揺れ"
+		},
+		{
+			"Id": "PARAM_HAIR_FRONT",
+			"GroupId": "",
+			"Name": "髪揺れ　前"
+		},
+		{
+			"Id": "PARAM_HAIR_BACK",
+			"GroupId": "",
+			"Name": "髪揺れ　後ろ"
+		}
+	],
+	"ParameterGroups": [],
+	"Parts": [
+		{
+			"Id": "PARTS_01_SKETCH",
+			"Name": "[ 下絵 ]"
+		},
+		{
+			"Id": "PARTS_01_BACKGROUND",
+			"Name": "背景"
+		},
+		{
+			"Id": "PARTS_01_ARM_R_B_002",
+			"Name": "２　制服　右腕 B"
+		},
+		{
+			"Id": "PARTS_01_ARM_L_B_002",
+			"Name": "２　制服　左腕 B"
+		},
+		{
+			"Id": "PARTS_01_ARM_R_A_002",
+			"Name": "２　制服　右腕 A"
+		},
+		{
+			"Id": "PARTS_01_ARM_L_A_002",
+			"Name": "２　制服　左腕 A"
+		},
+		{
+			"Id": "PARTS_01_BODY_002",
+			"Name": "２　制服"
+		},
+		{
+			"Id": "PARTS_01_ARM_R_B_001",
+			"Name": "１　ワンピース　右腕 B"
+		},
+		{
+			"Id": "PARTS_01_ARM_L_B_001",
+			"Name": "１　ワンピース　左腕 B"
+		},
+		{
+			"Id": "PARTS_01_ARM_R_A_001",
+			"Name": "１　ワンピース　右腕 A"
+		},
+		{
+			"Id": "PARTS_01_ARM_L_A_001",
+			"Name": "１　ワンピース　左腕 A"
+		},
+		{
+			"Id": "PARTS_01_BODY_001",
+			"Name": "１　ワンピース"
+		},
+		{
+			"Id": "PARTS_01_NECK_001",
+			"Name": "首"
+		},
+		{
+			"Id": "PARTS_01_HAIR_BACK_001",
+			"Name": "後ろ髪"
+		},
+		{
+			"Id": "PARTS_01_HAIR_SIDE_001",
+			"Name": "横髪"
+		},
+		{
+			"Id": "PARTS_01_HAIR_FRONT_001",
+			"Name": "前髪"
+		},
+		{
+			"Id": "PARTS_01_EAR_001",
+			"Name": "耳"
+		},
+		{
+			"Id": "PARTS_01_NOSE_001",
+			"Name": "鼻"
+		},
+		{
+			"Id": "PARTS_01_MOUTH_001",
+			"Name": "口"
+		},
+		{
+			"Id": "PARTS_01_BROW_001",
+			"Name": "まゆ毛"
+		},
+		{
+			"Id": "PARTS_01_EYE_BALL_001",
+			"Name": "目玉"
+		},
+		{
+			"Id": "PARTS_01_EYE_001",
+			"Name": "目"
+		},
+		{
+			"Id": "PARTS_01_FACE_001",
+			"Name": "顔"
+		},
+		{
+			"Id": "PARTS_01_HOHO_001",
+			"Name": "頬"
+		},
+		{
+			"Id": "PARTS_01_CORE",
+			"Name": "コアパーツ"
+		},
+		{
+			"Id": "ROUGH",
+			"Name": "ラフ"
+		}
+	]
+}

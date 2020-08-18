@@ -1,0 +1,29 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "haru_greeter.moc3",
+		"Textures": [
+			"haru_greeter.2048/texture_00.png",
+			"haru_greeter.2048/texture_01.png"
+		],
+		"Physics": "haru_greeter.physics3.json",
+		"DisplayInfo": "haru_greeter.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"ParamMouthOpenY"
+			]
+		}
+	]
+}

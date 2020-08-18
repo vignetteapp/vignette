@@ -1,0 +1,12 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "haru.moc3",
+		"Textures": [
+			"haru.1024/texture_00.png",
+			"haru.1024/texture_01.png",
+			"haru.1024/texture_02.png"
+		],
+		"DisplayInfo": "haru.cdi3.json"
+	}
+}
