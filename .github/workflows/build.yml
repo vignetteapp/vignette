@@ -7,7 +7,7 @@ on:
     branches: [ '*' ]
 
 jobs:
-  build:
+  build-linux:
 
     runs-on: ubuntu-latest
 
@@ -26,5 +26,26 @@ jobs:
     - name: Upload Nightly Artifact
       uses: actions/upload-artifact@master
       with:
-        name: holotrack-daily
-        path: /home/runner/work/holotrack/holotrack/HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
+        name: holotrack-daily-linux
+        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Debug --no-restore
+#    - name: Test
+#      run: dotnet test --no-restore --verbosity normal
+    - name: Upload Nightly Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: holotrack-daily-win32
+        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
