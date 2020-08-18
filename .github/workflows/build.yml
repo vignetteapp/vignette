@@ -32,6 +32,9 @@ jobs:
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/win*
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/osx*
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-x86
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm64
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/unix
 
   build-windows:
     runs-on: windows-latest
@@ -58,4 +61,7 @@ jobs:
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/linux*
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/centos*
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/ubuntu*
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/unix
            !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-x86
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm64
