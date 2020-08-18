@@ -20,21 +20,14 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Debug --no-restore
+      run: dotnet publish -c Debug -r linux-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
 #    - name: Test
 #      run: dotnet test --no-restore --verbosity normal
     - name: Upload Nightly Artifact
       uses: actions/upload-artifact@master
       with:
         name: holotrack-daily-linux
-        path: |
-           ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/win*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/osx*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-x86
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm64
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/unix
+        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/publish/**/*
 
   build-windows:
     runs-on: windows-latest
@@ -48,20 +41,11 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Debug --no-restore
+      run: dotnet publish -c Debug -r win10-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
 #    - name: Test
 #      run: dotnet test --no-restore --verbosity normal
     - name: Upload Nightly Artifact
       uses: actions/upload-artifact@master
       with:
         name: holotrack-daily-win32
-        path: |
-           ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/osx*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/linux*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/centos*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/ubuntu*
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/unix
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-x86
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm
-           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/*-arm64
+        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/publish/**/*
