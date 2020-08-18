@@ -27,7 +27,10 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: holotrack-daily-linux
-        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
+        path: |
+           ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/win*
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/osx*
 
   build-windows:
     runs-on: windows-latest
@@ -48,4 +51,8 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: holotrack-daily-win32
-        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
+        path: |
+           ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/osx*
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/linux*
+           !./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/runtimes/centos*
