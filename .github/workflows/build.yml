@@ -23,3 +23,8 @@ jobs:
       run: dotnet build --configuration Debug --no-restore
 #    - name: Test
 #      run: dotnet test --no-restore --verbosity normal
+    - name: Upload Nightly Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: holotrack-daily
+        path: /home/runner/work/holotrack/holotrack/HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/*
