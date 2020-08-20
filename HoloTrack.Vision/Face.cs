@@ -1,5 +1,4 @@
-﻿using System;
-using FaceRecognitionDotNet;
+﻿using FaceRecognitionDotNet;
 using System.Drawing;
 using System.Linq;
 using System.Collections.Generic;
@@ -24,11 +23,35 @@ namespace HoloTrack.Vision
             return faceRecognition.FaceLocations(image).ToArray();
         }
 
+
         /// <summary>
-        /// Gets landmark data from a specific face data.
+        /// Gets landmark from a specific face. This is a simplified version of GetLandmark() and considered experimental. Use at your own risk.
+        /// </summary>
+        /// <param name="faceIndex">the ID of the face to get landmarks. To get your face index, you might want to get your face location from GetTargets() and get the index of the face you want to track.</param>
+        /// <param name="cameraID">the ID of the camera to get input. Use Camera.EnumerateCameras() to find out which camera to get input to. Defaults to ID 0 (default camera).</param>
+        /// <returns></returns>
+        public static IDictionary<FacePart, IEnumerable<FacePoint>> GetLadmark2(int faceIndex, int cameraID=0)
+        {
+            // create a new list and only get the single target from our ID.
+            List<Location> faceLocation = new List<Location>();
+            Bitmap image = Camera.CreateCameraImage(cameraID);
+            Location[] faceLocations = GetTargets(cameraID);
+
+            faceLocation.Add(faceLocations[faceIndex]);
+            using FaceRecognitionDotNet.Image cameraImage = FaceRecognition.LoadImage(image);
+
+            // now targetLandmark will only listen to a specific location since there's only one location to listen to.
+            var targetLandmarks = faceRecognition.FaceLandmark(cameraImage, faceLocations).ToArray();
+
+            return targetLandmarks[0];
+        }
+
+
+        /// <summary>
+        /// (Obsolete) Gets landmark data from a specific face.
         /// </summary>
         /// <param name="faceIndex">the ID of the face to get landmarks. To get your face index, you might want to get a single OpenCV location and compare it against the output of Face.GetTargets()</param>
-        /// <param name="cameraID">the ID of the camera you want to open a stream. Use Camera.EnumerateCameras() for this.</param>
+        /// <param name="cameraID">the ID of the camera to get input. Use Camera.EnumerateCameras() to find out which camera to get input to. Defaults to ID 0 (default camera).</param>
         /// <returns></returns>
         public static Dictionary<FacePart, IEnumerable<FacePoint>> GetLandmark(int faceIndex, int cameraID=0)
         {
