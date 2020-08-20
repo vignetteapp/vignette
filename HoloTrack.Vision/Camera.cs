@@ -97,13 +97,9 @@ namespace HoloTrack.Vision
         {
             capture.Open(cameraID, VideoCaptureAPIs.ANY);
 
-            if (!capture.IsOpened())
-            {
-                throw new Exception("Not opening a new Video Capture. There's one open already!");
-            }
-
-            return capture.RetrieveMat();
-
+            return capture.IsOpened()
+                ? throw new Exception("Not opening a new Video Capture. There's one open already!")
+                : capture.RetrieveMat();
         }
 
         /// <summary>
