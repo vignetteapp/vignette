@@ -25,6 +25,11 @@ namespace HoloTrack.Vision
         }
 
         /// <summary>
+        /// Checks if Camera is still opened or not yet disposed.
+        /// </summary>
+        public bool IsCameraOpen => capture.IsOpened();
+
+        /// <summary>
         /// Enumerates and lists all available Cameras in the system
         /// </summary>
         /// <returns>A List containing the camera's device location and name. Keep in mind in Linux, name and location have the same value for now.</returns>
@@ -122,14 +127,6 @@ namespace HoloTrack.Vision
 
             using var ms = new MemoryStream(cameraStream);
             return (Bitmap)Image.FromStream(ms);
-        }
-
-        /// <summary>
-        /// Checks if Camera is still opened or not yet disposed.
-        /// </summary>
-        public bool IsCameraOpen ()
-        {
-            return capture.IsOpened();
         }
 
         /// <summary>
