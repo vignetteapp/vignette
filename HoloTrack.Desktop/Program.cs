@@ -1,12 +1,15 @@
-﻿using System;
+﻿using osu.Framework;
+using osu.Framework.Platform;
 
-namespace HoloTrack.Desktop
+namespace holotrack.Desktop
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (GameHost host = Host.GetSuitableHost(@"holotrack"))
+            using (Game game = new HoloTrackDesktop())
+                host.Run(game);
         }
     }
 }

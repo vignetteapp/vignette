@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Game",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/holotrack.Desktop/holotrack.Desktop.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "dependsOn": [ "Include Cubism Core (Windows)" ]
+        },
+        {
+            "label": "Build Tests",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/holotrack.Tests/holotrack.Tests.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "dependsOn": [ "Include Cubism Core (Windows Tests)" ]
+        },
+        {
+            "label": "Include Cubism Core (Windows)",
+            "command": "copy",
+            "type": "shell",
+            "args": [
+                "-Path",
+                "'${workspaceFolder}/CubismCore/dll/windows/x86_64/*.dll'",
+                "-Destination",
+                "'${workspaceFolder}/holotrack.Desktop/bin/Debug/netcoreapp3.1/'"
+            ]
+        },
+        {
+            "label": "Include Cubism Core (Windows Tests)",
+            "command": "copy",
+            "type": "shell",
+            "args": [
+                "-Path",
+                "'${workspaceFolder}/CubismCore/dll/windows/x86_64/*.dll'",
+                "-Destination",
+                "'${workspaceFolder}/holotrack.Tests/bin/Debug/netcoreapp3.1/'"
+            ]
+        }
+    ]
+}

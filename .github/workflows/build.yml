@@ -2,9 +2,7 @@ name: Build - Debug
 
 on:
   push:
-    branches: [ '*' ]
-  pull_request:
-    branches: [ '*' ]
+    branches: [ 'master' ]
 
 jobs:
   build-linux:
@@ -27,7 +25,7 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: holotrack-daily-linux
-        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/linux-x64/publish/*
+        path: ./holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/linux-x64/publish/*
 
   build-windows:
     runs-on: windows-latest
@@ -48,4 +46,4 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: holotrack-daily-win32
-        path: ./HoloTrack.Desktop/bin/x64/Debug/netcoreapp3.1/win10-x64/publish/*
+        path: ./holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/win10-x64/publish/*

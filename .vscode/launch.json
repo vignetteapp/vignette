@@ -1,0 +1,30 @@
+{
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   "version": "0.2.0",
+   "configurations": [
+        {
+            "name": "Launch Game",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Game",
+            "program": "${workspaceFolder}/holotrack.Desktop/bin/Debug/netcoreapp3.1/holotrack.Desktop.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/holotrack.Desktop",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch Tests",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Tests",
+            "program": "${workspaceFolder}/holotrack.Tests/bin/Debug/netcoreapp3.1/holotrack.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+    ]
+}
