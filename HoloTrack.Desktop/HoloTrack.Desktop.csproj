@@ -1,17 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\holotrack.Core\holotrack.Core.csproj"/>
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Platforms>x64</Platforms>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2020.812.0" />
+  <ItemGroup Label="Resources">
+    <EmbeddedResource Include="logo.ico" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HoloTrack.Vision\HoloTrack.Vision.csproj" />
-  </ItemGroup>
-
 </Project>

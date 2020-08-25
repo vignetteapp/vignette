@@ -1,62 +1,62 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30323.103
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Resources", "HoloTrack.Resources\HoloTrack.Resources.csproj", "{BE87B172-8BB8-4945-939D-5C94A3C06987}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "holotrack.Tests", "holotrack.Tests\holotrack.Tests.csproj", "{208048D7-22FF-4C46-8157-91131BB3C628}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Vision", "HoloTrack.Vision\HoloTrack.Vision.csproj", "{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "holotrack.Core", "holotrack.Core\holotrack.Core.csproj", "{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F94DC293-4ED2-4FB3-917C-6A1B1AA51E18}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		.github\workflows\build.yml = .github\workflows\build.yml
-		LICENSE = LICENSE
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Desktop", "HoloTrack.Desktop\HoloTrack.Desktop.csproj", "{D59F7D83-3ED5-4C86-9EED-F70E06F7F255}"
-	ProjectSection(ProjectDependencies) = postProject
-		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4} = {90EE054A-3C4A-49FA-89C3-FB0F03514DD4}
-		{BE87B172-8BB8-4945-939D-5C94A3C06987} = {BE87B172-8BB8-4945-939D-5C94A3C06987}
-		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D} = {E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.Core", "HoloTrack.Core\HoloTrack.Core.csproj", "{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloTrack.DirectShow", "HoloTrack.DirectShow\HoloTrack.DirectShow.csproj", "{35D06E96-FCDD-40E0-9381-20C06E4D78B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "holotrack.Desktop", "holotrack.Desktop\holotrack.Desktop.csproj", "{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Debug|x64.ActiveCfg = Debug|x64
-		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Debug|x64.Build.0 = Debug|x64
-		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Release|x64.ActiveCfg = Release|x64
-		{BE87B172-8BB8-4945-939D-5C94A3C06987}.Release|x64.Build.0 = Release|x64
-		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Debug|x64.ActiveCfg = Debug|x64
-		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Debug|x64.Build.0 = Debug|x64
-		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Release|x64.ActiveCfg = Release|x64
-		{90EE054A-3C4A-49FA-89C3-FB0F03514DD4}.Release|x64.Build.0 = Release|x64
-		{D59F7D83-3ED5-4C86-9EED-F70E06F7F255}.Debug|x64.ActiveCfg = Debug|x64
-		{D59F7D83-3ED5-4C86-9EED-F70E06F7F255}.Debug|x64.Build.0 = Debug|x64
-		{D59F7D83-3ED5-4C86-9EED-F70E06F7F255}.Release|x64.ActiveCfg = Release|x64
-		{D59F7D83-3ED5-4C86-9EED-F70E06F7F255}.Release|x64.Build.0 = Release|x64
-		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Debug|x64.ActiveCfg = Debug|x64
-		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Debug|x64.Build.0 = Debug|x64
-		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Release|x64.ActiveCfg = Release|x64
-		{E253BF7A-5C4A-475C-ADC2-AA0AEB13836D}.Release|x64.Build.0 = Release|x64
-		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Debug|x64.ActiveCfg = Debug|x64
-		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Debug|x64.Build.0 = Debug|x64
-		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Release|x64.ActiveCfg = Release|x64
-		{35D06E96-FCDD-40E0-9381-20C06E4D78B6}.Release|x64.Build.0 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {CC1403CB-F865-4550-9FE2-71C5654259C1}
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Debug|x64.Build.0 = Debug|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Debug|x86.Build.0 = Debug|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Release|x64.ActiveCfg = Release|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Release|x64.Build.0 = Release|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Release|x86.ActiveCfg = Release|Any CPU
+		{208048D7-22FF-4C46-8157-91131BB3C628}.Release|x86.Build.0 = Release|Any CPU
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Debug|Any CPU.Build.0 = Debug|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Debug|x64.ActiveCfg = Debug|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Debug|x64.Build.0 = Debug|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Debug|x86.ActiveCfg = Debug|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Debug|x86.Build.0 = Debug|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Release|Any CPU.ActiveCfg = Release|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Release|Any CPU.Build.0 = Release|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Release|x64.ActiveCfg = Release|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Release|x64.Build.0 = Release|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Release|x86.ActiveCfg = Release|x64
+		{EAE514A2-479D-42E3-8A5F-DBFB3BF670DD}.Release|x86.Build.0 = Release|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Debug|Any CPU.Build.0 = Debug|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Debug|x64.ActiveCfg = Debug|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Debug|x64.Build.0 = Debug|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Debug|x86.ActiveCfg = Debug|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Debug|x86.Build.0 = Debug|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Release|Any CPU.ActiveCfg = Release|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Release|Any CPU.Build.0 = Release|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Release|x64.ActiveCfg = Release|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Release|x64.Build.0 = Release|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Release|x86.ActiveCfg = Release|x64
+		{2B6609DC-1E32-4C6D-97CC-C4A2109CF8BD}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 EndGlobal
