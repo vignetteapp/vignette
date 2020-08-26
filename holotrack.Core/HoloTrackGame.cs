@@ -1,6 +1,7 @@
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Cubism;
+using osu.Framework.Input;
 using osu.Framework.IO.Stores;
 
 namespace holotrack.Core
@@ -24,6 +25,8 @@ namespace holotrack.Core
 
             var cubismAssets = new CubismAssetStore(new NamespacedResourceStore<byte[]>(Resources, @"Live2D"));
             dependencies.Cache(cubismAssets);
+
+            dependencies.Cache(new CameraManager());
 
             AddFont(Resources, @"Fonts/NotoSans");
         }
