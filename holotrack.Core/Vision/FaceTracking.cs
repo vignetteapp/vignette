@@ -9,7 +9,7 @@ namespace holotrack.Core.Vision
     /// <summary>
     /// A class that implements face targeting using DLib.
     /// </summary>
-    public class Face
+    public class FaceTracking
     {
         public static FaceRecognition faceRecognition;
 
