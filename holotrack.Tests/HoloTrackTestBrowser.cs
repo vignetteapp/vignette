@@ -14,7 +14,7 @@ namespace holotrack.Tests
 
             AddRange(new Drawable[]
             {
-                new TestBrowser(),
+                new TestBrowser("holotrack"),
                 new CursorContainer(),
             });
         }
