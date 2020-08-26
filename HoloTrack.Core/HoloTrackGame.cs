@@ -25,7 +25,7 @@ namespace holotrack.Core
             var cubismAssets = new CubismAssetStore(new NamespacedResourceStore<byte[]>(Resources, @"Live2D"));
             dependencies.Cache(cubismAssets);
 
-            AddFont(Resources, @"Resources/Fonts/NotoSans");
+            AddFont(Resources, @"Fonts/NotoSans");
         }
     }
 }
