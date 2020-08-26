@@ -335,7 +335,4 @@ inspectcode
 # BenchmarkDotNet
 /BenchmarkDotNet.Artifacts
 
-# Live2D Cubism Core
-CubismCore/dll/*
-
 !.gitkeep
