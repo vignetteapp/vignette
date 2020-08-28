@@ -6,19 +6,20 @@ using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using static osu.Framework.Graphics.UserInterface.BasicTextBox;
 
-namespace holotrack.Core.Graphics.UserInterface.Control
+namespace holotrack.Core.Graphics.UserInterface
 {
-    public class BasicInputBox : TextBox
+    public class HoloTrackTextBox : TextBox
     {
         protected override float LeftRightPadding => 10;
 
-        public BasicInputBox()
+        public HoloTrackTextBox()
         {
             Height = 40;
-            BorderColour = Colour4.FromHex("7d7d7d");
-            BorderThickness = 5;
+            CornerRadius = 3;
+            BorderColour = HoloTrackColor.ControlBorder;
+            BorderThickness = 3;
 
-            TextContainer.Height = 0.4f;
+            TextContainer.Height = 0.5f;
 
             Add(new Container
             {
@@ -29,15 +30,16 @@ namespace holotrack.Core.Graphics.UserInterface.Control
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Colour = Colour4.FromHex("362f2d"),
+                    Colour = Colour4.Transparent,
                 }
             });
         }
 
         protected override Caret CreateCaret() => new BasicCaret
         {
+            Scale = new Vector2(1, 1.5f),
             CaretWidth = 2,
-            SelectionColour = Colour4.White,
+            SelectionColour = Colour4.LightCoral,
         };
 
         protected override SpriteText CreatePlaceholder() => new SpriteText
@@ -45,7 +47,14 @@ namespace holotrack.Core.Graphics.UserInterface.Control
             Colour = Colour4.White.Opacity(0.1f),
             Anchor = Anchor.CentreLeft,
             Origin = Anchor.CentreLeft,
+            Font = HoloTrackFont.Control,
             X = 2
+        };
+
+        protected override Drawable GetDrawableCharacter(char c) => new SpriteText
+        {
+            Text = c.ToString(),
+            Font = HoloTrackFont.Control.With(size: CalculatedTextSize),
         };
 
         protected override void NotifyInputError()

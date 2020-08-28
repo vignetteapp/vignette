@@ -1,5 +1,6 @@
-using holotrack.Core.Graphics.UserInterface.Control;
+using holotrack.Core.Graphics.UserInterface;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Sprites;
 
 namespace holotrack.Tests.Visual.UserInterface
 {
@@ -9,9 +10,16 @@ namespace holotrack.Tests.Visual.UserInterface
         {
             Elements.AddRange(new Drawable[]
             {
-                new BasicButton
+                new HoloTrackButton
                 {
                     Text = @"basic button",
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Action = () => {},
+                },
+                new HoloTrackButton
+                {
+                    Text = @"disabled basic button",
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
@@ -21,19 +29,46 @@ namespace holotrack.Tests.Visual.UserInterface
                     ButtonText = @"Alt + F4",
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
+                    Action = () => {},
                 },
-                new SpriteButton
+                new KeybindButton
                 {
-                    Text = @"basic sprite button",
+                    Text = @"disabled keybind button",
+                    ButtonText = @"Alt + F4",
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                new BadgedSpriteButton
+                new FramedButton
                 {
-                    Text = @"badged sprite button",
-                    BadgeText = @"?",
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
+                    Action = () => {},
+                },
+                new FramedButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
+                new FramedButton
+                {
+                    Icon = FontAwesome.Solid.Question,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Action = () => {},
+                },
+                new FramedButton
+                {
+                    Icon = FontAwesome.Solid.Question,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
+                new FramedButton
+                {
+                    Icon = FontAwesome.Solid.Question,
+                    FrameColor = Colour4.Red,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Action = () => {},
                 }
             });
         }

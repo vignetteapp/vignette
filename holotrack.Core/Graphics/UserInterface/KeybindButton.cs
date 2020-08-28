@@ -1,9 +1,10 @@
+using System;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
 
-namespace holotrack.Core.Graphics.UserInterface.Control
+namespace holotrack.Core.Graphics.UserInterface
 {
     public class KeybindButton : FillFlowContainer
     {
@@ -18,7 +19,7 @@ namespace holotrack.Core.Graphics.UserInterface.Control
             }
         }
 
-        private BasicButton button;
+        private HoloTrackButton button;
         public string ButtonText
         {
             get => button?.Text;
@@ -26,6 +27,16 @@ namespace holotrack.Core.Graphics.UserInterface.Control
             {
                 if (button != null)
                     button.Text = value;
+            }
+        }
+
+        public Action Action
+        {
+            get => button?.Action;
+            set
+            {
+                if (button != null)
+                    button.Action = value;
             }
         }
 
@@ -38,14 +49,14 @@ namespace holotrack.Core.Graphics.UserInterface.Control
 
             AddRange(new Drawable[]
             {
-                button = new BasicButton
+                button = new HoloTrackButton
                 {
                     RelativeSizeAxes = Axes.X,
                     Width = 0.4f,
                 },
                 label = new SpriteText
                 {
-                    Font = FontUsage.Default.With(size: 16),
+                    Font = HoloTrackFont.Control,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                 }

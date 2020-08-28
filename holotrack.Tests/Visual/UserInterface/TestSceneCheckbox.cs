@@ -1,4 +1,4 @@
-using holotrack.Core.Graphics.UserInterface.Control;
+using holotrack.Core.Graphics.UserInterface;
 
 namespace holotrack.Tests.Visual.UserInterface
 {
@@ -6,7 +6,7 @@ namespace holotrack.Tests.Visual.UserInterface
     {
         public TestSceneCheckbox()
         {
-            Elements.Add(new BasicCheckbox {Text = @"basic checkbox" });
+            Elements.Add(new HoloTrackCheckbox {Text = @"basic checkbox" });
         }
     }
 }

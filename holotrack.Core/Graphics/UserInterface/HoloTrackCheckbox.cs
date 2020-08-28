@@ -5,9 +5,9 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 
-namespace holotrack.Core.Graphics.UserInterface.Control
+namespace holotrack.Core.Graphics.UserInterface
 {
-    public class BasicCheckbox : Checkbox
+    public class HoloTrackCheckbox : Checkbox
     {
         public string Text
         {
@@ -20,9 +20,9 @@ namespace holotrack.Core.Graphics.UserInterface.Control
         }
 
         private SpriteText label;
-        private Box check;
+        private SpriteIcon check;
 
-        public BasicCheckbox()
+        public HoloTrackCheckbox()
         {
             AutoSizeAxes = Axes.Y;
             RelativeSizeAxes = Axes.X;
@@ -31,38 +31,39 @@ namespace holotrack.Core.Graphics.UserInterface.Control
             {
                 new Container
                 {
-                    Size = new Vector2(30),
-                    Margin = new MarginPadding(10),
+                    Size = new Vector2(20),
                     Masking = true,
-                    BorderColour = Colour4.FromHex("7d7d7d"),
-                    BorderThickness = 4,
+                    CornerRadius = 3,
+                    BorderColour = HoloTrackColor.ControlBorder,
+                    BorderThickness = 3,
                     Children = new Drawable[]
                     {
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = Colour4.FromHex("362f2d"),
+                            Colour = Colour4.Transparent,
                         },
-                        check = new Box
+                        check = new SpriteIcon
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Colour4.FromHex("7d7d7d"),
+                            Size = new Vector2(0.4f),
+                            Icon = FontAwesome.Solid.Check,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Alpha = 0,
-                            Size = new Vector2(0.5f),
+                            RelativeSizeAxes = Axes.Both,
                         }
                     }
                 },
                 label = new SpriteText
                 {
-                    Margin = new MarginPadding { Left = 50 },
+                    Margin = new MarginPadding { Left = 30 },
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
+                    Font = HoloTrackFont.Control,
                 }
             });
 
             Current.ValueChanged += c => check.Alpha = c.NewValue ? 1 : 0;
+            Current.TriggerChange();
         }
     }
 }

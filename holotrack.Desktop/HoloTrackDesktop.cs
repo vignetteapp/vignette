@@ -1,6 +1,7 @@
 using System.Reflection;
 using holotrack.Core;
 using osu.Framework.Platform;
+using osuTK;
 
 namespace holotrack.Desktop
 {

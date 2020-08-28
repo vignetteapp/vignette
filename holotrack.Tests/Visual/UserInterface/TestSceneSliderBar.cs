@@ -1,4 +1,4 @@
-using holotrack.Core.Graphics.UserInterface.Control;
+using holotrack.Core.Graphics.UserInterface;
 using osu.Framework.Bindables;
 
 namespace holotrack.Tests.Visual.UserInterface
@@ -7,7 +7,7 @@ namespace holotrack.Tests.Visual.UserInterface
     {
         public TestSceneSliderBar()
         {
-            Elements.Add(new BasicSliderBar<float>
+            Elements.Add(new HoloTrackSliderBar<float>
             {
                 Current = new BindableFloat
                 {

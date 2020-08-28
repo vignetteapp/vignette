@@ -1,4 +1,4 @@
-using holotrack.Core.Graphics.UserInterface.Control;
+using holotrack.Core.Graphics.UserInterface;
 using osu.Framework.Graphics;
 
 namespace holotrack.Tests.Visual.UserInterface
@@ -9,20 +9,20 @@ namespace holotrack.Tests.Visual.UserInterface
         {
             Elements.AddRange(new[]
             {
-                new BasicInputBox
+                new HoloTrackTextBox
                 {
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
                 },
-                new BasicInputBox
+                new HoloTrackTextBox
                 {
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     PlaceholderText = @"has placeholder"
                 },
-                new BasicInputBox
+                new HoloTrackTextBox
                 {
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.Centre,

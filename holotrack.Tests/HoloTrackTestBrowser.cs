@@ -6,7 +6,7 @@ using osu.Framework.Testing;
 
 namespace holotrack.Tests
 {
-    public class HoloTrackTestBrowser : HoloTrackGame
+    public class HoloTrackTestBrowser : HoloTrackGameBase
     {
         protected override void LoadComplete()
         {
