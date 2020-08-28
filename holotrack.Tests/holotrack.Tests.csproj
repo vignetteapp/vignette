@@ -6,4 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\holotrack.Core\holotrack.Core.csproj"/>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.4.0.20200725"/>
+  </ItemGroup>
 </Project>
