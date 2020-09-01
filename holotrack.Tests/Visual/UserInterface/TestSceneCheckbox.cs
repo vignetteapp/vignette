@@ -1,4 +1,4 @@
-using holotrack.Core.Graphics.UserInterface;
+using holotrack.Graphics.UserInterface;
 
 namespace holotrack.Tests.Visual.UserInterface
 {

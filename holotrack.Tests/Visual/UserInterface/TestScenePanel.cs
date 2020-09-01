@@ -1,4 +1,4 @@
-using holotrack.Core.Graphics.UserInterface;
+using holotrack.Graphics.UserInterface;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Testing;

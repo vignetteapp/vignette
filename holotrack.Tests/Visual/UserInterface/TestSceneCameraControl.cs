@@ -1,4 +1,4 @@
-using holotrack.Core.Screens.Main;
+using holotrack.Screens.Main;
 using osu.Framework.Graphics;
 
 namespace holotrack.Tests.Visual.UserInterface

@@ -1,5 +1,5 @@
 using System.Reflection;
-using holotrack.Core;
+using holotrack;
 using osu.Framework.Platform;
 using osuTK;
 

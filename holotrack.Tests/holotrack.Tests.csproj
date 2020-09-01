@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\holotrack.Core\holotrack.Core.csproj"/>
+    <ProjectReference Include="..\holotrack\holotrack.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.4.0.20200725"/>

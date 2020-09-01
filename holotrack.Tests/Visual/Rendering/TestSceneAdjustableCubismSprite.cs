@@ -1,4 +1,4 @@
-using holotrack.Core.Screens.Main;
+using holotrack.Screens.Main;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cubism;
