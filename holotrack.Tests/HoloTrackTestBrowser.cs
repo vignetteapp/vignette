@@ -1,4 +1,4 @@
-using holotrack.Core;
+using holotrack;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Platform;

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\holotrack.Core\holotrack.Core.csproj"/>
+    <ProjectReference Include="..\holotrack\holotrack.csproj"/>
   </ItemGroup>
   <ItemGroup Label="Resources">
     <EmbeddedResource Include="logo.ico"/>
