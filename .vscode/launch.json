@@ -12,7 +12,8 @@
             "args": [],
             "cwd": "${workspaceFolder}/holotrack.Desktop",
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "preLaunchTask": "build",
         },
         {
             "name": "Launch Tests",
@@ -21,8 +22,9 @@
             "program": "${workspaceFolder}/holotrack.Tests/bin/Debug/netcoreapp3.1/holotrack.Tests.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
             "stopAtEntry": false,
-            "console": "internalConsole"
+            "preLaunchTask": "build",
         },
     ]
 }

@@ -1,0 +1,38 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "dotnet",
+            "windows": {
+                "args": [
+                    "build",
+                    "/p:CubismFrameworkRuntime=win-x64",
+                    "/p:GenerateFullPaths=true",
+                    "/t:build",
+                    "/consoleloggerparameters:NoSummary"
+                ],
+            },
+            "linux": {
+                "args": [
+                    "build",
+                    "/p:CubismFrameworkRuntime=linux-x64",
+                    "/p:GenerateFullPaths=true",
+                    "/t:build",
+                    "/consoleloggerparameters:NoSummary"
+                ],
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
