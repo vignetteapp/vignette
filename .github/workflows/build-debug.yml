@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet publish -c Debug -r linux-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
+      run: dotnet publish -c Debug -r linux-x64 --self-contained true -p:CubismFrameworkRuntime=linux-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
 #    - name: Test
 #      run: dotnet test --no-restore --verbosity normal
     - name: Upload Nightly Artifact
@@ -37,7 +37,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet publish -c Debug -r win10-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
+      run: dotnet publish -c Debug -r win10-x64 --self-contained true -p:CubismFrameworkRuntime=win-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
 #    - name: Test
 #      run: dotnet test --no-restore --verbosity normal
     - name: Upload Nightly Artifact
