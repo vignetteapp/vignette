@@ -4,9 +4,12 @@ namespace holotrack.Graphics
 {
     public static class HoloTrackColor
     {
-        public static Colour4 ControlBackground => Colour4.FromHex("362f2d");
-        public static Colour4 ControlBorder => Colour4.FromHex("7d7d7d");
-        public static Colour4 Notice => Colour4.Yellow;
-        public static Colour4 Warning => Colour4.Red;
+        public static Colour4 Base => Colour4.FromHex("362f2d");
+        public static Colour4 Light => Base.Lighten(0.3f);
+        public static Colour4 Lighter => Base.Lighten(0.6f);
+        public static Colour4 Lightest => Base.Lighten(0.9f);
+        public static Colour4 Dark => Base.Darken(0.3f);
+        public static Colour4 Darker => Base.Darken(0.6f);
+        public static Colour4 Darkest => Base.Darken(0.9f);
     }
 }
