@@ -24,11 +24,6 @@ namespace holotrack.Screens.Main
                     Adjustable = true,
                     Asset = assets.Get(@"haru_greeter.haru_greeter.model3.json"),
                 },
-                new SideMenu()
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                },
             });
         }
     }
