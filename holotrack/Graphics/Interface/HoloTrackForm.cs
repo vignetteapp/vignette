@@ -1,7 +1,10 @@
+using holotrack.Graphics.Sprites;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osuTK;
 
 namespace holotrack.Graphics.Interface
 {
@@ -9,21 +12,28 @@ namespace holotrack.Graphics.Interface
     {
         private const float TITLEBAR_HEIGHT = 64.0f;
 
-        private readonly SpriteText title;
+        private SpriteText title;
         public string Title
         {
             get => title.Text;
             set => title.Text = value;
         }
 
-        private readonly Container titlebar;
-        public bool TitleBarVisible
+        private Container titlebar;
+        public bool TitleBarVisibility
         {
             get => titlebar.Alpha == 1;
-            set => titlebar.Alpha = value ? 1 : 0;
+            set
+            {
+                titlebar.Alpha = value ? 1 : 0;
+                body.Padding = new MarginPadding { Top = value ? TITLEBAR_HEIGHT : 0 };
+            }
         }
 
-        private readonly Container<Drawable> content;
+        private Container body;
+        protected BufferedContainer Background;
+
+        private Container<Drawable> content;
         protected override Container<Drawable> Content => content;
 
         public HoloTrackForm()
@@ -42,20 +52,24 @@ namespace holotrack.Graphics.Interface
                             Colour = HoloTrackColor.Base,
                             RelativeSizeAxes = Axes.Both,
                         },
-                        title = new SpriteText
+                        title = new HoloTrackSpriteText
                         {
                             Font = HoloTrackFont.Bold.With(size: 24),
                             Margin = new MarginPadding(20),
                         }
                     }
                 },
-                new Container
+                body = new Container
                 {
                     Name = @"body",
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Top = TITLEBAR_HEIGHT },
                     Children = new Drawable[]
                     {
+                        Background = new BufferedContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            BlurSigma = new Vector2(20),
+                        },
                         new Box
                         {
                             Colour = HoloTrackColor.Base,
@@ -64,12 +78,18 @@ namespace holotrack.Graphics.Interface
                         },
                         content = new Container<Drawable>
                         {
-                            Padding = new MarginPadding(15),
                             RelativeSizeAxes = Axes.Both,
                         }
                     }
                 }
             };
+        }
+
+        [BackgroundDependencyLoader(true)]
+        private void load(HoloTrackGame game)
+        {
+            if (game != null)
+                Background.Child = game.CreateView();
         }
     }
 }
