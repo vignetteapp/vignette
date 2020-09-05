@@ -16,7 +16,7 @@ namespace holotrack.Screens.Main
 
     }
 
-    class FaceTrackingWorker : Component
+    public class FaceTrackingWorker : Component
     {
         public byte[] cameraStream;
         public CubismSprite live2dContainer;
