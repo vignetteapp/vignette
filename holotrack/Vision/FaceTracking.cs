@@ -9,9 +9,9 @@ namespace holotrack.Vision
     /// <summary>
     /// A class that implements face targeting using DLib.
     /// </summary>
-    public class FaceTracking
+    public static class FaceTracking
     {
-        public static FaceRecognition faceRecognition;
+        internal static FaceRecognition faceRecognition;
 
         /// <summary>
         /// Perform Inference and get all valid targets. Note that you must execute this asynchronously otherwise this will block the main thread.
@@ -26,7 +26,7 @@ namespace holotrack.Vision
 
 
         /// <summary>
-        /// Gets landmark from a specific face. This is a simplified version of GetLandmark() and considered experimental. Use at your own risk.
+        /// Gets landmark from a specific face.
         /// </summary>
         /// <param name="faceIndex">the ID of the face to get landmarks. To get your face index, you might want to get your face location from GetTargets() and get the index of the face you want to track.</param>
         /// <param name="cameraData">the image data of the camera.</param>
