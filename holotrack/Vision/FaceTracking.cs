@@ -11,7 +11,7 @@ namespace holotrack.Vision
     /// </summary>
     public static class FaceTracking
     {
-        internal static FaceRecognition faceRecognition;
+        internal static FaceRecognition FaceRecognition { get; set; } = FaceRecognition.Create(".models");
 
         /// <summary>
         /// Perform Inference and get all valid targets. Note that you must execute this asynchronously otherwise this will block the main thread.
@@ -21,7 +21,7 @@ namespace holotrack.Vision
             Bitmap imageFromCamera = new Bitmap(new MemoryStream(cameraData));
             FaceRecognitionDotNet.Image image = FaceRecognition.LoadImage(imageFromCamera);
 
-            return faceRecognition.FaceLocations(image).ToArray();
+            return FaceRecognition.FaceLocations(image).ToArray();
         }
 
 
@@ -42,7 +42,7 @@ namespace holotrack.Vision
             using FaceRecognitionDotNet.Image cameraImage = FaceRecognition.LoadImage(image);
 
             // now targetLandmark will only listen to a specific location since there's only one location to listen to.
-            var targetLandmarks = faceRecognition.FaceLandmark(cameraImage, faceLocations).ToArray();
+            var targetLandmarks = FaceRecognition.FaceLandmark(cameraImage, faceLocations).ToArray();
 
             return targetLandmarks[0];
         }
