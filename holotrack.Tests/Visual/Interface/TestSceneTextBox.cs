@@ -28,6 +28,11 @@ namespace holotrack.Tests.Visual.Interface
                         Width = 300,
                         Text = "content",
                     },
+                    new TestNumberOnlyTextBox
+                    {
+                        Width = 300,
+                        PlaceholderText = "numbers only",
+                    },
                     new TestLabelledTextBox { Width = 300 },
                 }
             });
@@ -42,6 +47,13 @@ namespace holotrack.Tests.Visual.Interface
                 Origin = Anchor.Centre,
                 Margin = new MarginPadding { Horizontal = 5 },
             };
+        }
+
+        private class TestNumberOnlyTextBox : HoloTrackTextBox
+        {
+            private readonly string valid = "0123456789";
+
+            protected override bool CanAddCharacter(char c) => valid.Contains(c);
         }
     }
 }
