@@ -1,13 +1,41 @@
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
 
 namespace holotrack.Graphics.Interface
 {
-    public abstract class LabelledTextBox : GridContainer
+    public abstract class LabelledTextBox : GridContainer, IHasCurrentValue<string>
     {
-        public HoloTrackTextBox TextBox;
         protected abstract Drawable CreateLabel();
+        protected virtual TextBox CreateTextBox() => new HoloTrackTextBox();
+
+        public TextBox TextBox { get; protected set; }
+
+        public Bindable<string> Current
+        {
+            get => TextBox.Current;
+            set => TextBox.Current = value;
+        }
+
+        public string Text
+        {
+            get => TextBox.Text;
+            set => TextBox.Text = value;
+        }
+
+        public string PlaceholderText
+        {
+            get => TextBox.PlaceholderText;
+            set => TextBox.PlaceholderText = value;
+        }
+
+        public bool CommitOnFocusLost
+        {
+            get => TextBox.CommitOnFocusLost;
+            set => TextBox.CommitOnFocusLost = value;
+        }
 
         public LabelledTextBox()
         {
@@ -39,7 +67,7 @@ namespace holotrack.Graphics.Interface
                             CreateLabel(),
                         }
                     },
-                    TextBox = new HoloTrackTextBox { RelativeSizeAxes = Axes.X }
+                    TextBox = CreateTextBox().With(t => t.RelativeSizeAxes = Axes.X),
                 }
             };
         }

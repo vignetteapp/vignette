@@ -30,7 +30,15 @@ namespace holotrack
             dependencies.Cache(cameraManager);
 
             AddFont(Resources, @"Fonts/NotoExtraCond");
-            AddFont(Resources, @"Fonts/NotoExtraCondAlt");
+            AddFont(Resources, @"Fonts/NotoExtraCond-Italic");
+            AddFont(Resources, @"Fonts/NotoExtraCond-Light");
+            AddFont(Resources, @"Fonts/NotoExtraCond-LightItalic");
+            AddFont(Resources, @"Fonts/NotoExtraCond-Bold");
+            AddFont(Resources, @"Fonts/NotoExtraCond-BoldItalic");
+            AddFont(Resources, @"Fonts/NotoExtraCond-Medium");
+            AddFont(Resources, @"Fonts/NotoExtraCond-MediumItalic");
+            AddFont(Resources, @"Fonts/NotoExtraCond-Black");
+            AddFont(Resources, @"Fonts/NotoExtraCond-BlackItalic");
         }
     }
 }
