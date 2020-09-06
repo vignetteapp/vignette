@@ -8,7 +8,7 @@
             "name": "Launch Game",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/holotrack.Desktop/bin/Debug/netcoreapp3.1/holotrack.Desktop.dll",
+            "program": "${workspaceFolder}/holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/holotrack.Desktop.dll",
             "args": [],
             "cwd": "${workspaceFolder}/holotrack.Desktop",
             "console": "internalConsole",
