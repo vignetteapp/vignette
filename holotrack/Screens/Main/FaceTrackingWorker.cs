@@ -3,19 +3,11 @@ using holotrack.Vision;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cubism;
-using CubismFramework;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace holotrack.Screens.Main
 {
-
-    internal enum StandardParameters
-    {
-
-    }
-
     public class FaceTrackingWorker : Component
     {
         public byte[] cameraStream;
@@ -23,12 +15,11 @@ namespace holotrack.Screens.Main
 
         protected override void Update()
         {
-            FaceRecognition fr = FaceRecognition.Create(".models");
             // FIXME: for now we hardcode it to Face ID 0. Next time we need to define targets. Probably set it on ctor.
             var faceDict = FaceTracking.GetLandmark(0, cameraStream);
 
             // eyeblink detector for maximum i m m e r s i o n
-            fr.EyeBlinkDetect(faceDict, out bool leftBlinked, out bool rightBlinked);
+            var eyeBlinkStatus = FaceTracking.GetEyeBlinkStatus(faceDict);
 
             // initialize the face parts
             // TODO: get rid of this unholy variable block. This thing is denser than a isekai MC
@@ -40,13 +31,23 @@ namespace holotrack.Screens.Main
             var upperLip = faceDict[FacePart.TopLip].ToArray();
             var lowerLip = faceDict[FacePart.BottomLip].ToArray();
 
-
-            if (leftBlinked && rightBlinked)
+            // we'll check each eyes individually here.
+            if (!eyeBlinkStatus[0] && !eyeBlinkStatus[1])
             {
-                // have our character blink here, then hand over the  parameter back to the individual parameters.
+                // both eyes have blinked
+            } 
+            else if (!eyeBlinkStatus[0] && eyeBlinkStatus[1])
+            {
+                // a right wink
             }
-
-            // set the parameters here if you have any.
+            else if (eyeBlinkStatus[0] && !eyeBlinkStatus[1])
+            {
+                // a left wink
+            }
+            else
+            {
+                // didn't blink, we'll want our parameters sent here
+            }
 
         }
 

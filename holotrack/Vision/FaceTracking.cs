@@ -11,7 +11,7 @@ namespace holotrack.Vision
     /// </summary>
     public static class FaceTracking
     {
-        internal static FaceRecognition FaceRecognition { get; set; } = FaceRecognition.Create(".models");
+        internal static FaceRecognition FaceRecognition { get; }
 
         /// <summary>
         /// Perform Inference and get all valid targets. Note that you must execute this asynchronously otherwise this will block the main thread.
@@ -45,6 +45,20 @@ namespace holotrack.Vision
             var targetLandmarks = FaceRecognition.FaceLandmark(cameraImage, faceLocations).ToArray();
 
             return targetLandmarks[0];
+        }
+
+        /// <summary>
+        /// Checks if the user's left or right eye blinked.
+        /// </summary>
+        /// <param name="faceLandmark">the landmark to monitor to.</param>
+        /// <returns>A zero-index array which checks if each eye has blinked. Keep in mind that they are indexed as Left-Right, not Right-Left.</returns>
+        public static bool[] GetEyeBlinkStatus (IDictionary<FacePart, IEnumerable<FacePoint>> faceLandmark)
+        {
+            FaceRecognition.EyeBlinkDetect(faceLandmark, out var lEyeBlinked, out var rEyeBlinked);
+
+            bool[] eyeStatus = {lEyeBlinked, rEyeBlinked};
+
+            return eyeStatus;
         }
     }
 }
