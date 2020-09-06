@@ -1,3 +1,4 @@
+using holotrack.Input;
 using holotrack.Screens.Main;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -31,10 +32,14 @@ namespace holotrack
             {
                 TargetDrawSize = new Vector2(1280, 720),
                 Strategy = DrawSizePreservationStrategy.Maximum,
-                Child = globalBufferedContainer = new BufferedContainer
+                Child = new HoloTrackKeyBindingContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = new ScreenStack(new Main()),
+                    Child = globalBufferedContainer = new BufferedContainer
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Child = new ScreenStack(new Main()),
+                    },
                 },
             });
         }
