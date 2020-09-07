@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using osu.Framework.Configuration;
+using osu.Framework.Configuration.Tracking;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 
@@ -19,7 +20,7 @@ namespace holotrack.Configuration
         {
             Set(HoloTrackSetting.BackgroundMode, BackgroundMode.Color);
             Set(HoloTrackSetting.BackgroundColor, new Colour4(0.0f, 1.0f, 0.0f, 1.0f));
-            Set(HoloTrackSetting.BackgroundImage, "");
+            Set(HoloTrackSetting.BackgroundImage, string.Empty);
             Set(HoloTrackSetting.BackgroundScale, 1.0f, 1.0f, 5.0f, 0.1f);
             Set(HoloTrackSetting.BackgroundPositionX, 0.0f);
             Set(HoloTrackSetting.BackgroundPositionY, 0.0f);
@@ -31,7 +32,14 @@ namespace holotrack.Configuration
 
             Set(HoloTrackSetting.MouseDrag, false);
             Set(HoloTrackSetting.MouseWheel, false);
+
+            Set<string>(HoloTrackSetting.CameraDevice, string.Empty);
         }
+
+        public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
+        {
+            new TrackedSetting<string>(HoloTrackSetting.CameraDevice, v => new SettingDescription(v, "Camera Device", string.IsNullOrEmpty(v) ? "Default" : v, v)),
+        };
     }
 
     public enum HoloTrackSetting
@@ -50,11 +58,14 @@ namespace holotrack.Configuration
 
         MouseDrag,
         MouseWheel,
+
+        CameraDevice,
     }
 
     public enum BackgroundMode
     {
         Image,
         Color,
+        Video,
     }
 }
