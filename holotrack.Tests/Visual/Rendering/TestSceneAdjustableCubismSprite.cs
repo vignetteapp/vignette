@@ -14,11 +14,9 @@ namespace holotrack.Tests.Visual.Rendering
             Add(new AdjustableCubismSprite
             {
                 RelativeSizeAxes = Axes.Both,
-                Asset = assets.Get(@"haru.haru.model3.json"),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
             });
-            
         }
     }
 }

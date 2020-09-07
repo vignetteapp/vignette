@@ -30,6 +30,8 @@ namespace holotrack.Overlays.SidePanel
         [Resolved]
         private HoloTrackConfigManager config { get; set; }
 
+        public byte[] TextureData => sprite.CaptureData;
+
         public CameraDisplay()
         {
             Size = new Vector2(260, 195);
