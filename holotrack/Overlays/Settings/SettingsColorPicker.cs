@@ -1,3 +1,4 @@
+using System;
 using holotrack.Graphics;
 using holotrack.Graphics.Interface;
 using holotrack.Graphics.Sprites;
@@ -37,21 +38,30 @@ namespace holotrack.Overlays.Settings
                     CommitOnFocusLost = true,
                 };
 
-                textBox.CurrentValue.BindTo(Current);
+                textBox.CurrentColor.BindTo(Current);
             }
         }
 
         private class LabelledColorTextBox : LabelledTextBox
         {
             private Box box;
-            public readonly Bindable<Colour4> CurrentValue = new Bindable<Colour4>();
+            private ColorTextBox textBox;
+            public readonly Bindable<Colour4> CurrentColor = new Bindable<Colour4>();
 
             public LabelledColorTextBox()
             {
-                TextBox.OnCommit += (sender, changed) => box.Colour = CurrentValue.Value = Colour4.FromHex(Text.PadRight(6, '0'));
+                textBox.CurrentColor.BindTo(CurrentColor);
+                CurrentColor.ValueChanged += e => box.Colour = e.NewValue;
             }
 
-            protected override TextBox CreateTextBox() => new ColorTextBox
+            protected override void LoadComplete()
+            {
+                base.LoadComplete();
+
+                box.Colour = CurrentColor.Value;
+            }
+
+            protected override TextBox CreateTextBox() => textBox = new ColorTextBox
             {
                 RelativeSizeAxes = Axes.X,
             };
@@ -90,14 +100,27 @@ namespace holotrack.Overlays.Settings
 
             private class ColorTextBox : HoloTrackTextBox
             {
+                public readonly Bindable<Colour4> CurrentColor = new Bindable<Colour4>();
+
                 public ColorTextBox()
                 {
-                    Text = @"FFFFFF";
                     PlaceholderText = @"000000";
                     LengthLimit = 6;
+
+                    CurrentColor.ValueChanged += e => Text = Text.PadRight(6, '0');
                 }
 
-                protected override void OnTextCommitted(bool changed) => Text = Text.PadRight(6, '0');
+                protected override void LoadComplete()
+                {
+                    base.LoadComplete();
+
+                    string toHexString(float f) => BitConverter.ToInt32(BitConverter.GetBytes(f), 0).ToString("X2");
+
+                    var c = CurrentColor.Value;
+                    Text = toHexString(c.R) + toHexString(c.G) + toHexString(c.B);
+                }
+
+                protected override void OnTextCommitted(bool changed) => CurrentColor.Value = Colour4.FromHex(Text.PadRight(6, '0'));
 
                 protected override bool CanAddCharacter(char c) => @"0123456789abcdef".Contains(char.ToLowerInvariant(c));
             }

@@ -17,7 +17,6 @@ namespace holotrack.Tests.Visual.Rendering
                 Asset = assets.Get(@"haru.haru.model3.json"),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Adjustable = true,
             });
             
         }

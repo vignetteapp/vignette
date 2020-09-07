@@ -5,7 +5,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Screens;
-using osuTK;
 
 namespace holotrack
 {
@@ -30,8 +29,6 @@ namespace holotrack
 
             Add(new DrawSizePreservingFillContainer
             {
-                TargetDrawSize = new Vector2(1280, 720),
-                Strategy = DrawSizePreservationStrategy.Maximum,
                 Child = new HoloTrackKeyBindingContainer
                 {
                     RelativeSizeAxes = Axes.Both,

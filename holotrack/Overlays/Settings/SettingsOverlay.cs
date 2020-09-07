@@ -28,7 +28,7 @@ namespace holotrack.Overlays.Settings
                     RelativeSizeAxes = Axes.Both,
                     ColumnDimensions = new[]
                     {
-                        new Dimension(GridSizeMode.Absolute, 230),
+                        new Dimension(GridSizeMode.Absolute, 200),
                         new Dimension(GridSizeMode.Distributed),
                     },
                     Content = new[]

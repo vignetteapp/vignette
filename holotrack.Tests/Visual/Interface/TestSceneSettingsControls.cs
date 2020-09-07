@@ -49,7 +49,7 @@ namespace holotrack.Tests.Visual.Interface
                     new SettingsColorPicker
                     {
                         Label = "Color Picker",
-                        Bindable = new Bindable<Colour4>(),
+                        Bindable = new Bindable<Colour4> { Value = Colour4.Black },
                     },
                     new SettingsSliderBar<float>
                     {

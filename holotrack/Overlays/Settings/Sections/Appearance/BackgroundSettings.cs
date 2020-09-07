@@ -1,6 +1,7 @@
+using holotrack.Configuration;
 using holotrack.Graphics.Interface;
 using holotrack.Graphics.Sprites;
-using osu.Framework.Bindables;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -9,7 +10,8 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
 {
     public class BackgroundSettings : SettingsSubSection
     {
-        public BackgroundSettings()
+        [BackgroundDependencyLoader]
+        private void load(HoloTrackConfigManager config)
         {
             HeaderText = @"Background Settings";
             SubHeaderText = @"Customize your scenery";
@@ -17,10 +19,13 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
             Add(new SettingsColorPicker
             {
                 Label = @"Background Color",
-                Bindable = new Bindable<Colour4>
-                {
-                    Default = Colour4.Green,
-                },
+                Bindable = config.GetBindable<Colour4>(HoloTrackSetting.BackgroundColor),
+            });
+
+            Add(new SettingsSliderBar<float>
+            {
+                Label = @"Scale",
+                Bindable = config.GetBindable<float>(HoloTrackSetting.BackgroundScale),
             });
 
             Add(new FillFlowContainer
@@ -52,13 +57,13 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                                 {
                                     Width = 0.75f,
                                     BadgeText = @"X",
-                                    Bindable = new BindableFloat(),
+                                    Bindable = config.GetBindable<float>(HoloTrackSetting.BackgroundPositionX),
                                 },
                                 new SettingsBadgedNumberBox<float>
                                 {
                                     Width = 0.75f,
                                     BadgeText = @"Y",
-                                    Bindable = new BindableFloat(),
+                                    Bindable = config.GetBindable<float>(HoloTrackSetting.BackgroundPositionY),
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                 },
@@ -68,25 +73,11 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                 }
             });
 
-            Add(new SettingsSliderBar<float>
-            {
-                Label = @"Scale",
-                Bindable = new BindableFloat
-                {
-                    MinValue = 1.0f,
-                    MaxValue = 5.0f,
-                    Precision = 0.1f,
-                    Default = 1.0f,
-                    Value = 1.0f,
-                }
-            });
-
             Add(new HoloTrackButton
             {
                 Text = @"Reset",
                 BackgroundColor = Colour4.Red,
                 RelativeSizeAxes = Axes.X,
-                Action = () => {},
             });
         }
     }
