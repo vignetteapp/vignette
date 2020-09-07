@@ -5,6 +5,8 @@ namespace holotrack.Overlays.SidePanel
 {
     public class SidePanelOverlay : FocusedOverlayContainer
     {
+        public readonly CameraDisplay Camera;
+
         private const float panel_padding = 10;
 
         public SidePanelOverlay()
@@ -36,7 +38,7 @@ namespace holotrack.Overlays.SidePanel
                     },
                     new Drawable[]
                     {
-                        new CameraDisplay
+                        Camera = new CameraDisplay
                         {
                             Anchor = Anchor.BottomRight,
                             Origin = Anchor.BottomRight,
