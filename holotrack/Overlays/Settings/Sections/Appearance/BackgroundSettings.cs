@@ -8,7 +8,7 @@ using osuTK;
 
 namespace holotrack.Overlays.Settings.Sections.Appearance
 {
-    public class BackgroundSettings : SettingsSubSection
+    public class BackgroundSettings : SettingsSubsection
     {
         [BackgroundDependencyLoader]
         private void load(HoloTrackConfigManager config)

@@ -1,6 +1,6 @@
 namespace holotrack.Overlays.Settings.Sections.Appearance
 {
-    public class ModelSelect : SettingsSubSection
+    public class ModelSelect : SettingsSubsection
     {
         public ModelSelect()
         {
