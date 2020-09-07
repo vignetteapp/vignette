@@ -1,4 +1,5 @@
 using holotrack.Graphics;
+using holotrack.Graphics.Sprites;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -7,29 +8,7 @@ namespace holotrack.Overlays.Settings
 {
     public abstract class SettingsSubsection : FillFlowContainer
     {
-        private TextFlowContainer header;
-        private string headerText;
-        public string HeaderText
-        {
-            get => headerText;
-            set
-            {
-                headerText = value;
-                header.AddText($"{headerText}\n", s => s.Font = HoloTrackFont.Black.With(size: 20));
-            }
-        }
-
-        private string subHeaderText;
-        public string SubHeaderText
-        {
-            get => subHeaderText;
-            set
-            {
-                subHeaderText = value;
-                header.AddText(subHeaderText, s => s.Font = HoloTrackFont.Medium.With(size: 16));
-            }
-        }
-
+        public abstract string Header { get; }
 
         protected FillFlowContainer Items;
         protected override Container<Drawable> Content => Items;
@@ -43,10 +22,10 @@ namespace holotrack.Overlays.Settings
 
             InternalChildren = new Drawable[]
             {
-                header = new TextFlowContainer(s => s.Font = HoloTrackFont.Default)
+                new HoloTrackSpriteText
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
+                    Text = Header,
+                    Font = HoloTrackFont.Black.With(size: 20),
                 },
                 Items = new FillFlowContainer
                 {

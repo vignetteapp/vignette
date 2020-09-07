@@ -10,12 +10,11 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
 {
     public class BackgroundSettings : SettingsSubsection
     {
+        public override string Header => @"Background Settings";
+
         [BackgroundDependencyLoader]
         private void load(HoloTrackConfigManager config)
         {
-            HeaderText = @"Background Settings";
-            SubHeaderText = @"Customize your scenery";
-
             Add(new SettingsColorPicker
             {
                 Label = @"Background Color",
