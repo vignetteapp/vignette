@@ -5,7 +5,7 @@ using osuTK;
 
 namespace holotrack.Overlays.Settings
 {
-    public abstract class SettingsSubSection : FillFlowContainer
+    public abstract class SettingsSubsection : FillFlowContainer
     {
         private TextFlowContainer header;
         private string headerText;
@@ -34,7 +34,7 @@ namespace holotrack.Overlays.Settings
         protected FillFlowContainer Items;
         protected override Container<Drawable> Content => Items;
 
-        public SettingsSubSection()
+        public SettingsSubsection()
         {
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
