@@ -3,7 +3,6 @@ using holotrack.Overlays.Settings;
 using holotrack.Overlays.SidePanel;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Cubism;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Screens;
 
@@ -12,26 +11,21 @@ namespace holotrack.Screens.Main
     public class Main : Screen, IKeyBindingHandler<HoloTrackAction>
     {
         private SettingsOverlay settings = new SettingsOverlay();
-        private SidePanelOverlay panel = new SidePanelOverlay();
 
-        [BackgroundDependencyLoader]
-        private void load(CubismAssetStore assets)
+        [Cached]
+        private SidePanelOverlay sidePanel = new SidePanelOverlay();
+
+        [Cached]
+        private AdjustableCubismSprite model = new AdjustableCubismSprite();
+
+        protected override void LoadComplete()
         {
-
             AddRangeInternal(new Drawable[]
             {
                 new AdjustableBackground(),
-                new AdjustableCubismSprite
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Asset = assets.Get(@"haru_greeter.haru_greeter.model3.json"),
-                },
+                model,
                 settings,
-                panel.With(p =>
-                {
-                    p.Anchor = Anchor.BottomRight;
-                    p.Origin = Anchor.BottomRight;
-                }),
+                sidePanel
             });
         }
 
@@ -44,7 +38,7 @@ namespace holotrack.Screens.Main
                     return true;
 
                 case HoloTrackAction.ToggleCamera:
-                    panel.ToggleVisibility();
+                    sidePanel.ToggleVisibility();
                     return true;
                 
                 default:
