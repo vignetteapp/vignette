@@ -39,19 +39,26 @@ namespace holotrack.Graphics.Interface
         where T : struct, IEquatable<T>, IComparable<T>, IConvertible
     {
         public readonly BindableNumber<T> CurrentNumber = new BindableNumber<T>();
-        private string defaultValue => default(T).ToString(NumberFormatInfo.InvariantInfo);
+        private static string default_string = default(T).ToString(NumberFormatInfo.InvariantInfo);
 
         public NumberTextBox()
         {
-            Text = defaultValue;
+            CurrentNumber.ValueChanged += e => Text = e.NewValue.ToString(NumberFormatInfo.InvariantInfo);
         }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            Text = CurrentNumber.Value.ToString(NumberFormatInfo.InvariantInfo);
+        }
+
         protected override void OnTextCommitted(bool changed)
         {
             if (string.IsNullOrEmpty(Text))
-                Text = defaultValue;
+                Text = default_string;
 
-            CurrentNumber.Value = (T)Convert.ChangeType(string.IsNullOrEmpty(Text) ? defaultValue : Text, typeof(T));
-            Text = CurrentNumber.Value.ToString(NumberFormatInfo.InvariantInfo);
+            CurrentNumber.Value = (T)Convert.ChangeType(string.IsNullOrEmpty(Text) ? default_string : Text, typeof(T));
         }
 
         protected override bool CanAddCharacter(char c)

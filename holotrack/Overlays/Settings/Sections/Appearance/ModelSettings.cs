@@ -1,6 +1,7 @@
+using holotrack.Configuration;
 using holotrack.Graphics.Interface;
 using holotrack.Graphics.Sprites;
-using osu.Framework.Bindables;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -9,10 +10,17 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
 {
     public class ModelSettings : SettingsSubSection
     {
-        public ModelSettings()
+        [BackgroundDependencyLoader]
+        private void load(HoloTrackConfigManager config)
         {
             HeaderText = @"Model Settings";
             SubHeaderText = @"Make adjustments to the Live2D model";
+
+            Add(new SettingsSliderBar<float>
+            {
+                Label = @"Scale",
+                Bindable = config.GetBindable<float>(HoloTrackSetting.ModelScale)
+            });
 
             Add(new FillFlowContainer
             {
@@ -43,13 +51,13 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                                 {
                                     Width = 0.75f,
                                     BadgeText = @"X",
-                                    Bindable = new BindableFloat(),
+                                    Bindable = config.GetBindable<float>(HoloTrackSetting.ModelPositionX),
                                 },
                                 new SettingsBadgedNumberBox<float>
                                 {
                                     Width = 0.75f,
                                     BadgeText = @"Y",
-                                    Bindable = new BindableFloat(),
+                                    Bindable = config.GetBindable<float>(HoloTrackSetting.ModelPositionY),
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                 },
@@ -57,31 +65,18 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                         },
                     }
                 }
-            });
-
-            Add(new SettingsSliderBar<float>
-            {
-                Label = @"Scale",
-                Bindable = new BindableFloat
-                {
-                    MinValue = 0.5f,
-                    MaxValue = 10.0f,
-                    Precision = 0.1f,
-                    Default = 1.0f,
-                    Value = 1.0f,
-                },
-            });
+            }); 
 
             Add(new SettingsCheckbox
             {
                 Label = @"Mouse drag moves the model",
-                Bindable = new BindableBool(),
+                Bindable = config.GetBindable<bool>(HoloTrackSetting.MouseDrag),
             });
 
             Add(new SettingsCheckbox
             {
                 Label = @"Mouse wheel scales the model",
-                Bindable = new BindableBool(),
+                Bindable = config.GetBindable<bool>(HoloTrackSetting.MouseWheel),
             });
 
             Add(new HoloTrackButton
@@ -89,7 +84,6 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                 Text = @"Reset",
                 BackgroundColor = Colour4.Red,
                 RelativeSizeAxes = Axes.X,
-                Action = () => {},
             });
         }
     }

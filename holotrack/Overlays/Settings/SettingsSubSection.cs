@@ -26,7 +26,7 @@ namespace holotrack.Overlays.Settings
             set
             {
                 subHeaderText = value;
-                header.AddText(subHeaderText, s => s.Font = HoloTrackFont.Default.With(size: 12));
+                header.AddText(subHeaderText, s => s.Font = HoloTrackFont.Medium.With(size: 16));
             }
         }
 

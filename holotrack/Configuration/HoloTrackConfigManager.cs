@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
-using osuTK;
 
 namespace holotrack.Configuration
 {
@@ -19,7 +18,7 @@ namespace holotrack.Configuration
         protected override void InitialiseDefaults()
         {
             Set(HoloTrackSetting.BackgroundMode, BackgroundMode.Color);
-            Set(HoloTrackSetting.BackgroundColor, Colour4.Green);
+            Set(HoloTrackSetting.BackgroundColor, new Colour4(0.0f, 1.0f, 0.0f, 1.0f));
             Set(HoloTrackSetting.BackgroundImage, "");
             Set(HoloTrackSetting.BackgroundScale, 1.0f, 1.0f, 5.0f, 0.1f);
             Set(HoloTrackSetting.BackgroundPositionX, 0.0f);

@@ -1,3 +1,6 @@
+using holotrack.Configuration;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cubism;
 using osu.Framework.Input.Events;
@@ -8,10 +11,39 @@ namespace holotrack.Screens.Main
 {
     public class AdjustableCubismSprite : CubismSprite
     {
-        public bool Adjustable;
+        private Bindable<float> userScale;
+        private Bindable<float> userXOffset;
+        private Bindable<float> userYOffset;
+        private Bindable<bool> allowMouseDrag;
+        private Bindable<bool> allowMouseScroll;
+
         public float ScrollSpeed = 5;
         public double MinScale = 0.1;
         public double MaxScale = 3;
+
+        [BackgroundDependencyLoader]
+        private void load(HoloTrackConfigManager config)
+        {
+            userScale = config.GetBindable<float>(HoloTrackSetting.ModelScale);
+            userXOffset = config.GetBindable<float>(HoloTrackSetting.ModelPositionX);
+            userYOffset = config.GetBindable<float>(HoloTrackSetting.ModelPositionY);
+            
+            allowMouseDrag = config.GetBindable<bool>(HoloTrackSetting.MouseDrag);
+            allowMouseScroll = config.GetBindable<bool>(HoloTrackSetting.MouseWheel);
+
+            userScale.ValueChanged += _ => updateRenderer();
+            userXOffset.ValueChanged += _ => updateRenderer();
+            userYOffset.ValueChanged += _ => updateRenderer();
+
+            updateRenderer();
+        }
+
+        private void updateRenderer()
+        {
+            Renderer.Translation = new Vector2(userXOffset.Value, userYOffset.Value);
+            Renderer.Scale = new Vector2(userScale.Value);
+            Invalidate(Invalidation.DrawNode);
+        }
 
         protected override bool OnDragStart(DragStartEvent e) => true;
 
@@ -19,21 +51,16 @@ namespace holotrack.Screens.Main
         {
             base.OnDrag(e);
 
-            if (!Adjustable || e.Button == MouseButton.Right) return;
+            if (!allowMouseDrag.Value || (e.Button == MouseButton.Right)) return;
 
-            Renderer.Translation += e.Delta * 2;
-            Invalidate(Invalidation.DrawNode);
+            userXOffset.Value += e.Delta.X * 2;
+            userYOffset.Value += e.Delta.Y * 2;
         }
 
         protected override bool OnScroll(ScrollEvent e)
         {
-            if (Adjustable)
-            {
-                Renderer.Scale += new Vector2(e.ScrollDelta.Y / ScrollSpeed);
-                Renderer.Scale.X = (float)MathHelper.Clamp(Renderer.Scale.X, MinScale, MaxScale);
-                Renderer.Scale.Y = (float)MathHelper.Clamp(Renderer.Scale.Y, MinScale, MaxScale);
-                Invalidate(Invalidation.DrawNode);
-            }
+            if (allowMouseScroll.Value)
+                userScale.Value += e.ScrollDelta.Y / ScrollSpeed;
 
             return base.OnScroll(e);
         }
