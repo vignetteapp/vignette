@@ -10,12 +10,11 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
 {
     public class ModelSettings : SettingsSubsection
     {
+        public override string Header => @"Model Settings";
+
         [BackgroundDependencyLoader]
         private void load(HoloTrackConfigManager config)
         {
-            HeaderText = @"Model Settings";
-            SubHeaderText = @"Make adjustments to the Live2D model";
-
             Add(new SettingsSliderBar<float>
             {
                 Label = @"Scale",
