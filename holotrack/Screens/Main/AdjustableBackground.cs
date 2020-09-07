@@ -5,13 +5,14 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Graphics.Video;
 using osuTK;
 
 namespace holotrack.Screens.Main
 {
     public class AdjustableBackground : Container
     {
-        private readonly Sprite background;
+        private readonly Sprite sprite;
         private Bindable<float> userScale;
         private Bindable<float> userXOffset;
         private Bindable<float> userYOffset;
@@ -21,7 +22,8 @@ namespace holotrack.Screens.Main
 
         public AdjustableBackground()
         {
-            Child = background = new Sprite
+            RelativeSizeAxes = Axes.Both;
+            Child = sprite = new Sprite
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -54,8 +56,8 @@ namespace holotrack.Screens.Main
 
         private void updateTranslation()
         {
-            background.Position = new Vector2(userXOffset.Value, userYOffset.Value);
-            background.Size = new Vector2(userScale.Value);
+            sprite.Position = new Vector2(userXOffset.Value, userYOffset.Value);
+            sprite.Size = new Vector2(userScale.Value);
         }
 
         private void updateTexture()
@@ -63,8 +65,8 @@ namespace holotrack.Screens.Main
             switch (backgroundMode.Value)
             {
                 case BackgroundMode.Color:
-                    background.Texture = Texture.WhitePixel;
-                    background.Colour = userColor.Value;
+                    sprite.Texture = Texture.WhitePixel;
+                    sprite.Colour = userColor.Value;
                     break;
             }
         }
