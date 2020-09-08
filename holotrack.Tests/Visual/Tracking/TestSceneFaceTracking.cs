@@ -16,6 +16,8 @@ namespace holotrack.Tests.Visual.Tracking
         private readonly FaceTracker tracker;
         private readonly Container faceLocationsContainer;
         private readonly CameraSprite camera;
+        private double lastTrackingTime;
+        private double trackerDeltaTime;
 
         public TestSceneFaceTracking()
         {
@@ -51,6 +53,11 @@ namespace holotrack.Tests.Visual.Tracking
             };
 
             tracker.StartTracking(camera);
+            tracker.OnTrackerUpdate += _ =>
+            {
+                trackerDeltaTime = Time.Current - lastTrackingTime;
+                lastTrackingTime = Time.Current;
+            };
         }
 
         protected override void Update()
@@ -58,7 +65,7 @@ namespace holotrack.Tests.Visual.Tracking
             if (!status.IsLoaded && !tracker.IsLoaded)
                 return;
             
-            status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking}";
+            status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(trackerDeltaTime / 1000).ToString("0.0000")} sec(s)";
 
             faceLocationsContainer.Clear();
 

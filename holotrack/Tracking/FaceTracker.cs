@@ -3,6 +3,7 @@ using FaceRecognitionDotNet.Extensions;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Camera;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -23,6 +24,10 @@ namespace holotrack.Tracking
         private readonly CancellationTokenSource trackerCancellationSource = new CancellationTokenSource();
 
         private List<Face> faces;
+
+        /// <summary>
+        /// A collection of tracked faces
+        /// </summary>
         public IReadOnlyList<Face> Faces => faces;
 
         /// <summary>
@@ -31,6 +36,9 @@ namespace holotrack.Tracking
         public int Tracked => Faces?.Count ?? 0;
  
         public bool IsTracking => Tracked > 0;
+
+        public event Action<IReadOnlyList<Face>> OnTrackerUpdate;
+
 
         [BackgroundDependencyLoader]
         private void load(FaceRecognition faceRecognition)
@@ -71,6 +79,8 @@ namespace holotrack.Tracking
                         BoundingBox = new RectangleF((float)loc.Left, (float)loc.Top, (float)(loc.Right - loc.Left), (float)(loc.Bottom - loc.Top))
                     });
                 }
+
+                OnTrackerUpdate?.Invoke(faces);
             }
         }
 
