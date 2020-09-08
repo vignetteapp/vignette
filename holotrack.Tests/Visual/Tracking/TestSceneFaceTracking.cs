@@ -68,22 +68,34 @@ namespace holotrack.Tests.Visual.Tracking
             {
                 foreach (var face in tracker.Faces.ToList())
                 {
-                    faceLocationsContainer.Add(new OutlinedBox
+                    OutlinedBox outline;
+                    faceLocationsContainer.Add(outline = new OutlinedBox
                     {
                         X = face.BoundingBox.X,
                         Y = face.BoundingBox.Y,
                         Width = face.BoundingBox.Width,
                         Height = face.BoundingBox.Height,
-                        Landmarks = face.Landmarks
                     });
+
+                    foreach (var part in face.Landmarks.Values)
+                    {
+                        foreach (var point in part)
+                        {
+                            faceLocationsContainer.Add(new Circle
+                            {
+                                X = (float)point.Point.X,
+                                Y = (float)point.Point.Y,
+                                Size = new Vector2(10),
+                                Colour = Colour4.Blue,
+                            });
+                        }
+                    }
                 }
             }
         }
 
         private class OutlinedBox : Container
         {
-            public IDictionary<FacePart, IEnumerable<FacePoint>> Landmarks;
-
             public OutlinedBox()
             {
                 Masking = true;
@@ -94,23 +106,6 @@ namespace holotrack.Tests.Visual.Tracking
                     Colour = Colour4.Transparent,
                     RelativeSizeAxes = Axes.Both,
                 };
-
-                if (Landmarks != null)
-                {
-                    foreach (var part in Landmarks.Values)
-                    {
-                        foreach (var point in part)
-                        {
-                            Add(new Circle
-                            {
-                                X = (float)point.Point.X,
-                                Y = (float)point.Point.Y,
-                                Size = new Vector2(5),
-                                Colour = Colour4.Blue,
-                            });
-                        }
-                    }
-                }
             }
         }
     }
