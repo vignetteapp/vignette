@@ -1,5 +1,6 @@
 using System.Linq;
 using holotrack.Tracking;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Camera;
 using osu.Framework.Graphics.Containers;
@@ -14,7 +15,7 @@ namespace holotrack.Tests.Visual.Tracking
     {
         private readonly SpriteText status;
         private readonly FaceTracker tracker;
-        private readonly Container faceLocationsContainer;
+        private readonly Container<TrackingBox> faceLocationsContainer;
         private readonly CameraSprite camera;
         private double lastTrackingTime;
         private double trackerDeltaTime;
@@ -28,7 +29,7 @@ namespace holotrack.Tests.Visual.Tracking
                 {
                     CameraID = 0,
                 },
-                faceLocationsContainer = new Container
+                faceLocationsContainer = new Container<TrackingBox>
                 {
                     Name = @"face locations",
                     Size = new Vector2(640, 480),
@@ -67,41 +68,34 @@ namespace holotrack.Tests.Visual.Tracking
             
             status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(trackerDeltaTime / 1000).ToString("0.0000")} sec(s)";
 
-            faceLocationsContainer.Clear();
-
             if (tracker.Faces != null)
             {
-                foreach (var face in tracker.Faces.ToList())
-                {
-                    OutlinedBox outline;
-                    faceLocationsContainer.Add(outline = new OutlinedBox
-                    {
-                        X = face.BoundingBox.X,
-                        Y = face.BoundingBox.Y,
-                        Width = face.BoundingBox.Width,
-                        Height = face.BoundingBox.Height,
-                    });
+                var faces = tracker.Faces.ToList();
 
-                    foreach (var part in face.Landmarks.Values)
-                    {
-                        foreach (var point in part)
-                        {
-                            faceLocationsContainer.Add(new Circle
-                            {
-                                X = (float)point.Point.X,
-                                Y = (float)point.Point.Y,
-                                Size = new Vector2(10),
-                                Colour = Colour4.Blue,
-                            });
-                        }
-                    }
-                }
+                while (faceLocationsContainer.Children.Count < faces.Count)
+                    faceLocationsContainer.Add(new TrackingBox());
+
+                while (faceLocationsContainer.Children.Count > faces.Count)
+                    faceLocationsContainer.Remove(faceLocationsContainer.First());
+
+                faceLocationsContainer.ForEach(box =>
+                {
+                    var index = faceLocationsContainer.IndexOf(box);
+                    var face = faces[index];
+
+                    box.MoveTo(new Vector2(face.BoundingBox.X, face.BoundingBox.Y), box.FirstTrack ? 0 : 200, Easing.OutQuint);
+                    box.ResizeTo(new Vector2(face.BoundingBox.Width, face.BoundingBox.Height), box.FirstTrack ? 0 : 200, Easing.OutQuint);
+
+                    box.FirstTrack = false;
+                });
             }
         }
 
-        private class OutlinedBox : Container
+        private class TrackingBox : Container
         {
-            public OutlinedBox()
+            public bool FirstTrack = true;
+
+            public TrackingBox()
             {
                 Masking = true;
                 BorderColour = Colour4.Red;
