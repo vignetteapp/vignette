@@ -1,3 +1,4 @@
+using FaceRecognitionDotNet;
 using holotrack.Configuration;
 using osu.Framework;
 using osu.Framework.Allocation;
@@ -35,6 +36,9 @@ namespace holotrack
             dependencies.Cache(cameraManager);
 
             dependencies.Cache(LocalConfig);
+
+            // Temporarily read the models in the output directory. We'll have a better support for embedded resources at a later date.
+            dependencies.Cache(FaceRecognition.Create($"{RuntimeInfo.StartupDirectory}/models"));
 
             AddFont(Resources, @"Fonts/NotoExtraCond");
             AddFont(Resources, @"Fonts/NotoExtraCond-Italic");
