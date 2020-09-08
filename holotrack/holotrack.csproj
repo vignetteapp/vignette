@@ -10,9 +10,13 @@
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0.2"/>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\**\*"/>
+    <EmbeddedResource Include="Resources\**\*" Exclude="Resources\Models\**\*"/>
     <None Include="NativeLibs\runtimes\$(CubismFrameworkRuntime)\**\*">
       <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Models\**\*">
+      <Link>models/%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
