@@ -1,8 +1,10 @@
-﻿using FaceRecognitionDotNet;
+﻿using DlibDotNet;
+using FaceRecognitionDotNet;
 using FaceRecognitionDotNet.Extensions;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Camera;
+using osuTK.Graphics.ES20;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,6 +39,20 @@ namespace holotrack.Tracking
  
         public bool IsTracking => Tracked > 0;
 
+        float _scale = float.MaxValue;
+        public float DetectScale
+        {
+            get => _scale;
+            set =>_scale = value;
+        }
+
+        int _maxSize = 350;
+        public int MaxSize
+        {
+            get => _maxSize;
+            set => _maxSize = value;
+        }
+
         public event Action<IReadOnlyList<Face>> OnTrackerUpdate;
 
 
@@ -63,7 +79,17 @@ namespace holotrack.Tracking
                 if (camera?.CaptureData == null)
                     continue;
 
-                var bitmap = new Bitmap(new MemoryStream(camera.CaptureData));
+                var mstream = new MemoryStream(camera.CaptureData);
+                var raw_bitmap = new Bitmap(mstream);
+
+                var scale = _scale;
+                if (scale == float.MaxValue)
+                {
+                    scale = (float)_maxSize / Math.Max(_maxSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height));
+                }
+
+                var bitmap = new Bitmap(raw_bitmap, new System.Drawing.Size((int)(raw_bitmap.Width * scale), (int)(raw_bitmap.Height * scale)));
+
                 var image = FaceRecognition.LoadImage(bitmap);
                 var locations = faceRecognition.FaceLocations(image).ToArray();
                 var landmarks = faceRecognition.FaceLandmark(image, locations).ToArray();
@@ -73,12 +99,34 @@ namespace holotrack.Tracking
                 for (int i = 0; i < locations.Length; i++)
                 {
                     var loc = locations[i];
+
+                    var marks = landmarks[i];
+                    var new_marks = new Dictionary<FacePart, IEnumerable<FacePoint>>();
+                    foreach(var key in marks.Keys)
+                    {
+                        var point_list = new List<FacePoint>();
+                        foreach(var point in marks[key])
+                        {
+                            point_list.Add(new FacePoint(
+                                new FaceRecognitionDotNet.Point((int)(point.Point.X / scale), (int)(point.Point.Y / scale)),
+                                point.Index
+                            ));
+                        }
+                        new_marks.Add(key, point_list);
+                    }
+
                     faces.Add(new Face
                     {
-                        Landmarks = landmarks[i],
-                        BoundingBox = new RectangleF((float)loc.Left, (float)loc.Top, (float)(loc.Right - loc.Left), (float)(loc.Bottom - loc.Top))
+                        Landmarks = new_marks,
+                        BoundingBox = new RectangleF((float)loc.Left / scale, (float)loc.Top / scale, 
+                                                     (float)(loc.Right - loc.Left) / scale, (float)(loc.Bottom - loc.Top) / scale)
                     });
                 }
+
+                image.Dispose();
+                bitmap.Dispose();
+                raw_bitmap.Dispose();
+                mstream.Dispose();
 
                 OnTrackerUpdate?.Invoke(faces);
             }
