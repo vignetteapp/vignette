@@ -21,3 +21,7 @@ TBA
 ## License
 
 holotrack is Copyright &copy; 2020 Ayane Satomi and the holotrack Authors, licensed under MIT. For the full license text please see the [LICENSE](./LICENSE) file in this repository.
+
+## Commercial Use
+
+While holotrack is covered by MIT, commercial usage on a corporate setting is prohibited. Please get in touch with us if you want to use holotrack for your company.
