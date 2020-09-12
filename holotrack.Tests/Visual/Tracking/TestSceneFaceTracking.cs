@@ -17,14 +17,12 @@ namespace holotrack.Tests.Visual.Tracking
         private readonly FaceTracker tracker;
         private readonly Container<TrackingBox> faceLocationsContainer;
         private readonly CameraSprite camera;
-        private double lastTrackingTime;
-        private double trackerDeltaTime;
 
         public TestSceneFaceTracking()
         {
             Children = new Drawable[]
             {
-                tracker = new FaceTracker(),
+                tracker = new FaceRecognitionDotNetFaceTracker(),
                 camera = new CameraSprite
                 {
                     CameraID = 0,
@@ -54,41 +52,31 @@ namespace holotrack.Tests.Visual.Tracking
             };
 
             tracker.StartTracking(camera);
-            tracker.OnTrackerUpdate += _ =>
-            {
-                trackerDeltaTime = Time.Current - lastTrackingTime;
-                lastTrackingTime = Time.Current;
-            };
         }
 
         protected override void Update()
         {
             if (!status.IsLoaded && !tracker.IsLoaded)
                 return;
-            
-            status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(trackerDeltaTime / 1000).ToString("0.0000")} sec(s)";
 
-            if (tracker.Faces != null)
+            status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(tracker.UpdateDelta / 1000).ToString("0.0000")} sec(s)";
+
+            while (faceLocationsContainer.Children.Count < tracker.Tracked)
+                faceLocationsContainer.Add(new TrackingBox());
+
+            while (faceLocationsContainer.Children.Count > tracker.Tracked)
+                faceLocationsContainer.Remove(faceLocationsContainer.First());
+
+            faceLocationsContainer.ForEach(box =>
             {
-                var faces = tracker.Faces.ToList();
+                var index = faceLocationsContainer.IndexOf(box);
+                var face = tracker.Faces[index];
 
-                while (faceLocationsContainer.Children.Count < faces.Count)
-                    faceLocationsContainer.Add(new TrackingBox());
+                box.MoveTo(face.Bounds.Location, box.FirstTrack ? 0 : 200, Easing.OutQuint);
+                box.ResizeTo(face.Bounds.Size, box.FirstTrack ? 0 : 200, Easing.OutQuint);
 
-                while (faceLocationsContainer.Children.Count > faces.Count)
-                    faceLocationsContainer.Remove(faceLocationsContainer.First());
-
-                faceLocationsContainer.ForEach(box =>
-                {
-                    var index = faceLocationsContainer.IndexOf(box);
-                    var face = faces[index];
-
-                    box.MoveTo(new Vector2(face.BoundingBox.X, face.BoundingBox.Y), box.FirstTrack ? 0 : 200, Easing.OutQuint);
-                    box.ResizeTo(new Vector2(face.BoundingBox.Width, face.BoundingBox.Height), box.FirstTrack ? 0 : 200, Easing.OutQuint);
-
-                    box.FirstTrack = false;
-                });
-            }
+                box.FirstTrack = false;
+            });
         }
 
         private class TrackingBox : Container

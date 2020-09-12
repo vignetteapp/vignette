@@ -1,86 +1,93 @@
-﻿using FaceRecognitionDotNet;
-using FaceRecognitionDotNet.Extensions;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Camera;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Camera;
 
 namespace holotrack.Tracking
 {
     /// <summary>
     /// A component responsible for processing image data for Facial Recognition
     /// </summary>
-    public class FaceTracker : Component
+    public abstract class FaceTracker : Component
     {
-        private CameraSprite camera { get; set; }
-        private FaceRecognition faceRecognition { get; set; }
+        protected CameraSprite Camera { get; private set; }
+        
         private Task trackerTask;
         private readonly CancellationTokenSource trackerCancellationSource = new CancellationTokenSource();
 
-        private List<Face> faces;
+        private List<Face> faces = new List<Face>();
 
         /// <summary>
         /// A collection of tracked faces
         /// </summary>
-        public IReadOnlyList<Face> Faces => faces;
+        public IReadOnlyList<Face> Faces 
+        {
+            get
+            {
+                lock (faces) return faces.ToArray();
+            }
+        }
 
         /// <summary>
         /// The number of faces being tracked
         /// </summary>
-        public int Tracked => Faces?.Count ?? 0;
- 
-        public bool IsTracking => Tracked > 0;
-
-        public event Action<IReadOnlyList<Face>> OnTrackerUpdate;
-
-
-        [BackgroundDependencyLoader]
-        private void load(FaceRecognition faceRecognition)
+        public int Tracked
         {
-            this.faceRecognition = faceRecognition;
-            this.faceRecognition.CustomEyeBlinkDetector = new EyeAspectRatioLargeEyeBlinkDetector(0.2, 0.2);
+            get
+            {
+                lock (faces) return faces.Count;
+            }
+        }
 
+        /// <summary>
+        /// A check if there is at least one face is being tracked
+        /// </summary>
+        public bool IsTracking
+        {
+            get
+            {
+                lock (faces) return faces.Count > 0;
+            }
+        }
+
+        private double lastTrack;
+
+        /// <summary>
+        /// Time between <see cref="UpdateState"/> calls in milliseconds
+        /// </summary>
+        public double UpdateDelta { get; private set; }
+
+        public virtual void StartTracking(CameraSprite camera) => Camera = camera;
+        public virtual void StopTracking() => Camera = null;
+
+        /// <summary>
+        /// Face Tracking update loop. This loop starts after <see cref="LoadComplete()"/>
+        /// </summary>
+        protected abstract void UpdateState(List<Face> faces);
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
             trackerTask = Task.Factory.StartNew(() => trackerLoop(trackerCancellationSource.Token), trackerCancellationSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        public void StartTracking(CameraSprite camera) => this.camera = camera;
-
-        public void StopTracking() => camera = null;
-
         private void trackerLoop(CancellationToken cancellationToken)
         {
-            while (true)
+            while(true)
             {
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                if (camera?.CaptureData == null)
+                if (Camera?.CaptureData == null)
                     continue;
 
-                var bitmap = new Bitmap(new MemoryStream(camera.CaptureData));
-                var image = FaceRecognition.LoadImage(bitmap);
-                var locations = faceRecognition.FaceLocations(image).ToArray();
-                var landmarks = faceRecognition.FaceLandmark(image, locations).ToArray();
+                var faceList = new List<Face>();
+                UpdateState(faceList);
+                faces = faceList;
 
-                faces = new List<Face>();
-
-                for (int i = 0; i < locations.Length; i++)
-                {
-                    var loc = locations[i];
-                    faces.Add(new Face
-                    {
-                        Landmarks = landmarks[i],
-                        BoundingBox = new RectangleF((float)loc.Left, (float)loc.Top, (float)(loc.Right - loc.Left), (float)(loc.Bottom - loc.Top))
-                    });
-                }
-
-                OnTrackerUpdate?.Invoke(faces);
+                UpdateDelta = Time.Current - lastTrack;
+                lastTrack = Time.Current;
             }
         }
 
@@ -92,12 +99,6 @@ namespace holotrack.Tracking
             trackerTask.Wait();
             trackerTask.Dispose();
             trackerCancellationSource.Dispose();
-        }
-
-        public struct Face
-        {
-            public RectangleF BoundingBox;
-            public IDictionary<FacePart, IEnumerable<FacePoint>> Landmarks;
         }
     }
 }
