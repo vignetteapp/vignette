@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Camera;
 using osuTK.Graphics.ES20;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace holotrack.Tracking
             set => _landmarkScale = value;
         }
 
-        int _maxDetectionSize = 200;
+        int _maxDetectionSize = 180;
         /// <summary>
         /// Maximum image size for detection, this value is applied first. Increasing this value to find more smaller face in far place. But it may loss performance.
         /// </summary>
@@ -95,6 +96,12 @@ namespace holotrack.Tracking
 
         public void StopTracking() => camera = null;
 
+        public TimeSpan time_copy;
+        public TimeSpan time_detect;
+        public TimeSpan time_landmark;
+        public TimeSpan time_post;
+
+
         private void trackerLoop(CancellationToken cancellationToken)
         {
             while (true)
@@ -105,6 +112,12 @@ namespace holotrack.Tracking
                 if (camera?.CaptureData == null)
                     continue;
 
+                // init stopwatch
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                // copy buffers
+                time_copy = stopwatch.Elapsed;
                 var mstream = new MemoryStream(camera.CaptureData);
                 var raw_bitmap = new Bitmap(mstream);
 
@@ -120,8 +133,15 @@ namespace holotrack.Tracking
 
                 var detectionImage = FaceRecognition.LoadImage(detectionBitmap);
                 var landmarkImage = FaceRecognition.LoadImage(landmarkBitmap);
+                time_copy = stopwatch.Elapsed - time_copy;
 
+                // face detection
+                time_detect = stopwatch.Elapsed;
                 var locations = faceRecognition.FaceLocations(detectionImage).ToArray();
+                time_detect = stopwatch.Elapsed - time_detect;
+
+                // face landmark tracking
+                time_landmark = stopwatch.Elapsed;
                 for (int i = 0; i < locations.Length; i++)
                 {
                     var item = locations[i];
@@ -133,7 +153,10 @@ namespace holotrack.Tracking
                         );
                 }
                 var landmarks = faceRecognition.FaceLandmark(landmarkImage, locations).ToArray();
+                time_landmark = stopwatch.Elapsed - time_landmark;
 
+                // post processing
+                time_post = stopwatch.Elapsed;
                 var scale = landmarkScale;
                 faces = new List<Face>();
 
@@ -172,6 +195,7 @@ namespace holotrack.Tracking
 
                 raw_bitmap.Dispose();
                 mstream.Dispose();
+                time_post = stopwatch.Elapsed - time_post;
 
                 OnTrackerUpdate?.Invoke(faces);
             }

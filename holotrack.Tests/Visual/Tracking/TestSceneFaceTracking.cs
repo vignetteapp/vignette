@@ -66,7 +66,8 @@ namespace holotrack.Tests.Visual.Tracking
             if (!status.IsLoaded && !tracker.IsLoaded)
                 return;
             
-            status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(trackerDeltaTime / 1000).ToString("0.0000")} sec(s)";
+            status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(trackerDeltaTime / 1000).ToString("0.0000")} sec(s) | " +
+                          $"{tracker.time_copy:ffff} | {tracker.time_detect:ffff} | {tracker.time_landmark:ffff} | {tracker.time_post:ffff}";
 
             if (tracker.Faces != null)
             {
@@ -83,8 +84,33 @@ namespace holotrack.Tests.Visual.Tracking
                     var index = faceLocationsContainer.IndexOf(box);
                     var face = faces[index];
 
-                    box.MoveTo(new Vector2(face.BoundingBox.X, face.BoundingBox.Y), box.FirstTrack ? 0 : 200, Easing.OutQuint);
-                    box.ResizeTo(new Vector2(face.BoundingBox.Width, face.BoundingBox.Height), box.FirstTrack ? 0 : 200, Easing.OutQuint);
+                    for(int i=0; i<box.Count; i++)
+                    {
+                        if(box.Children[i] is Circle)
+                        {
+                            box.Remove(box.Children[i]);
+                            i--;
+                        }
+                    }
+                    
+                    // TODO (AINL) : This should not be cropped by boundary of bounding box.
+                    foreach (var part in face.Landmarks.Values)
+                    {
+                        foreach (var point in part)
+                        {
+                            box.Add(new Circle
+                            {
+                                X = (float)point.Point.X - face.BoundingBox.X,
+                                Y = (float)point.Point.Y - face.BoundingBox.Y,
+                                Size = new Vector2(10),
+                                Colour = Colour4.Blue,
+                            });
+                        }
+                    }
+
+                    // TODO (AINL): This is working weird when tracking.
+                    box.MoveTo(new Vector2(face.BoundingBox.X, face.BoundingBox.Y), box.FirstTrack ? 0 : 0, Easing.OutQuint);
+                    box.ResizeTo(new Vector2(face.BoundingBox.Width, face.BoundingBox.Height), box.FirstTrack ? 0 : 0, Easing.OutQuint);
 
                     box.FirstTrack = false;
                 });
