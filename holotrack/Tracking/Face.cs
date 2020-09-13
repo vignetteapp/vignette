@@ -6,7 +6,7 @@ namespace holotrack.Tracking
 {
     public struct Face
     {
-        public Dictionary<FacePart, List<Vector2>> Landmarks;
+        public Dictionary<FacePart, IEnumerable<Vector2>> Landmarks;
         public RectangleF Bounds;
     }
 }

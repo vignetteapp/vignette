@@ -5,6 +5,7 @@ using System.Linq;
 using FaceRecognitionDotNet;
 using osu.Framework;
 using osuTK;
+using Size = System.Drawing.Size;
 using Bitmap = System.Drawing.Bitmap;
 using RectangleF = osu.Framework.Graphics.Primitives.RectangleF;
 
@@ -15,34 +16,89 @@ namespace holotrack.Tracking
         // Face Tracking models should be placed in the output directory in the meantime
         private static FaceRecognition face_recognition => FaceRecognition.Create($"{RuntimeInfo.StartupDirectory}/models");
 
+        /// <summary>
+        /// The scale factor of face detection. If this value is float.MaxValue, scale factor is automatically decide by maximum pixel size (MaxDetectionSize)
+        /// </summary>
+        public float DetectionScale = float.MaxValue;
+
+        /// <summary>
+        /// The scale factor of face landmark tracking. If this value is float.MaxValue, scale factor is automatically decide by maximum pixel size (MaxLandmarkSize)
+        /// </summary>
+        public float LandmarkScale = float.MaxValue;
+
+        /// <summary>
+        /// Maximum image size for detection, this value is applied first. Increasing this value to find more smaller face in far place. But it may loss performance.
+        /// </summary>
+        public int MaxDetectionSize = 200;
+
+        /// <summary>
+        /// Maximum image size for detection, this value is applied first.
+        /// </summary>
+        public int MaxLandmarkSize = 520;
+
         protected override void UpdateState(List<Face> faces)
         {
-            var bitmap = new Bitmap(new MemoryStream(Camera.CaptureData));
-            var image = FaceRecognition.LoadImage(bitmap);
-            var locations = face_recognition.FaceLocations(image).ToArray();
-            var landmarks = face_recognition.FaceLandmark(image, locations).ToArray();
+            var stream = new MemoryStream(Camera.CaptureData);
+            var rawBmp = new Bitmap(stream);
 
-            for (int i = 0; i < locations.Length; i++)
+            var dScale = DetectionScale == float.MaxValue
+                ? (float)MaxDetectionSize / Math.Max(MaxDetectionSize, Math.Max(rawBmp.Width, rawBmp.Height))
+                : DetectionScale;
+
+            var lScale = LandmarkScale == float.MaxValue
+                ? (float)MaxLandmarkSize / Math.Max(MaxLandmarkSize, Math.Max(rawBmp.Width, rawBmp.Height))
+                : LandmarkScale;
+
+            var detectionBitmap = new Bitmap(rawBmp, new Size((int)(rawBmp.Width * dScale), (int)(rawBmp.Height * dScale)));
+            var detectionImage = FaceRecognition.LoadImage(detectionBitmap);
+
+            var landmarkBitmap = new Bitmap(rawBmp, new Size((int)(rawBmp.Width * lScale), (int)(rawBmp.Height * lScale)));
+            var landmarkImage = FaceRecognition.LoadImage(landmarkBitmap);
+
+            var locations = face_recognition.FaceLocations(detectionImage).ToArray();
+            var landmarks = face_recognition.FaceLandmark(landmarkImage, locations).ToArray();
+
+            for (int i = 0; i < locations.Length; i ++)
             {
                 var location = locations[i];
-                var landmark = landmarks[i];
+                var left = ((float)location.Left / DetectionScale * LandmarkScale);
+                var top = ((float)location.Top / DetectionScale * LandmarkScale);
+                var right = ((float)location.Right / DetectionScale * LandmarkScale);
+                var bottom = ((float)location.Bottom / DetectionScale * LandmarkScale);
 
-                var landmarkDict = new Dictionary<FacePart, List<Vector2>>();
-                foreach (var (part, points) in landmark)
+                var bounds = new RectangleF
                 {
-                    var pointsList = new List<Vector2>();
-                    foreach (var p in points)
-                        pointsList.Add(new Vector2(p.Point.X, p.Point.Y));
+                    X = left,
+                    Y = top,
+                    Width = right - left,
+                    Height = bottom - top,
+                };
 
-                    landmarkDict.Add(fromFaceRecognitionFacePart(part), pointsList);
+                var marks = landmarks[i];
+                var newMarks = new Dictionary<FacePart, IEnumerable<Vector2>>();
+
+                foreach (var key in marks.Keys)
+                {
+                    var pointList = new List<Vector2>();
+                    foreach (var point in marks[key])
+                        pointList.Add(new Vector2(point.Point.X, point.Point.Y) / lScale);
+
+                    newMarks.Add(fromFaceRecognitionFacePart(key), pointList);
                 }
 
                 faces.Add(new Face
                 {
-                    Landmarks = landmarkDict,
-                    Bounds = new RectangleF((float)location.Left, (float)location.Top, (float)(location.Right - location.Left), (float)(location.Bottom - location.Top))
+                    Bounds = bounds,
+                    Landmarks = newMarks,
                 });
             }
+
+            landmarkImage.Dispose();
+            landmarkBitmap.Dispose();
+            detectionImage.Dispose();
+            detectionBitmap.Dispose();
+            rawBmp.Dispose();
+            stream.Dispose();
         }
 
         private FacePart fromFaceRecognitionFacePart(FaceRecognitionDotNet.FacePart part)

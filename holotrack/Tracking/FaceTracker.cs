@@ -21,35 +21,17 @@ namespace holotrack.Tracking
         /// <summary>
         /// A collection of tracked faces
         /// </summary>
-        public IReadOnlyList<Face> Faces 
-        {
-            get
-            {
-                lock (faces) return faces.ToArray();
-            }
-        }
+        public IReadOnlyList<Face> Faces => faces.ToArray();
 
         /// <summary>
         /// The number of faces being tracked
         /// </summary>
-        public int Tracked
-        {
-            get
-            {
-                lock (faces) return faces.Count;
-            }
-        }
+        public int Tracked => faces.Count;
 
         /// <summary>
         /// A check if there is at least one face is being tracked
         /// </summary>
-        public bool IsTracking
-        {
-            get
-            {
-                lock (faces) return faces.Count > 0;
-            }
-        }
+        public bool IsTracking => faces.Count > 0;
 
         private double lastTrack;
 
