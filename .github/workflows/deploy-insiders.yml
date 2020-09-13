@@ -1,12 +1,60 @@
 name: "Deploy - Insiders Build"
-# on : 
-#   type:
-#     release:
-#         types: prereleased
-on: push 
+on :
+  release:
+      types: [prereleased]
 
 jobs:
-  message_test:
+  build-win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet publish -c Debug -r win10-x64 --self-contained true -p:CubismFrameworkRuntime=win10-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
+    - name: Upload Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: holotrack-${{github.ref}}-win10-x64
+        path: ./holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/win10-x64/publish/*
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet publish -c Debug -r linux-x64 --self-contained true -p:CubismFrameworkRuntime=linux-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
+    - name: Upload Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: holotrack-${{github.ref}}-linux-x64
+        path: ./holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/linux-x64/publish/*
+
+  deploy:
+     needs: [build-win, build-linux]
+     runs-on: ubuntu-latest
+     steps:
+        - name: Download all workflow run artifacts
+          uses: actions/download-artifact@v2
+
+        - name: Publish 
+          uses: joabalea/App-Center-action@v1.0.2
+          with:
+             command: appcenter distribute --group insiders -f ./*.zip
+             token: ${{secrets.VS_APP_CENTER_TOKEN}}
+
+  message:
+    needs: [deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Alert all Insiders
