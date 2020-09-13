@@ -63,7 +63,8 @@ namespace holotrack.Tracking
 
                 if (Camera?.CaptureData == null)
                     continue;
-
+                    
+                    
                 var faceList = new List<Face>();
                 UpdateState(faceList);
                 faces = faceList;
