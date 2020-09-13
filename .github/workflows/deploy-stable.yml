@@ -1,0 +1,16 @@
+name: "Deploy - Insiders Build"
+# on : 
+#   type:
+#     release:
+#         types: released
+on: push 
+
+jobs:
+  message_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Alert all Insiders
+        uses: tsickert/discord-webhook@v1.0.1
+        with:
+          webhook-url: ${{secrets.DISCORD_WEBHOOK_URL_STABLE}}
+          content: "Heya! This is a test message for Discord-based alerts. If you see something like this in the near future, check the releases page!"
