@@ -15,12 +15,12 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet publish -c Debug -r win10-x64 --self-contained true -p:CubismFrameworkRuntime=win10-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
+      run: dotnet publish -c Release -r win10-x64 --self-contained true -p:CubismFrameworkRuntime=win10-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
     - name: Upload Artifact
       uses: actions/upload-artifact@master
       with:
         name: holotrack-${{github.ref}}-win10-x64
-        path: ./holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/win10-x64/publish/*
+        path: ./holotrack.Desktop/bin/x64/Release/netcoreapp3.1/win10-x64/publish/*
 
   build-linux:
     runs-on: ubuntu-latest
@@ -33,12 +33,12 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet publish -c Debug -r linux-x64 --self-contained true -p:CubismFrameworkRuntime=linux-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:CubismFrameworkRuntime=linux-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
     - name: Upload Artifact
       uses: actions/upload-artifact@master
       with:
         name: holotrack-${{github.ref}}-linux-x64
-        path: ./holotrack.Desktop/bin/x64/Debug/netcoreapp3.1/linux-x64/publish/*
+        path: ./holotrack.Desktop/bin/x64/Release/netcoreapp3.1/linux-x64/publish/*
 
   deploy:
      needs: [build-win, build-linux]
@@ -46,6 +46,11 @@ jobs:
      steps:
         - name: Download all workflow run artifacts
           uses: actions/download-artifact@v2
+      
+        - name: Pack Releases 
+          run: |
+           zip -r holotrack-${{github.ref}}-linux-64.zip holotrack-${{github.ref}}-linux-x64
+           zip -r holotrack-${{github.ref}}-win10-64.zip holotrack-${{github.ref}}-win10-x64
 
         - name: Publish 
           uses: joabalea/App-Center-action@v1.0.2
