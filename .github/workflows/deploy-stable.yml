@@ -1,4 +1,4 @@
-name: "Deploy - Insiders Build"
+name: "Deploy - Stable Build"
 # on : 
 #   type:
 #     release:
@@ -9,7 +9,7 @@ jobs:
   message_test:
     runs-on: ubuntu-latest
     steps:
-      - name: Alert all Insiders
+      - name: Alert the public
         uses: tsickert/discord-webhook@v1.0.1
         with:
           webhook-url: ${{secrets.DISCORD_WEBHOOK_URL_STABLE}}
