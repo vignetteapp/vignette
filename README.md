@@ -5,14 +5,7 @@ holotrack is a facetracking software for Live2D-based models using [osu!framewor
 
 - Built always on the latest C# standards - Made with osu!framework, a game engine that powers [osu!lazer](https://github.com/ppy/osu), the next iteration of osu!.
 - Open source, from the very core - holotrack is completely free and open source. No gotchas. 
-- Always evolving - holotrack improves every update, that includes dataset updates to improve face landmark recognition.
-
-## Motivation
-
-Most "VTuber"-oriented applications are too expensive or out of reach for most content creators. Even if it was on reach, they either underperform because they fail to account to what hardware is available
-for the content creator. holotrack might be basic compared to contemporaries but its primary aim is to lower the barrier of entry for content creation regarding virtual YouTubers. 
-
-Another motivation of this is because I was "forced" to make this. Don't ask who and why. They just did.
+- Always evolving - holotrack improves every update, and it tries to know you better too, literally.
 
 ## Running
 

@@ -59,7 +59,7 @@ namespace holotrack.Tracking
             get => _landmarkScale;
             set => _landmarkScale = value;
         }
-
+        
         int _maxDetectionSize = 180;
         /// <summary>
         /// Maximum image size for detection, this value is applied first. Increasing this value to find more smaller face in far place. But it may loss performance.
@@ -111,7 +111,7 @@ namespace holotrack.Tracking
 
                 if (camera?.CaptureData == null)
                     continue;
-
+                    
                 // init stopwatch
 #if DEBUG
                 var stopwatch = new Stopwatch();
@@ -129,7 +129,7 @@ namespace holotrack.Tracking
                     (float)_maxDetectionSize / Math.Max(_maxDetectionSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height)) : _detectionScale;
                 var landmarkScale = _landmarkScale == float.MaxValue ?
                     (float)_maxLandmarkSize / Math.Max(_maxLandmarkSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height)) : _landmarkScale;
-
+                    
                 var detectionBitmap = new Bitmap(raw_bitmap,
                     new System.Drawing.Size((int)(raw_bitmap.Width * detectionScale), (int)(raw_bitmap.Height * detectionScale)));
                 var landmarkBitmap = new Bitmap(raw_bitmap,
