@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Camera;
 using osuTK.Graphics.ES20;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -58,8 +59,8 @@ namespace holotrack.Tracking
             get => _landmarkScale;
             set => _landmarkScale = value;
         }
-
-        int _maxDetectionSize = 200;
+        
+        int _maxDetectionSize = 180;
         /// <summary>
         /// Maximum image size for detection, this value is applied first. Increasing this value to find more smaller face in far place. But it may loss performance.
         /// </summary>
@@ -95,6 +96,12 @@ namespace holotrack.Tracking
 
         public void StopTracking() => camera = null;
 
+        public TimeSpan TimeCopy = TimeSpan.MinValue;
+        public TimeSpan TimeDetect = TimeSpan.MinValue;
+        public TimeSpan TimeLandmark = TimeSpan.MinValue;
+        public TimeSpan TimePost = TimeSpan.MinValue;
+
+
         private void trackerLoop(CancellationToken cancellationToken)
         {
             while (true)
@@ -104,7 +111,17 @@ namespace holotrack.Tracking
 
                 if (camera?.CaptureData == null)
                     continue;
+                    
+                // init stopwatch
+#if DEBUG
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+#endif
 
+                // copy buffers
+#if DEBUG
+                TimeCopy = stopwatch.Elapsed;
+#endif
                 var mstream = new MemoryStream(camera.CaptureData);
                 var raw_bitmap = new Bitmap(mstream);
 
@@ -112,7 +129,7 @@ namespace holotrack.Tracking
                     (float)_maxDetectionSize / Math.Max(_maxDetectionSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height)) : _detectionScale;
                 var landmarkScale = _landmarkScale == float.MaxValue ?
                     (float)_maxLandmarkSize / Math.Max(_maxLandmarkSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height)) : _landmarkScale;
-
+                    
                 var detectionBitmap = new Bitmap(raw_bitmap,
                     new System.Drawing.Size((int)(raw_bitmap.Width * detectionScale), (int)(raw_bitmap.Height * detectionScale)));
                 var landmarkBitmap = new Bitmap(raw_bitmap,
@@ -120,8 +137,23 @@ namespace holotrack.Tracking
 
                 var detectionImage = FaceRecognition.LoadImage(detectionBitmap);
                 var landmarkImage = FaceRecognition.LoadImage(landmarkBitmap);
+#if DEBUG
+                TimeCopy = stopwatch.Elapsed - TimeCopy;
+#endif
 
+                // face detection
+#if DEBUG
+                TimeDetect = stopwatch.Elapsed;
+#endif
                 var locations = faceRecognition.FaceLocations(detectionImage).ToArray();
+#if DEBUG
+                TimeDetect = stopwatch.Elapsed - TimeDetect;
+#endif
+
+                // face landmark tracking
+#if DEBUG
+                TimeLandmark = stopwatch.Elapsed;
+#endif
                 for (int i = 0; i < locations.Length; i++)
                 {
                     var item = locations[i];
@@ -133,7 +165,14 @@ namespace holotrack.Tracking
                         );
                 }
                 var landmarks = faceRecognition.FaceLandmark(landmarkImage, locations).ToArray();
+#if DEBUG
+                TimeLandmark = stopwatch.Elapsed - TimeLandmark;
+#endif
 
+                // post processing
+#if DEBUG
+                TimePost = stopwatch.Elapsed;
+#endif
                 var scale = landmarkScale;
                 faces = new List<Face>();
 
@@ -172,6 +211,9 @@ namespace holotrack.Tracking
 
                 raw_bitmap.Dispose();
                 mstream.Dispose();
+#if DEBUG
+                TimePost = stopwatch.Elapsed - TimePost;
+#endif
 
                 OnTrackerUpdate?.Invoke(faces);
             }
