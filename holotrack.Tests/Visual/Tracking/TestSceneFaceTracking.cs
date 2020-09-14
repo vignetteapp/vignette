@@ -67,7 +67,7 @@ namespace holotrack.Tests.Visual.Tracking
                 return;
             
             status.Text = $"Faces: {tracker.Tracked} | IsTracking: {tracker.IsTracking} | Delta: {(trackerDeltaTime / 1000).ToString("0.0000")} sec(s) | " +
-                          $"{tracker.time_copy:ffff} | {tracker.time_detect:ffff} | {tracker.time_landmark:ffff} | {tracker.time_post:ffff}";
+                          $"{tracker.TimeCopy:ffff} | {tracker.TimeDetect:ffff} | {tracker.TimeLandmark:ffff} | {tracker.TimePost:ffff}";
 
             if (tracker.Faces != null)
             {
