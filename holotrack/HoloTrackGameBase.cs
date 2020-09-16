@@ -1,8 +1,10 @@
 using FaceRecognitionDotNet;
 using holotrack.Configuration;
+using holotrack.IO;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Cubism;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Input;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
@@ -13,6 +15,7 @@ namespace holotrack
     {
         protected HoloTrackConfigManager LocalConfig;
         protected Storage Storage { get; set; }
+        protected FileStore Files;
 
         private DependencyContainer dependencies;
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
@@ -29,13 +32,19 @@ namespace holotrack
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), @"Resources"));
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(HoloTrackGame).Assembly), @"Resources"));
 
+            dependencies.Cache(LocalConfig);
+            dependencies.Cache(Files);
+
             var cubismAssets = new CubismAssetStore(new NamespacedResourceStore<byte[]>(Resources, @"Live2D"));
             dependencies.Cache(cubismAssets);
 
+            var userCubismAssets = new UserCubismAssetStore(Files);
+            dependencies.Cache(userCubismAssets);
+
+            Textures.AddStore(new TextureLoaderStore(Files.Store));
+
             var cameraManager = new CameraManager(Host.UpdateThread) { EventScheduler = Scheduler };
             dependencies.Cache(cameraManager);
-
-            dependencies.Cache(LocalConfig);
 
             // Temporarily read the models in the output directory. We'll have a better support for embedded resources at a later date.
             dependencies.Cache(FaceRecognition.Create($"{RuntimeInfo.StartupDirectory}/models"));
@@ -58,6 +67,7 @@ namespace holotrack
 
             Storage ??= host.Storage;
             LocalConfig ??= new HoloTrackConfigManager(Storage);
+            Files ??= new FileStore(Storage);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 using osu.Framework.Platform;
 
@@ -15,11 +16,29 @@ namespace holotrack.Desktop
                 case DesktopGameWindow desktopGameWindow:
                     desktopGameWindow.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "logo.ico"));
                     desktopGameWindow.Title = Name;
+                    desktopGameWindow.FileDrop += (_, e) => fileDrop(e.FileNames);
                     break;
 
                 // SDL2 Window
                 case DesktopWindow desktopWindow:
                     desktopWindow.Title = Name;
+                    desktopWindow.DragDrop += f => fileDrop(new[] { f });
+                    break;
+            }
+        }
+
+        private void fileDrop(string[] paths)
+        {
+            foreach (var path in paths)
+            switch (Path.GetExtension(path))
+            {
+                case ".jpg":
+                case ".png":
+                    Files.AddBackground(path);
+                    break;
+
+                case ".zip":
+                    Files.AddCubismModel(path);
                     break;
             }
         }
