@@ -70,6 +70,12 @@ namespace holotrack.Tests.Visual.Interface
                         Label = "Checkbox 2",
                         Bindable = new Bindable<bool>(true),
                     },
+                    new SettingsDropdown<string>
+                    {
+                        Label = "String Dropdown",
+                        Bindable = new Bindable<string>(),
+                        Items = new [] { "Hello", "World" },
+                    },
                 }
             });
         }
