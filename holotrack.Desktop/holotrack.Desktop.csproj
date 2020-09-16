@@ -6,7 +6,7 @@
     <EmbeddedResource Include="logo.ico"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.4.0.20200725"/>
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.4.0.20200915"/>
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
