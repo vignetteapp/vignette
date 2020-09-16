@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using FaceRecognitionDotNet;
 using holotrack.Configuration;
 using holotrack.IO;
+using holotrack.IO.Imports;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Cubism;
@@ -17,6 +20,7 @@ namespace holotrack
         protected Storage Storage { get; set; }
         protected FileStore Files;
 
+        private List<Importer> importers => new List<Importer>();
         private DependencyContainer dependencies;
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
             dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
@@ -67,7 +71,12 @@ namespace holotrack
 
             Storage ??= host.Storage;
             LocalConfig ??= new HoloTrackConfigManager(Storage);
+
             Files ??= new FileStore(Storage);
+            importers.Add(new BackgroundImporter(Files));
+            importers.Add(new CubismAssetImporter(Files));
         }
+
+        public void Import(string file) => importers.Where(i => i.IsFileSupported(file)).FirstOrDefault()?.Import(file);
     }
 }

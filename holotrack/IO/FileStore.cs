@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using JsonFlatFileDataStore;
 using osu.Framework.Extensions;
@@ -22,30 +20,6 @@ namespace holotrack.IO
             Store = new StorageBackedResourceStore(Storage);
             Data = new DataStore($"{storage.GetFullPath(string.Empty)}/files.json");
             Context = Data.GetCollection<FileMetadata>();
-        }
-
-        public FileMetadata AddBackground(string path) => Add(path, File.OpenRead(path), FileType.Background);
-
-        public FileMetadata[] AddCubismModel(string path)
-        {
-            using (ZipArchive archive = ZipFile.OpenRead(path))
-            {
-                if (!archive.Entries.Any(f => f.Name.Contains(".model3.json")))
-                    throw new FileNotFoundException("The provided zip file is not a valid Live2D model.");
-
-                var metas = new List<FileMetadata>();
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    using (var stream = entry.Open())
-                    {
-                        var memStream = new MemoryStream();
-                        stream.CopyTo(memStream);
-                        metas.Add(Add(entry.FullName, memStream, FileType.ModelAsset));
-                    }
-                }
-
-                return metas.ToArray();
-            }
         }
 
         public FileMetadata Add(string path, Stream data, FileType type)

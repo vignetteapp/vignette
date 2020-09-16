@@ -1,4 +1,3 @@
-using System.IO;
 using System.Reflection;
 using osu.Framework.Platform;
 
@@ -30,17 +29,7 @@ namespace holotrack.Desktop
         private void fileDrop(string[] paths)
         {
             foreach (var path in paths)
-            switch (Path.GetExtension(path))
-            {
-                case ".jpg":
-                case ".png":
-                    Files.AddBackground(path);
-                    break;
-
-                case ".zip":
-                    Files.AddCubismModel(path);
-                    break;
-            }
+                Import(path);
         }
     }
 }
