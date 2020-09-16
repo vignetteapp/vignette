@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ppy.osu.Framework" Version="2020.911.0"/>
-    <PackageReference Include="osu.Framework.Live2D" Version="2020.914.2"/>
+    <PackageReference Include="osu.Framework.Live2D" Version="2020.915.0"/>
     <PackageReference Include="osu.Framework.Camera" Version="2020.914.1"/>
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0.2"/>
   </ItemGroup>
