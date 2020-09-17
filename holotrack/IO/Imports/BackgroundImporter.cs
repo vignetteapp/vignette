@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 
 namespace holotrack.IO.Imports
@@ -11,6 +12,7 @@ namespace holotrack.IO.Imports
             AddExtension(".jpg");
         }
 
-        public override void Import(string path) => Files.Add(path, File.OpenRead(path), FileType.Background);
+        protected override IEnumerable<FileMetadata> Import(string path) => new[] { Files.Add(path, File.OpenRead(path), FileType.Background) };
+        protected override IEnumerable<FileMetadata> Populate() => Files.Context.Find(f => f.Type == FileType.Background);
     }
 }

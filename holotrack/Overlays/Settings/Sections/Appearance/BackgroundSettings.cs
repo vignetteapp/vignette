@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using holotrack.Configuration;
 using holotrack.Graphics.Interface;
 using holotrack.Graphics.Sprites;
+using holotrack.IO;
+using holotrack.IO.Imports;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -12,9 +17,21 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
     {
         public override string Header => @"Background Settings";
 
+        [Resolved]
+        private IReadOnlyList<Importer> importers { get; set; }
+        private BindableList<FileMetadata> imported => importers.Where(i => i.GetType() == typeof(BackgroundImporter)).FirstOrDefault()?.Imported;
+
+        private SettingsDropdown<string> backgrounds;
+
         [BackgroundDependencyLoader]
         private void load(HoloTrackConfigManager config)
         {
+            Add(backgrounds = new SettingsDropdown<string>
+            {
+                Label = "Background",
+                Bindable = config.GetBindable<string>(HoloTrackSetting.BackgroundImage),
+            });
+
             Add(new SettingsColorPicker
             {
                 Label = @"Background Color",
@@ -78,6 +95,17 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                 BackgroundColor = Colour4.Red,
                 RelativeSizeAxes = Axes.X,
             });
+
+            imported.CollectionChanged += (_, __) => updateList();
+            updateList();
+        }
+
+        private void updateList()
+        {
+            var list = new List<string>(new[] { "Color" });
+            list.AddRange(((IEnumerable<FileMetadata>)imported)?.Select(f => f.Path));
+
+            Schedule(() => backgrounds.Items = list);
         }
     }
 }

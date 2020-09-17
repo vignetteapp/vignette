@@ -20,7 +20,7 @@ namespace holotrack
         protected Storage Storage { get; set; }
         protected FileStore Files;
 
-        private List<Importer> importers => new List<Importer>();
+        private readonly List<Importer> importers = new List<Importer>();
         private DependencyContainer dependencies;
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
             dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
@@ -50,6 +50,8 @@ namespace holotrack
             var cameraManager = new CameraManager(Host.UpdateThread) { EventScheduler = Scheduler };
             dependencies.Cache(cameraManager);
 
+            dependencies.CacheAs<IReadOnlyList<Importer>>(importers);
+
             // Temporarily read the models in the output directory. We'll have a better support for embedded resources at a later date.
             dependencies.Cache(FaceRecognition.Create($"{RuntimeInfo.StartupDirectory}/models"));
 
@@ -77,6 +79,6 @@ namespace holotrack
             importers.Add(new CubismAssetImporter(Files));
         }
 
-        public void Import(string file) => importers.Where(i => i.IsFileSupported(file)).FirstOrDefault()?.Import(file);
+        public void Import(string file) => importers.Where(i => i.IsFileSupported(file)).FirstOrDefault()?.Add(file);
     }
 }

@@ -54,8 +54,8 @@ namespace holotrack.Screens.Main
             userYOffset.ValueChanged += _ => updateTranslation();
 
             backgroundMode.ValueChanged += _ => updateTexture();
-            userTexture.ValueChanged += _ => updateTexture();
             userColor.ValueChanged += _ => updateTexture();
+            userTexture.ValueChanged += v => updateMode(v.NewValue);
 
             updateTranslation();
             updateTexture();
@@ -65,6 +65,12 @@ namespace holotrack.Screens.Main
         {
             sprite.Position = new Vector2(userXOffset.Value, userYOffset.Value);
             sprite.Size = new Vector2(userScale.Value);
+        }
+
+        private void updateMode(string newMode)
+        {
+            backgroundMode.Value = newMode == "Color" ? BackgroundMode.Color : BackgroundMode.Image;
+            updateTexture();
         }
 
         private void updateTexture()

@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using holotrack.Configuration;
 using holotrack.Graphics.Interface;
 using holotrack.Graphics.Sprites;
+using holotrack.IO;
+using holotrack.IO.Imports;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -12,9 +17,21 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
     {
         public override string Header => @"Model Settings";
 
+        [Resolved]
+        private IReadOnlyList<Importer> importers { get; set; }
+        private BindableList<FileMetadata> imported => importers.Where(i => i.GetType() == typeof(CubismAssetImporter)).FirstOrDefault()?.Imported;
+
+        private SettingsDropdown<string> assets;
+
         [BackgroundDependencyLoader]
         private void load(HoloTrackConfigManager config)
         {
+            Add(assets = new SettingsDropdown<string>
+            {
+                Label = "Model",
+                Bindable = config.GetBindable<string>(HoloTrackSetting.Model),
+            });
+
             Add(new SettingsSliderBar<float>
             {
                 Label = @"Scale",
@@ -84,6 +101,25 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
                 BackgroundColor = Colour4.Red,
                 RelativeSizeAxes = Axes.X,
             });
+
+            imported.CollectionChanged += (_, __) => updateList();
+            updateList();
+        }
+
+        private void updateList()
+        {
+            var list = new List<string>();
+            list.AddRange(new[]
+            {
+                "haru.haru.model3.json",
+                "haru_greeter.haru_greeter.model3.json",
+                "hibiki.hibiki.model3.json",
+                "hiyori.hiyori.model3.json",
+                "shizuku.shizuku.model3.json"
+            });
+            list.AddRange(((IEnumerable<FileMetadata>)imported)?.Select(f => f.Path));
+
+            assets.Items = list;
         }
     }
 }

@@ -11,8 +11,8 @@ namespace holotrack.IO
     {
         public readonly Storage Storage;
         public readonly IResourceStore<byte[]> Store;
+        public readonly IDocumentCollection<FileMetadata> Context;
         protected readonly DataStore Data;
-        protected readonly IDocumentCollection<FileMetadata> Context;
 
         public FileStore(Storage storage)
         {

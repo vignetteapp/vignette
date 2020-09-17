@@ -75,6 +75,7 @@ namespace holotrack.Overlays.Settings
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
         protected override void PopIn() => this.FadeIn(200, Easing.OutQuint).ScaleTo(1.0f, 200, Easing.OutQuint);
+
         protected override void PopOut() => this.FadeOut(200, Easing.OutQuint).ScaleTo(0.75f, 200, Easing.OutQuint);
 
         protected override bool OnClick(ClickEvent e)
