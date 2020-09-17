@@ -15,13 +15,21 @@ namespace holotrack.Desktop
                 case DesktopGameWindow desktopGameWindow:
                     desktopGameWindow.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "logo.ico"));
                     desktopGameWindow.Title = Name;
+                    desktopGameWindow.FileDrop += (_, e) => fileDrop(e.FileNames);
                     break;
 
                 // SDL2 Window
                 case DesktopWindow desktopWindow:
                     desktopWindow.Title = Name;
+                    desktopWindow.DragDrop += f => fileDrop(new[] { f });
                     break;
             }
+        }
+
+        private void fileDrop(string[] paths)
+        {
+            foreach (var path in paths)
+                Import(path);
         }
     }
 }

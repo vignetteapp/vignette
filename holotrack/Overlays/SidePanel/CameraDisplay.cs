@@ -2,15 +2,12 @@ using System.Linq;
 using holotrack.Configuration;
 using holotrack.Graphics;
 using holotrack.Graphics.Interface;
-using holotrack.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Camera;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
@@ -101,45 +98,19 @@ namespace holotrack.Overlays.SidePanel
         }
 
 
-        private class CameraDevicesDropdown : Dropdown<string>
+        private class CameraDevicesDropdown : HoloTrackDropdown<string>
         {
             protected override DropdownHeader CreateHeader() => new CameraDevicesDropdownHeader();
 
-            protected override DropdownMenu CreateMenu() => new CameraDevicesDropdownMenu();
-
-            private class CameraDevicesDropdownHeader : DropdownHeader
+            private class CameraDevicesDropdownHeader : HoloTrackDropdownHeader
             {
-                private readonly Sprite chevron;
-                private readonly HoloTrackSpriteText label;
-
-                protected override string Label 
-                {
-                    get => label.Text;
-                    set => label.Text = value;
-                }
-
                 public CameraDevicesDropdownHeader()
                 {
                     BackgroundColour = Colour4.Transparent;
                     BackgroundColourHover = Colour4.Transparent;
 
-                    Children = new Drawable[]
+                    AddRange(new Drawable[]
                     {
-                        new Container
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Height = 25,
-                            Child = label = new HoloTrackSpriteText
-                            {
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                            },
-                        },
-                        chevron = new Sprite
-                        {
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
-                        },
                         new Box
                         {
                             Width = 0.5f,
@@ -158,80 +129,7 @@ namespace holotrack.Overlays.SidePanel
                             Colour = ColourInfo.GradientHorizontal(Colour4.White, Colour4.Transparent),
                             RelativeSizeAxes = Axes.X,
                         },
-                    };
-                }
-
-                [BackgroundDependencyLoader]
-                private void load(TextureStore store)
-                {
-                    chevron.Texture = store.Get("chevron-down");
-                }
-            }
-
-            private class CameraDevicesDropdownMenu : DropdownMenu
-            {
-                public CameraDevicesDropdownMenu()
-                {
-                    Margin = new MarginPadding { Top = 5 };
-                    BackgroundColour = HoloTrackColor.Lighter;
-                }
-
-                public override bool HandleNonPositionalInput => State == MenuState.Open;
-
-                protected override bool OnHover(HoverEvent e) => false;
-
-                protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new CameraDevicesDrawableDropdownMenuItem(item);
-
-                protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new HoloTrackScrollContainer(direction);
-
-                protected override Menu CreateSubMenu() => new CameraDevicesMenu(Direction.Vertical);
-
-                private class CameraDevicesDrawableDropdownMenuItem : DrawableDropdownMenuItem
-                {
-                    public override bool HandlePositionalInput => true;
-
-                    public CameraDevicesDrawableDropdownMenuItem(MenuItem item)
-                        : base(item)
-                    {
-                        Margin = new MarginPadding(5);
-                        BackgroundColour = Colour4.Transparent;
-                        BackgroundColourHover = Colour4.Transparent;
-                        BackgroundColourSelected = Colour4.Transparent;
-                    }
-
-                    protected override Drawable CreateContent() => new HoloTrackSpriteText();
-                }
-
-                private class CameraDevicesMenu : Menu
-                {
-                    public CameraDevicesMenu(Direction direction, bool topLevelMenu = false)
-                        : base(direction, topLevelMenu)
-                    {
-                        BackgroundColour = Colour4.Transparent;
-                    }
-
-                    protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) => new DrawableCameraDeviceMenuItem(item);
-
-                    protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new HoloTrackScrollContainer(direction);
-
-                    protected override Menu CreateSubMenu() => new CameraDevicesMenu(Direction.Vertical);
-
-                    private class DrawableCameraDeviceMenuItem : DrawableMenuItem
-                    {
-                        public DrawableCameraDeviceMenuItem(MenuItem item)
-                            : base(item)
-                        {
-                            BackgroundColour = Colour4.Transparent;
-                            BackgroundColourHover = Colour4.Transparent;
-                        }
-
-                        protected override Drawable CreateContent() => new HoloTrackSpriteText
-                        {
-                            Anchor = Anchor.CentreLeft,
-                            Origin = Anchor.CentreLeft,
-                            Padding = new MarginPadding(2),
-                        };
-                    }
+                    });
                 }
             }
         }

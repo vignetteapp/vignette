@@ -1,4 +1,6 @@
+using CubismFramework;
 using holotrack.Configuration;
+using holotrack.IO;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -23,6 +25,9 @@ namespace holotrack.Screens.Main
 
         [Resolved]
         private CubismAssetStore assets { get; set; }
+
+        [Resolved]
+        private UserCubismAssetStore userAssets { get; set; }
 
         public const float scroll_speed = 5;
 
@@ -63,9 +68,20 @@ namespace holotrack.Screens.Main
         {
             Clear(true);
 
+            CubismAsset loaded;
+
+            try
+            {
+                loaded = assets.Get(asset.Value);
+            }
+            catch
+            {
+                loaded = userAssets.Get(asset.Value);
+            }
+
             Child = Sprite = new CubismSprite
             {
-                Asset = assets.Get(asset.Value),
+                Asset = loaded,
                 RelativeSizeAxes = Axes.Both,
             };
 

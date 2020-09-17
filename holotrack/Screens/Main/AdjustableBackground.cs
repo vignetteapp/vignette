@@ -1,11 +1,11 @@
 using holotrack.Configuration;
+using holotrack.IO;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Graphics.Video;
 using osuTK;
 
 namespace holotrack.Screens.Main
@@ -20,11 +20,18 @@ namespace holotrack.Screens.Main
         private Bindable<string> userTexture;
         private Bindable<Colour4> userColor;
 
+        [Resolved]
+        private FileStore files { get; set; }
+
+        [Resolved]
+        private TextureStore textures { get; set; }
+
         public AdjustableBackground()
         {
             RelativeSizeAxes = Axes.Both;
             Child = sprite = new Sprite
             {
+                FillMode = FillMode.Fill,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.Both,
@@ -47,8 +54,8 @@ namespace holotrack.Screens.Main
             userYOffset.ValueChanged += _ => updateTranslation();
 
             backgroundMode.ValueChanged += _ => updateTexture();
-            userTexture.ValueChanged += _ => updateTexture();
             userColor.ValueChanged += _ => updateTexture();
+            userTexture.ValueChanged += v => updateMode(v.NewValue);
 
             updateTranslation();
             updateTexture();
@@ -60,6 +67,12 @@ namespace holotrack.Screens.Main
             sprite.Size = new Vector2(userScale.Value);
         }
 
+        private void updateMode(string newMode)
+        {
+            backgroundMode.Value = newMode == "Color" ? BackgroundMode.Color : BackgroundMode.Image;
+            updateTexture();
+        }
+
         private void updateTexture()
         {
             switch (backgroundMode.Value)
@@ -67,6 +80,11 @@ namespace holotrack.Screens.Main
                 case BackgroundMode.Color:
                     sprite.Texture = Texture.WhitePixel;
                     sprite.Colour = userColor.Value;
+                    break;
+
+                case BackgroundMode.Image:
+                    sprite.Texture = textures.Get(files.Retrieve(userTexture.Value));
+                    sprite.Colour = Colour4.White;
                     break;
             }
         }
