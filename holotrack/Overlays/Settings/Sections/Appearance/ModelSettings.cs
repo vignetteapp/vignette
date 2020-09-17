@@ -119,7 +119,7 @@ namespace holotrack.Overlays.Settings.Sections.Appearance
             });
             list.AddRange(((IEnumerable<FileMetadata>)imported)?.Select(f => f.Path));
 
-            assets.Items = list;
+            Schedule(() => assets.Items = list);
         }
     }
 }
