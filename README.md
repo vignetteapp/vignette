@@ -17,4 +17,4 @@ holotrack is Copyright &copy; 2020 Ayane Satomi and the holotrack Authors, licen
 
 ## Commercial Use
 
-Commercial usage on a corporate setting is prohibited. Please get in touch with us if you want to use holotrack for your company.
+Vignette is under GPLv3 so that means you are allowed to use it as long it is within the boundaries of GPL - this also means any kind of commercial use is prohibited. If you want to distribute Vignette commercially, contact Ayane Satomi (Capuccino) personally through her email for a negotiation.
