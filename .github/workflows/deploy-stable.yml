@@ -20,8 +20,8 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@master
       with:
-        name: holotrack-${{github.ref}}-win10-x64
-        path: ./holotrack.Desktop/bin/x64/Release/netcoreapp3.1/win10-x64/publish/*
+        name: vignette-${{github.ref}}-win10-x64
+        path: ./vignette.Desktop/bin/x64/Release/netcoreapp3.1/win10-x64/publish/*
 
   build-linux:
     runs-on: ubuntu-latest
@@ -38,8 +38,8 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@master
       with:
-        name: holotrack-${{github.ref}}-linux-x64
-        path: ./holotrack.Desktop/bin/x64/Release/netcoreapp3.1/linux-x64/publish/*
+        name: vignette-${{github.ref}}-linux-x64
+        path: ./vignette.Desktop/bin/x64/Release/netcoreapp3.1/linux-x64/publish/*
 
   deploy:
      needs: [build-win, build-linux]
@@ -50,8 +50,8 @@ jobs:
 
         - name: Pack Releases 
           run: |
-           zip -r holotrack-${{github.ref}}-linux-64.zip holotrack-${{github.ref}}-linux-x64
-           zip -r holotrack-${{github.ref}}-win10-64.zip holotrack-${{github.ref}}-win10-x64
+           zip -r vignette-${{github.ref}}-linux-64.zip vignette-${{github.ref}}-linux-x64
+           zip -r vignette-${{github.ref}}-win10-64.zip vignette-${{github.ref}}-win10-x64
 
         - name: Publish
           uses: joabalea/App-Center-action@v1.0.2

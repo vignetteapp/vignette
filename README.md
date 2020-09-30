@@ -3,7 +3,7 @@
 </p>
 
 
-[![License](https://img.shields.io/github/license/project-vignette/vignette)](https://github.com/project-vignette/vignette/blob/master/LICENSE) ![Status](https://img.shields.io/github/workflow/status/project-vignette/vignette/Build%20-%20Debug/master) [![Discord](https://img.shields.io/discord/746656644196335647?color=7289DA&label=%20&logo=discord&logoColor=white)](https://discord.gg/3yMf3Y9)
+[![License](https://img.shields.io/github/license/vignette-project/vignette)](https://github.com/vignette-project/vignette/blob/master/LICENSE) ![Status](https://img.shields.io/github/workflow/status/vignette-project/vignette/Build%20-%20Debug/master) [![Discord](https://img.shields.io/discord/746656644196335647?color=7289DA&label=%20&logo=discord&logoColor=white)](https://discord.gg/3yMf3Y9)
 
 Vignette is a facetracking software for Live2D-based models using [osu!framework](https://github.com/ppy/osu-framework). Unlike most solutions, Vignette is:
 
@@ -13,7 +13,9 @@ Vignette is a facetracking software for Live2D-based models using [osu!framework
 
 ## Running
 
-TBA
+We provide releases from GitHub Releases and also from Visual Studio App Center. Vignette releases builds for a select few people before we create a release here, so pay attention.
+
+If you cannot wait, we have our [Contributing Guide](https://github.com/vignette-project/vignette/wiki/Contributing-Guide) to guide you through the build process.
 
 ## License
 
