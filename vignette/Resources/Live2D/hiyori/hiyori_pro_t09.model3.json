@@ -1,0 +1,29 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "hiyori_pro_t09.moc3",
+		"Textures": [
+			"hiyori_pro_t09.2048/texture_00.png",
+			"hiyori_pro_t09.2048/texture_01.png"
+		],
+		"Physics": "hiyori_pro_t09.physics3.json",
+		"DisplayInfo": "hiyori_pro_t09.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"ParamMouthOpenY"
+			]
+		}
+	]
+}

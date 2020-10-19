@@ -2,21 +2,6 @@
 	"Version": 3,
 	"Parameters": [
 		{
-			"Id": "ParamPositionX",
-			"GroupId": "ParamGroup8",
-			"Name": "Position X"
-		},
-		{
-			"Id": "ParamPositionY",
-			"GroupId": "ParamGroup8",
-			"Name": "Position Y"
-		},
-		{
-			"Id": "ParamPositionZ",
-			"GroupId": "ParamGroup8",
-			"Name": "Position Z"
-		},
-		{
 			"Id": "ParamAngleX",
 			"GroupId": "ParamGroupFace",
 			"Name": "Angle X"
@@ -35,36 +20,6 @@
 			"Id": "ParamCheek",
 			"GroupId": "ParamGroupFace",
 			"Name": "Cheek"
-		},
-		{
-			"Id": "ParamBodyAngleX",
-			"GroupId": "ParamGroupBody",
-			"Name": "Body X"
-		},
-		{
-			"Id": "ParamBodyAngleY",
-			"GroupId": "ParamGroupBody",
-			"Name": "Body Y"
-		},
-		{
-			"Id": "ParamBodyAngleZ",
-			"GroupId": "ParamGroupBody",
-			"Name": "Body Z"
-		},
-		{
-			"Id": "ParamBreath",
-			"GroupId": "ParamGroupBody",
-			"Name": "Breath"
-		},
-		{
-			"Id": "ParamShoulder",
-			"GroupId": "ParamGroupBody",
-			"Name": "Shoulder"
-		},
-		{
-			"Id": "ParamStep",
-			"GroupId": "ParamGroupBody",
-			"Name": "Step"
 		},
 		{
 			"Id": "ParamEyeLOpen",
@@ -145,6 +100,36 @@
 			"Id": "ParamMouthOpenY",
 			"GroupId": "ParamGroupMouth",
 			"Name": "Mouth Open"
+		},
+		{
+			"Id": "ParamBodyAngleX",
+			"GroupId": "ParamGroupBody",
+			"Name": "Body X"
+		},
+		{
+			"Id": "ParamBodyAngleY",
+			"GroupId": "ParamGroupBody",
+			"Name": "Body Y"
+		},
+		{
+			"Id": "ParamBodyAngleZ",
+			"GroupId": "ParamGroupBody",
+			"Name": "Body Z"
+		},
+		{
+			"Id": "ParamBreath",
+			"GroupId": "ParamGroupBody",
+			"Name": "Breath"
+		},
+		{
+			"Id": "ParamShoulder",
+			"GroupId": "ParamGroupBody",
+			"Name": "Shoulder"
+		},
+		{
+			"Id": "ParamLeg",
+			"GroupId": "ParamGroupBody",
+			"Name": "Leg"
 		},
 		{
 			"Id": "ParamArmLA",
@@ -369,19 +354,9 @@
 	],
 	"ParameterGroups": [
 		{
-			"Id": "ParamGroup8",
-			"GroupId": "",
-			"Name": "Position"
-		},
-		{
 			"Id": "ParamGroupFace",
 			"GroupId": "",
 			"Name": "Face"
-		},
-		{
-			"Id": "ParamGroupBody",
-			"GroupId": "",
-			"Name": "Body"
 		},
 		{
 			"Id": "ParamGroupEyes",
@@ -402,6 +377,11 @@
 			"Id": "ParamGroupMouth",
 			"GroupId": "",
 			"Name": "Mouth"
+		},
+		{
+			"Id": "ParamGroupBody",
+			"GroupId": "",
+			"Name": "Body"
 		},
 		{
 			"Id": "ParamGroup2",
@@ -539,5 +519,15 @@
 			"Id": "Part2",
 			"Name": "Hair Side Up L Rotation"
 		}
+	],
+	"CombinedParameters": [
+		[
+			"ParamAngleX",
+			"ParamAngleY"
+		],
+		[
+			"ParamMouthForm",
+			"ParamMouthOpenY"
+		]
 	]
 }
