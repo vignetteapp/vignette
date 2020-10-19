@@ -1,0 +1,31 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "shizuku_t01.moc3",
+		"Textures": [
+			"shizuku_t01.1024/texture_00.png",
+			"shizuku_t01.1024/texture_01.png",
+			"shizuku_t01.1024/texture_02.png",
+			"shizuku_t01.1024/texture_03.png"
+		],
+		"Physics": "shizuku_t01.physics3.json",
+		"DisplayInfo": "shizuku_t01.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"PARAM_EYE_L_OPEN",
+				"PARAM_EYE_R_OPEN"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"PARAM_MOUTH_OPEN_Y"
+			]
+		}
+	]
+}
