@@ -4,11 +4,10 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2020.1004.0"/>
-    <PackageReference Include="osu.Framework.Live2D" Version="2020.916.0"/>
-    <PackageReference Include="osu.Framework.Camera" Version="2020.1015.0"/>
+    <PackageReference Include="ppy.osu.Framework" Version="2020.1019.0"/>
+    <PackageReference Include="osu.Framework.Live2D" Version="2020.1019.0"/>
+    <PackageReference Include="osu.Framework.Camera" Version="2020.1019.0"/>
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0.2"/>
-    <PackageReference Include="JsonFlatFileDataStore" Version="2.2.2"/>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**\*" Exclude="Resources\Models\**\*"/>
