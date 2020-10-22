@@ -1,0 +1,34 @@
+name: test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  repository_dispatch:
+    types: [ push-nativelibs ]
+
+  jobs:
+    test:
+      name: test
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            submodules: recursive
+
+        - name: Obtain NativeLibs
+          run: |
+            curl -1 -O 'https://dl.cloudsmith.io/public/vignette/vg-prebuiltlibs/raw/names/vignette.NativeLibs/versions/2020.1027.0/vignette.NativeLibs.zip'
+            unzip vignette.NativeLibs.zip
+
+        - name: Setup
+          uses: actions/setup-dotnet@main
+        
+        - name: Test
+          uses: cake-build/cake-action@v1
+          with:
+            script-path: ./build/build.cake
+            target: Test
+    
