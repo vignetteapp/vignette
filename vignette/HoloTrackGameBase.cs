@@ -1,10 +1,8 @@
-using System.Linq;
 using FaceRecognitionDotNet;
 using vignette.Configuration;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Cubism;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Input;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
@@ -31,9 +29,6 @@ namespace vignette
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(VignetteGame).Assembly), @"Resources"));
 
             dependencies.Cache(LocalConfig);
-
-            var cubismAssets = new CubismAssetStore(new NamespacedResourceStore<byte[]>(Resources, @"Live2D"));
-            dependencies.Cache(cubismAssets);
 
             var cameraManager = new CameraManager(Host.UpdateThread) { EventScheduler = Scheduler };
             dependencies.Cache(cameraManager);
