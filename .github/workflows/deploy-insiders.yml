@@ -60,4 +60,4 @@ jobs:
         uses: tsickert/discord-webhook@v1.0.1
         with:
           webhook-url: ${{secrets.DISCORD_WEBHOOK_URL_INSIDERS}}
-          content: "Hey @everyone! This is your local Insider messenger! This is a test message for Discord-based alerts. If you see something like this in the near future, check the Appcenter!"
+          content: "@everyone ${{github.ref}} has released. Check https://g.asatomi.live/short/vignette-beta"
