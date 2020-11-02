@@ -4,7 +4,7 @@
       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1" PrivateAssets="All" />
   </ItemGroup>
   <PropertyGroup Label="Code Analysis">
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodeAnalysis/vignette.ruleset</CodeAnalysisRuleSet>
