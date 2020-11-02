@@ -11,16 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**\*" Exclude="Resources\Models\**\*"/>
-    <None Include="NativeLibs\runtimes\$(CubismFrameworkRuntime)\**\*">
-      <Link>%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\Models\**\*">
       <Link>models/%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Target Name="CopyNativeLibs" BeforeTargets="Build">
-    <Message Text="Cubism Runtime: $(CubismFrameworkRuntime)" Importance="High"/>
-  </Target>
 </Project>

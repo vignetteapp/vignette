@@ -1,6 +1,7 @@
 [CmdletBinding()]
 Param(
     [string]$Target,
+    [string]$Runtime,
     [string]$Configuration,
     [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
     [string]$Verbosity,
@@ -14,6 +15,7 @@ Param(
 # Build Cake arguments
 $cakeArguments = "";
 if ($Target) { $cakeArguments += "-target=$Target" }
+if ($Runtime) { $cakeArguments += "-runtime=$Runtime" }
 if ($Configuration) { $cakeArguments += "-configuration=$Configuration" }
 if ($Verbosity) { $cakeArguments += "-verbosity=$Verbosity" }
 if ($ShowDescription) { $cakeArguments += "-showdescription" }

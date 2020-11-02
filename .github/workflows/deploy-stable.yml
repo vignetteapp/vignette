@@ -1,70 +1,63 @@
-name: "Deploy - Stable Build"
-
-on :
+name: "deploy"
+on:
   release:
-      types: [released]
+    types: [ released ]
 
 jobs:
-  build-win:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.301
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet publish -c Release -r win10-x64 --self-contained true -p:CubismFrameworkRuntime=win10-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
-    - name: Upload Artifact
-      uses: actions/upload-artifact@master
-      with:
-        name: vignette-${{github.ref}}-win10-x64
-        path: ./vignette.Desktop/bin/x64/Release/netcoreapp3.1/win10-x64/publish/*
-
-  build-linux:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runtime: [ win10-x64, linux-x64 ]
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.301
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:CubismFrameworkRuntime=linux-x64 -p:PublishSingleFile=false -p:PublishTrimmed=true
-    - name: Upload Artifact
-      uses: actions/upload-artifact@master
-      with:
-        name: vignette-${{github.ref}}-linux-x64
-        path: ./vignette.Desktop/bin/x64/Release/netcoreapp3.1/linux-x64/publish/*
+      - uses: actions/checkout@v2
+
+      - name: Obtain NativeLibs
+        run: |
+          curl -1 -O 'https://dl.cloudsmith.io/public/vignette/vg-prebuiltlibs/raw/names/vignette.NativeLibs/versions/2020.1027.0/vignette.NativeLibs.zip'
+          unzip vignette.NativeLibs.zip
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+
+      - name: Publish
+        run: |
+          dotnet tool restore
+          dotnet cake ./build/build.cake --bootstrap
+          dotnet cake ./build/build.cake -target=Build -runtime=${{ matrix.runtime }} -configuration=Release
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: vignette-${{ github.ref }}-${{ matrix.runtime }}
+          path: ./vignette.Desktop/bin/x64/Release/netcoreapp3.1/${{ matrix.runtime }}/publish/*
+
 
   deploy:
-     needs: [build-win, build-linux]
-     runs-on: ubuntu-latest
-     steps:
-        - name: Download all workflow run artifacts
-          uses: actions/download-artifact@v2
-
-        - name: Pack Releases 
-          run: |
-           zip -r vignette-${{github.ref}}-linux-64.zip vignette-${{github.ref}}-linux-x64
-           zip -r vignette-${{github.ref}}-win10-64.zip vignette-${{github.ref}}-win10-x64
-
-        - name: Publish
-          uses: joabalea/App-Center-action@v1.0.2
-          with:
-             command: appcenter distribute --group public -f ./*.zip -r CHANGELOG.md
-             token: ${{secrets.VS_APP_CENTER_TOKEN}}
-
-  message:
-    needs: [deploy]
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - name: Alert the public
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Pack Releases
+        run: |
+          zip -r vignette-${{github.ref}}-linux-64.zip vignette-${{github.ref}}-linux-x64
+          zip -r vignette-${{github.ref}}-win10-64.zip vignette-${{github.ref}}-win10-x64
+
+      - name: Publish 
+        uses: joabalea/App-Center-action@v1.0.2
+        with:
+          command: appcenter distribute --group public -f ./*.zip -r CHANGELOG.md
+          token: ${{secrets.VS_APP_CENTER_TOKEN}}
+
+  alert:
+    needs: [ deploy ]
+    runs-on: ubuntu-latest
+      - name: Alert
         uses: tsickert/discord-webhook@v1.0.1
         with:
           webhook-url: ${{secrets.DISCORD_WEBHOOK_URL_STABLE}}
-          content: "@everyone ${{github.ref}} has released. Check https://g.asatomi.live/short/vignette-beta"
+          content: "Hey @everyone! This is your local Insider messenger! This is a test message for Discord-based alerts. If you see something like this in the near future, check the Appcenter!"
