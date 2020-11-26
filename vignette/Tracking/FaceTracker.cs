@@ -23,7 +23,6 @@ namespace vignette.Tracking
     {
         private CameraSprite camera { get; set; }
         private FaceRecognition faceRecognition { get; set; }
-        private SimpleHeadPoseEstimator headEstimator { get; set; }
         private Task trackerTask;
         private readonly CancellationTokenSource trackerCancellationSource = new CancellationTokenSource();
 
@@ -94,7 +93,7 @@ namespace vignette.Tracking
         {
             this.faceRecognition = faceRecognition;
             //TODO <sr229>: I made some stub references here. Change this to a proper assembly location. 
-            this.headEstimator = new SimpleHeadPoseEstimator(rollModelFileName, pitchModelFileName, yawModelFileName);
+            this.faceRecognition.CustomHeadPoseEstimator = new SimpleHeadPoseEstimator(rollModelFileName, pitchModelFileName, yawModelFileName);
             this.faceRecognition.CustomEyeBlinkDetector = new EyeAspectRatioLargeEyeBlinkDetector(0.2, 0.2);
 
             trackerTask = Task.Factory.StartNew(() => trackerLoop(trackerCancellationSource.Token), trackerCancellationSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
