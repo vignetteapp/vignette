@@ -1,10 +1,8 @@
-﻿using DlibDotNet;
-using FaceRecognitionDotNet;
+﻿using FaceRecognitionDotNet;
 using FaceRecognitionDotNet.Extensions;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Camera;
-using osuTK.Graphics.ES20;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
