@@ -23,10 +23,16 @@ namespace vignette.Tracking
     {
         private CameraSprite camera { get; set; }
         private FaceRecognition faceRecognition { get; set; }
+        private SimpleHeadPoseEstimator headEstimator { get; set; }
         private Task trackerTask;
         private readonly CancellationTokenSource trackerCancellationSource = new CancellationTokenSource();
 
         private List<Face> faces;
+
+        // head pose estimation files here
+        private string yawModelFileName;
+        private string pitchModelFileName;
+        private string rollModelFileName;
 
         /// <summary>
         /// A collection of tracked faces
@@ -59,7 +65,7 @@ namespace vignette.Tracking
             get => _landmarkScale;
             set => _landmarkScale = value;
         }
-        
+
         int _maxDetectionSize = 180;
         /// <summary>
         /// Maximum image size for detection, this value is applied first. Increasing this value to find more smaller face in far place. But it may loss performance.
@@ -87,6 +93,8 @@ namespace vignette.Tracking
         private void load(FaceRecognition faceRecognition)
         {
             this.faceRecognition = faceRecognition;
+            //TODO <sr229>: I made some stub references here. Change this to a proper assembly location. 
+            this.headEstimator = new SimpleHeadPoseEstimator(rollModelFileName, pitchModelFileName, yawModelFileName);
             this.faceRecognition.CustomEyeBlinkDetector = new EyeAspectRatioLargeEyeBlinkDetector(0.2, 0.2);
 
             trackerTask = Task.Factory.StartNew(() => trackerLoop(trackerCancellationSource.Token), trackerCancellationSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
@@ -99,6 +107,7 @@ namespace vignette.Tracking
         public TimeSpan TimeCopy = TimeSpan.MinValue;
         public TimeSpan TimeDetect = TimeSpan.MinValue;
         public TimeSpan TimeLandmark = TimeSpan.MinValue;
+        public TimeSpan TimeHeadPose = TimeSpan.MinValue;
         public TimeSpan TimePost = TimeSpan.MinValue;
 
 
@@ -111,7 +120,7 @@ namespace vignette.Tracking
 
                 if (camera?.CaptureData == null)
                     continue;
-                    
+
                 // init stopwatch
 #if DEBUG
                 var stopwatch = new Stopwatch();
@@ -129,7 +138,7 @@ namespace vignette.Tracking
                     (float)_maxDetectionSize / Math.Max(_maxDetectionSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height)) : _detectionScale;
                 var landmarkScale = _landmarkScale == float.MaxValue ?
                     (float)_maxLandmarkSize / Math.Max(_maxLandmarkSize, Math.Max(raw_bitmap.Width, raw_bitmap.Height)) : _landmarkScale;
-                    
+
                 var detectionBitmap = new Bitmap(raw_bitmap,
                     new System.Drawing.Size((int)(raw_bitmap.Width * detectionScale), (int)(raw_bitmap.Height * detectionScale)));
                 var landmarkBitmap = new Bitmap(raw_bitmap,
@@ -197,6 +206,7 @@ namespace vignette.Tracking
 
                     faces.Add(new Face
                     {
+                        Pose = faceRecognition.PredictHeadPose(new_marks),
                         Landmarks = new_marks,
                         BoundingBox = new RectangleF((float)loc.Left / scale, (float)loc.Top / scale,
                                                      (float)(loc.Right - loc.Left) / scale, (float)(loc.Bottom - loc.Top) / scale)
@@ -213,6 +223,7 @@ namespace vignette.Tracking
                 mstream.Dispose();
 #if DEBUG
                 TimePost = stopwatch.Elapsed - TimePost;
+                TimeHeadPose = stopwatch.Elapsed - TimeHeadPose;
 #endif
 
                 OnTrackerUpdate?.Invoke(faces);
@@ -233,6 +244,7 @@ namespace vignette.Tracking
         {
             public RectangleF BoundingBox;
             public IDictionary<FacePart, IEnumerable<FacePoint>> Landmarks;
+            public HeadPose Pose;
         }
     }
 }
