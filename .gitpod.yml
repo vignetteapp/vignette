@@ -1,0 +1,6 @@
+image:
+  file: .gitpod.dockerfile
+  
+tasks:
+  - init: resolve deps
+    command: dotnet restore
