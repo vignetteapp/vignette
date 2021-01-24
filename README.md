@@ -21,8 +21,8 @@ If you cannot wait, we have our [Contributing Guide](https://github.com/vignette
 
 ## License
 
-Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under GNU General Public License 3.0. For the full license text please see the [LICENSE](./LICENSE) file in this repository.
+Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under Non-Profit Open Source License v3.0. For the full license text please see the [LICENSE](./LICENSE) file in this repository.
 
 ## Commercial Use
 
-While Vignette is GPLv3 - Commercial usage in a enterprise setting is prohibited - for agencies who wish to use Vignette for their performers, please contact [Ayane Satomi](mailto:chinodesuuu@gmail.com) for a negotiation.
+While Vignette is NPOSLv3, for-profit agencies who wish to use Vignette for their performers, please contact [Ayane Satomi](mailto:chinodesuuu@gmail.com) for a negotiation.
