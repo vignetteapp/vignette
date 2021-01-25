@@ -12,13 +12,13 @@ namespace vignette.Desktop
             switch (host.Window)
             {
                 // Legacy osuTK Window
-                case DesktopGameWindow desktopGameWindow:
+                case OsuTKDesktopWindow desktopGameWindow:
                     desktopGameWindow.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "logo.ico"));
                     desktopGameWindow.Title = Name;
                     break;
 
                 // SDL2 Window
-                case DesktopWindow desktopWindow:
+                case SDL2DesktopWindow desktopWindow:
                     desktopWindow.Title = Name;
                     break;
             }

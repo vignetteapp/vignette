@@ -18,14 +18,14 @@ namespace vignette
         {
             dependencies.CacheAs(this);
 
-            Add(new DrawSizePreservingFillContainer
-            {
-                Child = new VignetteKeyBindingContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = new ScreenStack(),
-                },
-            });
+//            Add(new DrawSizePreservingFillContainer
+//            {
+//                Child = new VignetteKeyBindingContainer
+//                {
+//                    RelativeSizeAxes = Axes.Both,
+//                    Child = new ScreenStack(),
+//                },
+//            });
         }
     }
 }
