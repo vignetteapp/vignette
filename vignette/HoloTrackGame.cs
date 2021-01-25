@@ -1,4 +1,3 @@
-using vignette.Input;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -18,14 +17,6 @@ namespace vignette
         {
             dependencies.CacheAs(this);
 
-//            Add(new DrawSizePreservingFillContainer
-//            {
-//                Child = new VignetteKeyBindingContainer
-//                {
-//                    RelativeSizeAxes = Axes.Both,
-//                    Child = new ScreenStack(),
-//                },
-//            });
         }
     }
 }
