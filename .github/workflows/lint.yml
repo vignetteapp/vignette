@@ -10,9 +10,10 @@ jobs:
       - name: Lint
         uses: github/super-linter@v3
         env:
-          EDITORCONFIG_FILE_NAME: .editorconfig
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_XML: false
           VALIDATE_JSON: false
           VALIDATE_YAML: false
+          VALIDATE_CSHARP: true
           VALIDATE_POWERSHELL: false
+          VALIDATE_EDITORCONFIG: false

@@ -1,5 +1,5 @@
 ﻿// Copyright 2020 - 2021 Vignette Project
-// Licensed under MIT. See LICENSE for details.
+// Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework;
 using osu.Framework.Platform;
