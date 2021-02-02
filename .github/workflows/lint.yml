@@ -11,9 +11,4 @@ jobs:
         uses: github/super-linter@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_XML: false
-          VALIDATE_JSON: false
-          VALIDATE_YAML: false
           VALIDATE_CSHARP: true
-          VALIDATE_POWERSHELL: false
-          VALIDATE_EDITORCONFIG: false
