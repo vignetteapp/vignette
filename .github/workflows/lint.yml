@@ -1,0 +1,18 @@
+on: push
+name: Lint
+jobs:
+  build:
+    name: Lint Project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Lint
+        uses: github/super-linter@v3
+        env:
+          EDITORCONFIG_FILE_NAME: .editorconfig
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_XML: false
+          VALIDATE_JSON: false
+          VALIDATE_YAML: false
+          VALIDATE_POWERSHELL: false
