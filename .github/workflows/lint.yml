@@ -3,7 +3,7 @@ name: Lint
 jobs:
   build:
     name: Lint Project
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
