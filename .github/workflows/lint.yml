@@ -11,4 +11,6 @@ jobs:
         uses: github/super-linter@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUPPRESS_POSSUM: true
           VALIDATE_CSHARP: true
+          LINTER_RULES_PATH: /
