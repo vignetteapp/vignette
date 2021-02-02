@@ -12,5 +12,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SUPPRESS_POSSUM: true
-          VALIDATE_CSHARP: true
+          VALIDATE_EDITORCONFIG: true
+          EDITORCONFIG_FILE_NAME: .editorconfig
           LINTER_RULES_PATH: /
