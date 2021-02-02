@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Vignette (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "${workspaceRoot}/Vignette.Desktop/bin/Debug/net5.0/Vignette.Desktop.dll"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Build Vignette (Debug)",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Vignette (Release)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "${workspaceRoot}/Vignette.Desktop/bin/Debug/net5.0/Vignette.Desktop.dll"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Build Vignette (Release)",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Vignette (Tests, Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "${workspaceRoot}/Vignette.Application.Tests/bin/Debug/net5.0/Vignette.Application.Tests.dll"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Build tests (Debug)",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Vignette (Tests, Release)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "${workspaceRoot}/Vignette.Application.Tests/bin/Debug/net5.0/Vignette.Application.Tests.dll"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "Build tests (Release)",
+            "console": "internalConsole"
+        }
+    ]
+}
