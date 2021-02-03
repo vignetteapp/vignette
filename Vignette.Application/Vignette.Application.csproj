@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="ppy.osu.Framework" Version="2021.128.0" />
-    <PackageReference Include="Vignette.Application.Camera" Version="2021.201.2" />
+    <PackageReference Include="Vignette.Application.Camera" Version="2021.203.0" />
     <PackageReference Include="Vignette.Application.Live2D" Version="2021.201.4" />
     <PackageReference Include="Vignette.Application.Live2D.Native" Version="2021.201.0" />
   </ItemGroup>
