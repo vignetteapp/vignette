@@ -18,4 +18,11 @@
     <PackageReference Include="Vignette.Application.Live2D.Native" Version="2021.201.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Recognition\Models\*.dat">
+      <Link>recognition/models/%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
