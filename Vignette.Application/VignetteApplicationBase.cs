@@ -12,13 +12,13 @@ namespace Vignette.Application
 {
     public class VignetteApplicationBase : Game
     {
-        protected new Container<Drawable> Content => content;
+        protected override Container<Drawable> Content => content;
 
         private readonly Container content;
 
         public VignetteApplicationBase()
         {
-            AddRange(new[]
+            AddRangeInternal(new[]
             {
                 new SafeAreaContainer
                 {
