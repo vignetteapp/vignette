@@ -21,8 +21,7 @@ namespace Vignette.Application.Recognition
 
         private FaceRecognition instance;
 
-
-        internal static string GetAssemblyDirectory
+        private static string getAssemblyDirectory
         {
             get
             {
@@ -36,7 +35,7 @@ namespace Vignette.Application.Recognition
 
         public FaceRecognitionDotNetFaceTracker()
         {
-            string basePath = $@"{GetAssemblyDirectory}/recognition/models";
+            string basePath = $@"{getAssemblyDirectory}/recognition/models";
             instance = FaceRecognition.Create(basePath);
         }
 
