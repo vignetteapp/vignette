@@ -9,6 +9,7 @@ namespace Vignette.Application.Tests
     {
         protected override void LoadComplete()
         {
+            base.LoadComplete();
             Add(new TestBrowser(@"Vignette"));
         }
     }
