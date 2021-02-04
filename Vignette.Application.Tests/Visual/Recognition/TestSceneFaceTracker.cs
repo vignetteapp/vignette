@@ -1,68 +1,85 @@
 ﻿// Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenCvSharp;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Testing;
+using osu.Framework.Graphics.UserInterface;
 using osuTK;
-using Vignette.Application.Camera;
-using Vignette.Application.Camera.Graphics;
 using Vignette.Application.Recognition;
 
 namespace Vignette.Application.Tests.Visual.Recognition
 {
-    public class TestSceneFaceTracker : TestScene
+    public class TestSceneFaceTracker : TestSceneRecognition
     {
-        private readonly CameraVirtual camera;
+        private TrackerVisualizer visualizer;
 
-        private readonly FaceTracker tracker;
+        private readonly BasicCheckbox visualizerVisibility;
+
+        private readonly BasicDropdown<VisualizerMode> visualizerMode;
+
+        private readonly BasicDropdown<FaceRegion> regionSelector;
 
         public TestSceneFaceTracker()
         {
-            camera = new CameraVirtual(VignetteTestResources.GetResource(@"bakamitai_deepfake_template.mp4"), EncodingFormat.JPEG, new[]
+            Add(new FillFlowContainer
             {
-                new ImageEncodingParam(ImwriteFlags.JpegQuality, 50),
-                new ImageEncodingParam(ImwriteFlags.JpegOptimize, 50),
+                AutoSizeAxes = Axes.Y,
+                Direction = FillDirection.Vertical,
+                Width = 200.0f,
+                Margin = new MarginPadding(5),
+                Spacing = new Vector2(0, 5),
+                Children = new Drawable[]
+                {
+                    visualizerVisibility = new BasicCheckbox { LabelText = @"Toggle Visualizer" },
+                    visualizerMode = new BasicDropdown<VisualizerMode>
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Items = Enum.GetValues<VisualizerMode>(),
+                    },
+                    regionSelector = new BasicDropdown<FaceRegion>
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Items = Enum.GetValues<FaceRegion>(),
+                        Alpha = 0.0f,
+                    },
+                }
             });
 
-            Add(new DrawableCameraVirtual(camera)
+            Add(visualizer = new TrackerVisualizer(Tracker)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Height = camera.Height,
-                Width = camera.Width,
+                Height = Camera.Height,
+                Width = Camera.Width,
                 Scale = new Vector2(2.0f),
+                Mode = visualizerMode.Current.Value,
+                Region = regionSelector.Current.Value,
             });
 
-            Add(tracker = new FaceRecognitionDotNetFaceTracker());
-            Add(new TrackerVisualizer(tracker)
+            visualizerVisibility.Current.ValueChanged += (state) => visualizer.Alpha = state.NewValue ? 1.0f : 0.0f;
+            visualizerVisibility.Current.Value = true;
+
+            regionSelector.Current.ValueChanged += (mode) => visualizer.Region = mode.NewValue; 
+
+            visualizerMode.Current.ValueChanged += (mode) =>
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Height = camera.Height,
-                Width = camera.Width,
-                Scale = new Vector2(2.0f),
-            });
+                regionSelector.Alpha = mode.NewValue == VisualizerMode.Regional ? 1.0f : 0.0f;
+                visualizer.Mode = mode.NewValue;
+            };
 
-            camera.Loop = true;
-
-            AddStep(@"start camera", () => camera.Start());
-            AddStep(@"start tracking", () => tracker.StartTracking(camera));
-            AddStep(@"pause/unpause", () =>
-            {
-                if (camera.Paused)
-                    camera.Resume();
-                else
-                    camera.Pause();
-            });
+            visualizerMode.Current.Value = VisualizerMode.General;
         }
 
         private class TrackerVisualizer : Container
         {
+            public VisualizerMode Mode { get; set; }
+
+            public FaceRegion Region { get; set; }
+
             private FaceTracker tracker;
 
             private Box box;
@@ -96,10 +113,11 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 if (tracker.Faces == null)
                     return;
 
+                box.Scale = Scale * 0.5f;
+                box.Colour = tracker.Faces.Any() ? Colour4.Green : Colour4.Red;
+
                 if (!tracker.Faces.Any())
                 {
-                    box.Colour = Colour4.Red;
-
                     foreach (var circle in circles)
                         circle.Alpha = 0.0f;
                 }
@@ -107,12 +125,16 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 {
                     var face = tracker.Faces[0];
 
-                    box.X = face.Bounds.X;
-                    box.Y = face.Bounds.Y;
-                    box.Width = face.Bounds.Width;
-                    box.Height = face.Bounds.Height;
-                    box.Scale = Scale * 0.5f;
-                    box.Colour = Colour4.Green;
+                    switch (Mode)
+                    {
+                        case VisualizerMode.General:
+                            visualizeGeneral(face);
+                            break;
+
+                        case VisualizerMode.Regional:
+                            visualizeRegional(face);
+                            break;
+                    }
 
                     for (int i = 0; i < face.Landmarks.Count(); i++)
                     {
@@ -124,6 +146,31 @@ namespace Vignette.Application.Tests.Visual.Recognition
                     }
                 }
             }
+
+            private void visualizeGeneral(Face face)
+            {
+                box.X = face.Bounds.X;
+                box.Y = face.Bounds.Y;
+                box.Width = face.Bounds.Width;
+                box.Height = face.Bounds.Height;
+            }
+
+            private void visualizeRegional(Face face)
+            {
+                var bounds = face.GetRegionBounds(Region);
+
+                box.X = bounds.X;
+                box.Y = bounds.Y;
+                box.Width = bounds.Width;
+                box.Height = bounds.Height;
+            }
+        }
+
+        private enum VisualizerMode
+        {
+            General,
+
+            Regional,
         }
     }
 }
