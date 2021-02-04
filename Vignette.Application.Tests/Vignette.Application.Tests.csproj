@@ -6,6 +6,8 @@
     <IsPackable>false</IsPackable>
 
     <StartupObject>Vignette.Application.Tests.Program</StartupObject>
+
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

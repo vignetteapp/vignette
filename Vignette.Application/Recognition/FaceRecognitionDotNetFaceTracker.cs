@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using FaceRecognitionDotNet;
 using osuTK;
 using Bitmap = System.Drawing.Bitmap;
@@ -20,9 +21,22 @@ namespace Vignette.Application.Recognition
 
         private FaceRecognition instance;
 
+
+        internal static string GetAssemblyDirectory
+        {
+            get
+            {
+                var assemblyName = Assembly.GetExecutingAssembly().Location;
+                var UriBuilder = new UriBuilder(assemblyName);
+                var path = Uri.UnescapeDataString(UriBuilder.Path);
+
+                return Path.GetDirectoryName(path);
+            }
+        }
+
         public FaceRecognitionDotNetFaceTracker()
         {
-            string basePath = @"./recognition/models";
+            string basePath = $@"{GetAssemblyDirectory}/recognition/models";
             instance = FaceRecognition.Create(basePath);
         }
 
@@ -82,7 +96,7 @@ namespace Vignette.Application.Recognition
             return faces;
         }
 
-        private FaceRegion facePartToRegion(FacePart point)
+        private static FaceRegion facePartToRegion(FacePart point)
         {
             switch (point)
             {
