@@ -63,7 +63,7 @@ namespace Vignette.Application.Tests.Visual.Recognition
             visualizerVisibility.Current.ValueChanged += (state) => visualizer.Alpha = state.NewValue ? 1.0f : 0.0f;
             visualizerVisibility.Current.Value = true;
 
-            regionSelector.Current.ValueChanged += (mode) => visualizer.Region = mode.NewValue; 
+            regionSelector.Current.ValueChanged += (mode) => visualizer.Region = mode.NewValue;
 
             visualizerMode.Current.ValueChanged += (mode) =>
             {
