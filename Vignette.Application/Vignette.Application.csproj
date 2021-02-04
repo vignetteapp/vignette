@@ -25,9 +25,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="C:\Users\n20ga\.nuget\packages\dlibdotnet\19.18.0.20200525\build\..\runtimes\win-AnyCPU\native\DlibDotNetNative.dll" />
-    <Content Remove="C:\Users\n20ga\.nuget\packages\dlibdotnet\19.18.0.20200525\build\..\runtimes\win-AnyCPU\native\DlibDotNetNativeDnn.dll" />
-  </ItemGroup>
-
 </Project>
