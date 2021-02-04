@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FaceRecognitionDotNet;
-using FaceRecognitionDotNet.Extensions;
 using osuTK;
 using Bitmap = System.Drawing.Bitmap;
 using RectangleF = osu.Framework.Graphics.Primitives.RectangleF;
@@ -29,13 +28,14 @@ namespace Vignette.Application.Recognition
 
         protected override IEnumerable<Face> Track()
         {
-            using var bitmap = new Bitmap(Camera.Data);
+            using var memory = new MemoryStream(Camera.Data);
+            using var bitmap = new Bitmap(memory);
 
             float detectionScale = DetectionSize / (float)Math.Max(DetectionSize, Math.Max(bitmap.Width, bitmap.Height));
             float landmarkScale = LandmarkSize / (float)Math.Max(LandmarkSize, Math.Max(bitmap.Width, bitmap.Height));
 
-            using var detectionBitmap = new Bitmap(bitmap, bitmap.Size * (int)detectionScale);
-            using var landmarkBitmap = new Bitmap(bitmap, bitmap.Size * (int)landmarkScale);
+            using var detectionBitmap = new Bitmap(bitmap, System.Drawing.Size.Round(bitmap.Size * detectionScale));
+            using var landmarkBitmap = new Bitmap(bitmap, System.Drawing.Size.Round(bitmap.Size * landmarkScale));
             using var detectionImage = FaceRecognition.LoadImage(detectionBitmap);
             using var landmarkImage = FaceRecognition.LoadImage(landmarkBitmap);
 
