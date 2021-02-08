@@ -49,29 +49,32 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 }
             });
 
-            Add(visualizer = new TrackerVisualizer(Tracker)
+            visualizerVisibility.Current.ValueChanged += (state) => visualizer.Alpha = state.NewValue ? 1.0f : 0.0f;
+            visualizerVisibility.Current.Value = true;
+
+            regionSelector.Current.BindValueChanged((mode) => visualizer.Region = mode.NewValue, true);
+
+            visualizerMode.Current.BindValueChanged((mode) =>
+            {
+                regionSelector.Alpha = mode.NewValue == VisualizerMode.Regional ? 1.0f : 0.0f;
+                visualizer.Mode = mode.NewValue;
+            }, true);
+
+            visualizerMode.Current.Value = VisualizerMode.General;
+        }
+
+        protected override void TrackerChanged(FaceTracker tracker)
+        {
+            visualizer?.Expire();
+
+            Add(visualizer = new TrackerVisualizer(tracker)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Height = Camera.Height,
                 Width = Camera.Width,
                 Scale = new Vector2(2.0f),
-                Mode = visualizerMode.Current.Value,
-                Region = regionSelector.Current.Value,
             });
-
-            visualizerVisibility.Current.ValueChanged += (state) => visualizer.Alpha = state.NewValue ? 1.0f : 0.0f;
-            visualizerVisibility.Current.Value = true;
-
-            regionSelector.Current.ValueChanged += (mode) => visualizer.Region = mode.NewValue;
-
-            visualizerMode.Current.ValueChanged += (mode) =>
-            {
-                regionSelector.Alpha = mode.NewValue == VisualizerMode.Regional ? 1.0f : 0.0f;
-                visualizer.Mode = mode.NewValue;
-            };
-
-            visualizerMode.Current.Value = VisualizerMode.General;
         }
 
         private class TrackerVisualizer : Container
