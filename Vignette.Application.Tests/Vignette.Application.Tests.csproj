@@ -19,7 +19,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.5.1.20210206" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.1.20210206" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.1.20210208" />
     <PackageReference Include="Vignette.Application.Camera.Linux" Version="2021.207.0" />
     <PackageReference Include="Vignette.Application.Camera.Windows.Legacy" Version="2021.207.0" />
   </ItemGroup>
