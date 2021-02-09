@@ -6,11 +6,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Graphics;
+using osuTK;
 using Vignette.Application.Camera;
 
 namespace Vignette.Application.Recognition
 {
-    public abstract class FaceTracker : Component
+    public abstract class FaceTracker : Component, IFaceTracker
     {
         public IReadOnlyList<Face> Faces => faces?.ToArray();
 
@@ -35,6 +36,16 @@ namespace Vignette.Application.Recognition
         public virtual void StopTracking() => Camera = null;
 
         protected abstract IEnumerable<Face> Track();
+
+        public abstract Vector3? GetHeadAngles(int index = 0);
+
+        public abstract Vector2? GetHeadPosition(int index = 0);
+
+        public abstract Vector2? GetEyePupilPosition(FaceRegion eye, int headIndex = 0);
+
+        public abstract float? GetEyeLidOpen(FaceRegion eye, int headIndex = 0);
+
+        public abstract float? GetMouthOpen(int index = 0);
 
         protected override void LoadComplete()
         {

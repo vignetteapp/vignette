@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using FaceRecognitionDotNet;
+using OpenCvSharp;
+using osu.Framework.Graphics.Textures;
 using osuTK;
 using Bitmap = System.Drawing.Bitmap;
 using RectangleF = osu.Framework.Graphics.Primitives.RectangleF;
@@ -93,6 +95,68 @@ namespace Vignette.Application.Recognition
             }
 
             return faces;
+        }
+
+        public override Vector3? GetHeadAngles(int index = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Vector2? GetHeadPosition(int index = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Vector2? GetEyePupilPosition(FaceRegion eye, int headIndex = 0)
+        {
+            if (!(eye == FaceRegion.LeftEye || eye == FaceRegion.RightEye))
+                throw new ArgumentOutOfRangeException($@"{eye} is not an eye.");
+
+            if (Faces == null || Camera.Data == null)
+                return null;
+
+            var faces = Faces.ToArray();
+
+            if (headIndex >= faces.Length)
+                return null;
+
+            var data = Camera.Data.ToArray();
+            var mat = Mat.FromImageData(data);
+            var eyeRect = faces[headIndex].GetRegionBounds(eye);
+
+            // Apply filters to matrix to filter out possible noise from the region of interest
+            var eyeMat = mat[new Rect((int)eyeRect.X, (int)eyeRect.Y, (int)eyeRect.Width, (int)eyeRect.Height)]
+                .CvtColor(ColorConversionCodes.BGR2GRAY)
+                .GaussianBlur(new Size(7, 7), 0);
+
+            var contours = Cv2.FindContoursAsArray(eyeMat.Threshold(3, 255, ThresholdTypes.BinaryInv), RetrievalModes.Tree, ContourApproximationModes.ApproxSimple);
+
+            if (contours.Length > 0)
+            {
+                // Find the biggest contour as that is usually the pupil
+                var sorted = contours.OrderBy(c => Cv2.ContourArea(c));
+                var contourRect = Cv2.BoundingRect(sorted.First());
+
+                var position = new Vector2(contourRect.Width / eyeRect.Width, contourRect.Height / eyeRect.Height);
+                position.Normalize();
+
+                return position;
+            }
+            else
+                return null;
+        }
+
+        public override float? GetEyeLidOpen(FaceRegion eye, int headIndex = 0)
+        {
+            if (eye != FaceRegion.LeftEye || eye != FaceRegion.RightEye)
+                throw new ArgumentOutOfRangeException($@"Face Region {eye} is not an eye.");
+
+            throw new NotImplementedException();
+        }
+
+        public override float? GetMouthOpen(int index = 0)
+        {
+            throw new NotImplementedException();
         }
 
         private static FaceRegion facePartToRegion(FacePart point)
