@@ -42,12 +42,6 @@ namespace Vignette.Application.Tests.Visual.Recognition
 
         private readonly BasicDropdown<CameraType> cameraTypeSelector;
 
-        private static readonly ImageEncodingParam[] encodingparams = new[]
-        {
-            new ImageEncodingParam(ImwriteFlags.JpegQuality, 100),
-            new ImageEncodingParam(ImwriteFlags.JpegOptimize, 50),
-        };
-
         public TestSceneRecognition()
         {
             cameraManager = createSuitableCameraManager(Scheduler);
@@ -141,7 +135,7 @@ namespace Vignette.Application.Tests.Visual.Recognition
                         break;
 
                     case CameraType.Virtual:
-                        Camera = new CameraVirtual(VignetteTestResources.GetResource(@"bakamitai_deepfake_template.mp4"), EncodingFormat.JPEG, encodingparams);
+                        Camera = new CameraVirtual(VignetteTestResources.GetResource(@"bakamitai_deepfake_template.mp4"));
                         cameraSpriteContainer.Add(cameraSprite = new DrawableCameraVirtual((CameraVirtual)Camera));
                         virtualCameraControls.Alpha = 1.0f;
                         physicalCameraControls.Alpha = 0.0f;
@@ -171,7 +165,7 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 if (cameraSprite is DrawableCameraDevice drawableCameraDevice)
                     drawableCameraDevice.Expire();
 
-                Camera = new CameraDevice(Array.IndexOf(cameraManager.CameraDeviceNames.ToArray(), cam.NewValue), EncodingFormat.JPEG, encodingparams);
+                Camera = new CameraDevice(Array.IndexOf(cameraManager.CameraDeviceNames.ToArray(), cam.NewValue));
                 cameraSpriteContainer.Add(cameraSprite = new DrawableCameraDevice((CameraDevice)Camera));
             };
         }

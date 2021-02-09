@@ -4,9 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenCvSharp;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using Vignette.Application.Recognition;
@@ -15,7 +18,11 @@ namespace Vignette.Application.Tests.Visual.Recognition
 {
     public class TestSceneFaceTracker : TestSceneRecognition
     {
+        private FaceTracker tracker;
+
         private TrackerVisualizer visualizer;
+
+        private readonly Sprite regionOfInterest;
 
         private readonly BasicCheckbox visualizerVisibility;
 
@@ -46,6 +53,26 @@ namespace Vignette.Application.Tests.Visual.Recognition
                         Items = Enum.GetValues<FaceRegion>(),
                         Alpha = 0.0f,
                     },
+                    new Container
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 200.0f,
+                        Children = new Drawable[]
+                        {
+                            new Box
+                            {
+                                Colour = Colour4.Black,
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            regionOfInterest = new Sprite
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                FillMode = FillMode.Fit,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            }
+                        }
+                    }
                 }
             });
 
@@ -63,9 +90,32 @@ namespace Vignette.Application.Tests.Visual.Recognition
             visualizerMode.Current.Value = VisualizerMode.General;
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            if (Camera.Data == null)
+                return;
+
+            if (!(tracker?.Faces?.Any() ?? false))
+                return;
+
+            // store copies so we're thread-safe
+            var cam = Camera.Data.ToArray();
+            var faces = tracker.Faces.ToArray();
+
+            var mat = Mat.FromImageData(cam);
+            var roi = faces[0].GetRegionBounds(regionSelector.Current.Value);
+
+            if (regionOfInterest.IsLoaded)
+                regionOfInterest.Texture = Texture.FromStream(mat[new Rect((int)roi.X, (int)roi.Y, (int)roi.Width, (int)roi.Height)].ToMemoryStream());
+        }
+
         protected override void TrackerChanged(FaceTracker tracker)
         {
             visualizer?.Expire();
+
+            this.tracker = tracker;
 
             Add(visualizer = new TrackerVisualizer(tracker)
             {
