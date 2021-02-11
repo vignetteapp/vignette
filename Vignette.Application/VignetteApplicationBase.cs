@@ -37,7 +37,24 @@ namespace Vignette.Application
         [BackgroundDependencyLoader]
         private void load()
         {
-            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), "Resources"));
+            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(VignetteApplicationBase).Assembly), @"Resources"));
+            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), @"Resources"));
+
+            AddFont(Resources, @"Fonts/Raleway");
+            AddFont(Resources, @"Fonts/Raleway-Black");
+            AddFont(Resources, @"Fonts/Raleway-BlackItalic");
+            AddFont(Resources, @"Fonts/Raleway-Bold");
+            AddFont(Resources, @"Fonts/Raleway-BoldItalic");
+            AddFont(Resources, @"Fonts/Raleway-ExtraBold");
+            AddFont(Resources, @"Fonts/Raleway-ExtraBoldItalic");
+            AddFont(Resources, @"Fonts/Raleway-Light");
+            AddFont(Resources, @"Fonts/Raleway-LightItalic");
+            AddFont(Resources, @"Fonts/Raleway-Medium");
+            AddFont(Resources, @"Fonts/Raleway-MediumItalic");
+            AddFont(Resources, @"Fonts/Raleway-SemiBold");
+            AddFont(Resources, @"Fonts/Raleway-SemiBoldItalic");
+            AddFont(Resources, @"Fonts/Raleway-Thin");
+            AddFont(Resources, @"Fonts/Raleway-ThinItalic");
         }
     }
 }
