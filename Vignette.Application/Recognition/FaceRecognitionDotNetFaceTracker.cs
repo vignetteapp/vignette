@@ -26,10 +26,7 @@ namespace Vignette.Application.Recognition
             get
             {
                 var assemblyName = Assembly.GetExecutingAssembly().Location;
-                var UriBuilder = new UriBuilder(assemblyName);
-                var path = Uri.UnescapeDataString(UriBuilder.Path);
-
-                return Path.GetDirectoryName(path);
+                return Path.GetDirectoryName(assemblyName);
             }
         }
 
