@@ -45,21 +45,21 @@ namespace Vignette.Application.Graphics.Themes
             watcher.Changed += (_, e) => reloadTheme(e.FullPath);
             watcher.Renamed += (_, e) => reloadTheme(e.OldFullPath, e.FullPath);
 
-            watcher.EnableRaisingEvents = true;
-
             loadSystemThemes();
+            loadUserThemes();
+
+            watcher.EnableRaisingEvents = true;
         }
 
-        public void Save()
+        private void loadUserThemes()
         {
-            
+            foreach (string path in storage.GetFiles(".", ".json"))
+                loadTheme(path);
         }
 
         private void loadSystemThemes()
         {
-            string[] files = Directory.GetFiles(Path.Combine(RuntimeInfo.StartupDirectory, "themes"));
-
-            foreach (string path in files)
+            foreach (string path in Directory.GetFiles(Path.Combine(RuntimeInfo.StartupDirectory, "themes")))
                 loadTheme(path);
         }
 
