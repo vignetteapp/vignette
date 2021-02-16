@@ -2,10 +2,10 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using Vignette.Application.Graphics.Shapes;
+using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Graphics.Interface
 {
@@ -13,7 +13,7 @@ namespace Vignette.Application.Graphics.Interface
     {
         private Drawable label;
 
-        private readonly Box overlay;
+        private readonly VignetteBox overlay;
 
         private readonly VignetteBox background;
 
@@ -42,11 +42,12 @@ namespace Vignette.Application.Graphics.Interface
                 background = new VignetteBox
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colouring = Colouring.Accent,
+                    ThemeColour = ThemeColour.ThemePrimary,
                 },
-                overlay = new Box
+                overlay = new VignetteBox
                 {
                     RelativeSizeAxes = Axes.Both,
+                    ThemeColour = ThemeColour.Black,
                     Alpha = 0.0f,
                 },
                 label = CreateLabel(),
@@ -62,7 +63,7 @@ namespace Vignette.Application.Graphics.Interface
 
             background.Alpha = isFilled ? 1.0f : 0.0f;
             if (label is IThemeable themeable)
-                themeable.Colouring = isFilled ? Colouring.Background : Colouring.Accent;
+                themeable.ThemeColour = isFilled ? ThemeColour.White : ThemeColour.ThemePrimary;
         }
 
         protected abstract Drawable CreateLabel();
@@ -79,14 +80,14 @@ namespace Vignette.Application.Graphics.Interface
         {
             base.OnHoverLost(e);
 
-            if (Enabled.Value)
+            if (Enabled.Value && !e.HasAnyButtonPressed)
                 overlay.Alpha = 0.0f;
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
             if (Enabled.Value)
-                overlay.Colour = Colour4.DarkGray;
+                overlay.Alpha = 0.1f;
 
             return base.OnMouseDown(e);
         }
@@ -94,7 +95,7 @@ namespace Vignette.Application.Graphics.Interface
         protected override void OnMouseUp(MouseUpEvent e)
         {
             if (Enabled.Value)
-                overlay.Colour = Colour4.White;
+                overlay.Alpha = ScreenSpaceDrawQuad.Contains(e.ScreenSpaceMousePosition) ? 0.05f : 0.0f;
 
             base.OnMouseUp(e);
         }

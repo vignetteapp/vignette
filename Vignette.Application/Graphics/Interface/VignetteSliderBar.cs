@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using Vignette.Application.Graphics.Shapes;
+using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Graphics.Interface
 {
@@ -35,18 +36,17 @@ namespace Vignette.Application.Graphics.Interface
                     Origin = Anchor.CentreLeft,
                     Height = 6.0f,
                     Position = new Vector2(2, 0),
-                    Colouring = Colouring.Accent,
+                    ThemeColour = ThemeColour.ThemePrimary,
                     RelativeSizeAxes = Axes.None,
                 },
                 right = new VignetteBox
                 {
                     Width = 0.5f,
-                    Level = 4,
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
                     Height = 6.0f,
                     Position = new Vector2(-2, 0),
-                    Colouring = Colouring.Background,
+                    ThemeColour = ThemeColour.NeutralQuaternaryAlt,
                     RelativeSizeAxes = Axes.None,
                 },
                 new Container
@@ -61,7 +61,7 @@ namespace Vignette.Application.Graphics.Interface
                             RelativePositionAxes = Axes.X,
                             BorderThickness = 6.0f,
                             CornerRadius = RangePadding,
-                            Colouring = Colouring.Accent,
+                            ThemeColour = ThemeColour.ThemePrimary,
                             Origin = Anchor.TopCentre,
                             Size = new Vector2(slider_bar_height),
                         },

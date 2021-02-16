@@ -6,15 +6,24 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.IO.Stores;
+using osu.Framework.Platform;
+using Vignette.Application.Graphics.Themes;
 using Vignette.Application.Live2D.Resources;
 
 namespace Vignette.Application
 {
     public class VignetteApplicationBase : Game
     {
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+
+        private DependencyContainer dependencies;
+
         protected override Container<Drawable> Content => content;
 
         private readonly Container content;
+
+        protected Storage Storage { get; set; }
 
         public VignetteApplicationBase()
         {
@@ -55,6 +64,14 @@ namespace Vignette.Application
             AddFont(Resources, @"Fonts/Raleway-SemiBoldItalic");
             AddFont(Resources, @"Fonts/Raleway-Thin");
             AddFont(Resources, @"Fonts/Raleway-ThinItalic");
+
+            dependencies.Cache(new ThemeStore(Storage));
+        }
+
+        public override void SetHost(GameHost host)
+        {
+            base.SetHost(host);
+            Storage ??= host.Storage;
         }
     }
 }

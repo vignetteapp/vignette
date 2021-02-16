@@ -6,74 +6,48 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Graphics.Shapes
 {
     public class OutlinedBox : Container, IThemeable
     {
-        [Resolved(CanBeNull = true)]
-        private VignetteColour colour { get; set; }
+        private ThemeColour themeColour = ThemeColour.NeutralLight;
 
-        private int level;
-
-        public int Level
+        public ThemeColour ThemeColour
         {
-            get => level;
+            get => themeColour;
             set
             {
-                if (level == value)
+                if (themeColour == value)
                     return;
 
-                level = value;
+                themeColour = value;
                 updateColour();
             }
         }
 
-        private Colouring colouring;
+        public double TransitionDuration { get; set; } = 250;
 
-        public Colouring Colouring
-        {
-            get => colouring;
-            set
-            {
-                if (colouring == value)
-                    return;
-
-                colouring = value;
-                updateColour();
-            }
-        }
+        [Resolved]
+        private ThemeStore themes { get; set; }
 
         public OutlinedBox()
         {
             Masking = true;
+            BorderThickness = VignetteStyle.BorderThickness;
             Add(new Box { RelativeSizeAxes = Axes.Both, Colour = Colour4.Transparent });
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            colour?.Accent.BindValueChanged(_ => updateColour());
-            colour?.DarkMode.BindValueChanged(_ => updateColour());
-
-            updateColour();
+            themes?.Current.BindValueChanged(_ => updateColour(), true);
         }
 
         private void updateColour()
         {
-            Schedule(() =>
-            {
-                switch (Colouring)
-                {
-                    case Colouring.Accent:
-                        this.TransformTo<OutlinedBox, SRGBColour>("BorderColour", colour?.Accent.Value ?? Colour4.White, 200, Easing.OutQuint);
-                        break;
-
-                    case Colouring.Background:
-                        this.TransformTo<OutlinedBox, SRGBColour>("BorderColour", colour?.GetBackgroundColor(Level) ?? Colour4.White, 200, Easing.OutQuint);
-                        break;
-                }
-            });
+            Schedule(() => this.TransformTo<OutlinedBox, SRGBColour>("BorderColour", themes.Current.Value?.Get(ThemeColour) ?? Colour4.White, TransitionDuration, Easing.OutQuint));
         }
     }
 }

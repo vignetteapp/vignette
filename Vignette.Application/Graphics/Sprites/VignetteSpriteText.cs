@@ -4,43 +4,31 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
+using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Graphics.Sprites
 {
     public class VignetteSpriteText : SpriteText, IThemeable
     {
-        [Resolved(CanBeNull = true)]
-        private VignetteColour colour { get; set; }
+        private ThemeColour themeColour = ThemeColour.Black;
 
-        private int level;
-
-        public int Level
+        public ThemeColour ThemeColour
         {
-            get => level;
+            get => themeColour;
             set
             {
-                if (level == value)
+                if (themeColour == value)
                     return;
 
-                level = value;
+                themeColour = value;
                 updateColour();
             }
         }
 
-        private Colouring colouring;
+        public double TransitionDuration { get; set; } = 250;
 
-        public Colouring Colouring
-        {
-            get => colouring;
-            set
-            {
-                if (colouring == value)
-                    return;
-
-                colouring = value;
-                updateColour();
-            }
-        }
+        [Resolved]
+        private ThemeStore themes { get; set; }
 
         public VignetteSpriteText()
         {
@@ -50,27 +38,12 @@ namespace Vignette.Application.Graphics.Sprites
         [BackgroundDependencyLoader]
         private void load()
         {
-            colour?.Accent.BindValueChanged(_ => updateColour());
-            colour?.DarkMode.BindValueChanged(_ => updateColour());
-
-            updateColour();
+            themes?.Current.BindValueChanged(_ => updateColour(), true);
         }
 
         private void updateColour()
         {
-            Schedule(() =>
-            {
-                switch (Colouring)
-                {
-                    case Colouring.Accent:
-                        this.FadeColour(colour?.Accent.Value ?? Colour4.White, 200, Easing.OutQuint);
-                        break;
-
-                    case Colouring.Background:
-                        this.FadeColour(colour?.GetBackgroundColor(Level) ?? Colour4.White, 200, Easing.OutQuint);
-                        break;
-                }
-            });
+            Schedule(() => this.FadeColour(themes.Current.Value?.Get(ThemeColour) ?? Colour4.White, TransitionDuration, Easing.OutQuint));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Vignette.Application.Graphics.Interface
         public string Text
         {
             get => spriteText.Text;
-            set => spriteText.Text = value.ToUpperInvariant();
+            set => spriteText.Text = value;
         }
 
         public ButtonText()

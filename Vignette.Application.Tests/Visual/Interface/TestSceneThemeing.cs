@@ -1,12 +1,14 @@
 ﻿// Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
 using Vignette.Application.Graphics;
 using Vignette.Application.Graphics.Shapes;
+using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Tests.Visual.Interface
 {
@@ -21,21 +23,20 @@ namespace Vignette.Application.Tests.Visual.Interface
             {
                 themedBoxFlow = new FillFlowContainer
                 {
-                    Direction = FillDirection.Horizontal,
-                    Height = 50,
-                    AutoSizeAxes = Axes.X,
+                    Width = 250,
+                    Direction = FillDirection.Full,
+                    AutoSizeAxes = Axes.Y,
                 },
                 new VignetteBox
                 {
                     Size = new Vector2(50),
-                    Colouring = Colouring.Accent,
+                    ThemeColour = ThemeColour.ThemePrimary,
                 },
                 new OutlinedBox
                 {
                     Size = new Vector2(50),
-                    Colouring = Colouring.Override,
-                    BorderColour = Colour4.Red,
-                    BorderThickness = 10.0f,
+                    ThemeColour = ThemeColour.ThemePrimary,
+                    BorderThickness = 5.0f,
                 },
                 new FillFlowContainer
                 {
@@ -51,8 +52,8 @@ namespace Vignette.Application.Tests.Visual.Interface
                 },
             });
 
-            for (int i = 0; i <= 10; i++)
-                themedBoxFlow.Add(new VignetteBox { Size = new Vector2(50), Level = i, });
+            foreach (var colour in Enum.GetValues<ThemeColour>())
+                themedBoxFlow.Add(new VignetteBox { Size = new Vector2(50), ThemeColour = colour, });
         }
 
         private class ElevatedContainer : Container
