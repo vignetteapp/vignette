@@ -27,7 +27,7 @@ namespace Vignette.Application.Graphics.Shapes
             }
         }
 
-        public double TransitionDuration { get; set; } = 250;
+        public double TransitionDuration { get; set; } = VignetteStyle.TransitionDuration;
 
         [Resolved]
         private ThemeStore themes { get; set; }

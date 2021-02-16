@@ -2,9 +2,7 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using Vignette.Application.Graphics.Shapes;
@@ -15,15 +13,13 @@ namespace Vignette.Application.Graphics.Interface
 {
     public class VignetteTextBox : TextBox
     {
-        private readonly OutlinedBox border;
-
         public VignetteTextBox()
         {
             Height = 35;
             TextFlow.Padding = new MarginPadding { Vertical = 5 };
             TextContainer.Height = 0.75f;
 
-            Add(border = new OutlinedBox
+            Add(new OutlinedBox
             {
                 Depth = 1,
                 ThemeColour = ThemeColour.NeutralTertiary,

@@ -13,6 +13,8 @@ namespace Vignette.Application.Graphics
 
         public static float BorderThickness => 1.5f;
 
+        public static double TransitionDuration => 250;
+
         public static EdgeEffectParameters ElevationOne => new EdgeEffectParameters
         {
             Colour = Colour4.Black.Opacity(0.1f),
