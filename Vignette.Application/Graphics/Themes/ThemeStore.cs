@@ -35,8 +35,8 @@ namespace Vignette.Application.Graphics.Themes
 
             watcher = new FileSystemWatcher
             {
-                Path = this.storage?.GetFullPath("."),
-                Filter = ".json",
+                Path = this.storage?.GetFullPath(string.Empty),
+                Filter = "*.json",
                 NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
             };
 
@@ -53,8 +53,8 @@ namespace Vignette.Application.Graphics.Themes
 
         private void loadUserThemes()
         {
-            foreach (string path in storage.GetFiles(".", ".json"))
-                loadTheme(path);
+            foreach (string path in storage.GetFiles(string.Empty, "*.json"))
+                loadTheme(storage.GetFullPath(path));
         }
 
         private void loadSystemThemes()
