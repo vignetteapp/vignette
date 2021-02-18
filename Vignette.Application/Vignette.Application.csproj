@@ -35,7 +35,7 @@
   <ItemGroup>
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0.2" />
     <PackageReference Include="Humanizer" Version="2.8.26" />
-    <PackageReference Include="ppy.osu.Framework" Version="2021.204.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2021.215.0" />
     <PackageReference Include="Vignette.Application.Camera" Version="2021.207.0" />
     <PackageReference Include="Vignette.Application.Live2D" Version="2021.201.4" />
     <PackageReference Include="Vignette.Application.Live2D.Native" Version="2021.203.0" />
