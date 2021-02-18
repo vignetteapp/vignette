@@ -46,7 +46,7 @@ namespace Vignette.Application.Tests.Visual.Interface
         private void load(ThemeStore store)
         {
             store.Current.BindTo(themesDropdown.Current);
-            themesDropdown.ItemSource = store.Loaded;
+            store.Loaded.BindCollectionChanged((s, e) => Schedule(() => themesDropdown.Items = store.Loaded), true);
         }
 
         public void AddComponent(Drawable drawable) => content.Add(drawable);
