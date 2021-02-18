@@ -8,105 +8,71 @@ using System.Linq;
 using System.Text.Json;
 using osu.Framework;
 using osu.Framework.Bindables;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
+using Vignette.Application.IO.Stores;
 
 namespace Vignette.Application.Graphics.Themes
 {
-    public class ThemeStore : IDisposable
+    public class ThemeStore : ObservedDirectoryStore
     {
         public IBindable<Theme> Current => current;
 
         public IBindableList<Theme> Loaded => loaded;
 
-        private readonly Storage storage;
-
-        private readonly FileSystemWatcher watcher;
+        protected override string DirectoryName => @"themes";
 
         private readonly Bindable<Theme> current = new Bindable<Theme>();
 
         private readonly BindableList<Theme> loaded = new BindableList<Theme>();
 
         public ThemeStore(Storage storage = null)
+            : base(storage)
         {
-            this.storage = storage?.GetStorageForDirectory("themes");
-
-            if (this.storage == null)
-                return;
-
-            watcher = new FileSystemWatcher
-            {
-                Path = this.storage?.GetFullPath(string.Empty),
-                Filter = "*.json",
-                NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
-            };
-
-            watcher.Created += (_, e) => loadTheme(e.FullPath);
-            watcher.Deleted += (_, e) => unloadTheme(e.FullPath);
-            watcher.Changed += (_, e) => reloadTheme(e.FullPath);
-            watcher.Renamed += (_, e) => reloadTheme(e.OldFullPath, e.FullPath);
-
             loadSystemThemes();
             loadUserThemes();
-
-            watcher.EnableRaisingEvents = true;
         }
 
         private void loadUserThemes()
         {
-            foreach (string path in storage.GetFiles(string.Empty, "*.json"))
-                loadTheme(storage.GetFullPath(path));
+            foreach (string path in Storage.GetFiles(string.Empty, "*.json"))
+                FileCreated(Storage.GetFullPath(path));
         }
 
         private void loadSystemThemes()
         {
             foreach (string path in Directory.GetFiles(Path.Combine(RuntimeInfo.StartupDirectory, "themes")))
-                loadTheme(path);
+                FileCreated(path);
         }
 
-        private void reloadTheme(string path)
-        {
-            unloadTheme(path);
-            loadTheme(path);
-        }
-
-        private void reloadTheme(string oldPath, string newPath)
-        {
-            unloadTheme(oldPath);
-            loadTheme(newPath);
-        }
-
-        private void unloadTheme(string path)
-        {
-            string filename = Path.GetFileNameWithoutExtension(path);
-            var theme = loaded.FirstOrDefault(t => t.Name == filename);
-
-            if (theme != null)
-                loaded.Remove(theme);
-        }
-
-        private void loadTheme(string path)
+        protected override void FileCreated(string path)
         {
             string filename = Path.GetFileNameWithoutExtension(path);
 
             if (loaded.Any(t => t.Name == filename))
                 return;
 
-            using var file = File.OpenRead(path);
+            using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var reader = new StreamReader(file);
 
-            var deserialized = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd());
-            loaded.Add(new Theme(filename, deserialized));
+            try
+            {
+                var deserialized = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd());
+                loaded.Add(new Theme(filename, deserialized));
+            }
+            catch (Exception e)
+            {
+                Logger.Log($"Failed to load theme to load theme {filename}.\n{e}");
+            }
         }
 
-        public void Dispose()
+        protected override void FileDeleted(string path)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+            string filename = Path.GetFileNameWithoutExtension(path);
+            var theme = loaded.FirstOrDefault(t => t.Name == filename);
 
-        protected virtual void Dispose(bool isDisposing)
-        {
-            watcher.Dispose();
+            if (theme != null)
+                loaded.Remove(theme);
         }
     }
 }
