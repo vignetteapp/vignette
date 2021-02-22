@@ -50,7 +50,7 @@ namespace Vignette.Application.Graphics.Interface
                     },
                     label = new VignetteSpriteText
                     {
-                        Font = VignetteFont.Medium.With(size: 16),
+                        Font = VignetteFont.SemiBold.With(size: 16),
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Margin = new MarginPadding { Left = 10 },

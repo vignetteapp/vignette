@@ -49,21 +49,21 @@ namespace Vignette.Application
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(VignetteApplicationBase).Assembly), @"Resources"));
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), @"Resources"));
 
-            AddFont(Resources, @"Fonts/Raleway");
-            AddFont(Resources, @"Fonts/Raleway-Black");
-            AddFont(Resources, @"Fonts/Raleway-BlackItalic");
+            AddFont(Resources, @"Fonts/SegoeUI");
+            AddFont(Resources, @"Fonts/SegoeUI-Italic");
+            AddFont(Resources, @"Fonts/SegoeUI-Bold");
+            AddFont(Resources, @"Fonts/SegoeUI-BoldItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-Black");
+            AddFont(Resources, @"Fonts/SegoeUI-BlackItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-Light");
+            AddFont(Resources, @"Fonts/SegoeUI-LightItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiBold");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiBoldItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiLight");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiLightItalic");
+
             AddFont(Resources, @"Fonts/Raleway-Bold");
             AddFont(Resources, @"Fonts/Raleway-BoldItalic");
-            AddFont(Resources, @"Fonts/Raleway-ExtraBold");
-            AddFont(Resources, @"Fonts/Raleway-ExtraBoldItalic");
-            AddFont(Resources, @"Fonts/Raleway-Light");
-            AddFont(Resources, @"Fonts/Raleway-LightItalic");
-            AddFont(Resources, @"Fonts/Raleway-Medium");
-            AddFont(Resources, @"Fonts/Raleway-MediumItalic");
-            AddFont(Resources, @"Fonts/Raleway-SemiBold");
-            AddFont(Resources, @"Fonts/Raleway-SemiBoldItalic");
-            AddFont(Resources, @"Fonts/Raleway-Thin");
-            AddFont(Resources, @"Fonts/Raleway-ThinItalic");
 
             dependencies.Cache(new ThemeStore(Storage));
         }
