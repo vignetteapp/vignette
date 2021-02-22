@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Humanizer;
 using osu.Framework.Graphics;
 using Vignette.Application.IO;
@@ -16,9 +15,9 @@ namespace Vignette.Application.Graphics.Themes
 
         private readonly Dictionary<ThemeColour, Colour4> colours = new Dictionary<ThemeColour, Colour4>();
 
-        public Theme(string path, IDictionary<string, string> mapping)
+        public Theme(string name, IDictionary<string, string> mapping)
         {
-            Name = Path.GetFileNameWithoutExtension(path);
+            Name = name;
             foreach ((string key, string value) in mapping)
                 colours.Add(Enum.Parse<ThemeColour>(key.Pascalize()), Colour4.FromHex(value));
         }

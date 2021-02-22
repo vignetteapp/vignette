@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using osu.Framework.Bindables;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
 
 namespace Vignette.Application.IO
@@ -72,7 +73,7 @@ namespace Vignette.Application.IO
             }
         }
 
-        protected abstract T Load(string path);
+        protected abstract T Load(string filename, Stream data);
 
         protected virtual void FileCreated(string path)
         {
@@ -81,9 +82,18 @@ namespace Vignette.Application.IO
             if (loaded.Any(t => t.Name == filename))
                 return;
 
-            var toLoad = Load(path);
-            if (toLoad != null)
-                loaded.Add(toLoad);
+            try
+            {
+                using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                var toLoad = Load(filename, file);
+                if (toLoad != null)
+                    loaded.Add(toLoad);
+            }
+            catch
+            {
+                Logger.Log($"Failed to load theme to load {path}.");
+            }
         }
 
         protected virtual void FileDeleted(string path)

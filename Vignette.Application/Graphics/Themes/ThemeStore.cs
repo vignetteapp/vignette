@@ -29,21 +29,11 @@ namespace Vignette.Application.Graphics.Themes
                 FileCreated(path);
         }
 
-        protected override Theme Load(string path)
+        protected override Theme Load(string filename, Stream data)
         {
-            try
-            {
-                using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using var reader = new StreamReader(file);
-
-                var deserialized = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd());
-                return new Theme(path, deserialized);
-            }
-            catch
-            {
-                Logger.Log($"Failed to load theme to load theme {path}.");
-                return null;
-            }
+            using var reader = new StreamReader(data);
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd());
+            return new Theme(filename, deserialized);
         }
     }
 }
