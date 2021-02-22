@@ -12,11 +12,9 @@ using osu.Framework.Platform;
 namespace Vignette.Application.IO
 {
     public abstract class ObservedDirectoryStore<T> : IDisposable
-        where T : IFileInfo
+        where T : class
     {
-        public IBindable<T> Current => current;
-
-        public IBindableList<T> Loaded => loaded;
+        public IBindableList<ObservableFile<T>> Loaded => loaded;
 
         protected abstract string DirectoryName { get; }
 
@@ -26,9 +24,7 @@ namespace Vignette.Application.IO
 
         private bool disposedValue;
 
-        private readonly Bindable<T> current = new Bindable<T>();
-
-        private readonly BindableList<T> loaded = new BindableList<T>();
+        private readonly BindableList<ObservableFile<T>> loaded = new BindableList<ObservableFile<T>>();
 
         private readonly FileSystemWatcher watcher;
 
@@ -58,6 +54,14 @@ namespace Vignette.Application.IO
             loadFiles();
         }
 
+        public T Get(string name) => loaded.FirstOrDefault(f => f.Name == name);
+
+        public bool Has(string name) => Get(name) != null;
+
+        public void Add(string name, T data) => loaded.Add(new ObservableFile<T>(name, data));
+
+        public void Remove(string name) => loaded.Remove(loaded.FirstOrDefault(f => f.Name == name));
+
         private void loadFiles(string directory = null)
         {
             foreach (string filter in Filters)
@@ -73,22 +77,22 @@ namespace Vignette.Application.IO
             }
         }
 
-        protected abstract T Load(string filename, Stream data);
+        protected abstract T Load(Stream data);
 
         protected virtual void FileCreated(string path)
         {
             string filename = Path.GetFileNameWithoutExtension(path);
 
-            if (loaded.Any(t => t.Name == filename))
+            if (Has(filename))
                 return;
 
             try
             {
                 using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-                var toLoad = Load(filename, file);
+                var toLoad = Load(file);
                 if (toLoad != null)
-                    loaded.Add(toLoad);
+                    Add(filename, toLoad);
             }
             catch
             {
@@ -99,10 +103,9 @@ namespace Vignette.Application.IO
         protected virtual void FileDeleted(string path)
         {
             string filename = Path.GetFileNameWithoutExtension(path);
-            var asset = loaded.FirstOrDefault(t => t.Name == filename);
 
-            if (asset != null)
-                loaded.Remove(asset);
+            if (Has(filename))
+                Remove(filename);
         }
 
         protected virtual void FileChanged(string path)

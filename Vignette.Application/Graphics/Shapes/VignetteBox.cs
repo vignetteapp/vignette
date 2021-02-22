@@ -2,15 +2,17 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
+using Vignette.Application.Configuration;
 using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Graphics.Shapes
 {
     public class VignetteBox : Box, IThemeable
     {
-        private ThemeColour themeColour = ThemeColour.NeutralLighter;
+        public double TransitionDuration { get; set; } = VignetteStyle.TransitionDuration;
 
         public ThemeColour ThemeColour
         {
@@ -25,20 +27,24 @@ namespace Vignette.Application.Graphics.Shapes
             }
         }
 
-        public double TransitionDuration { get; set; } = VignetteStyle.TransitionDuration;
+        private ThemeColour themeColour = ThemeColour.NeutralLighter;
+
+        private Bindable<string> theme;
 
         [Resolved]
         private ThemeStore themes { get; set; }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(ApplicationConfigManager appConfig)
         {
-            themes?.Current.BindValueChanged(_ => updateColour(), true);
+            theme = appConfig.GetBindable<string>(ApplicationConfig.Theme);
+            theme.BindValueChanged(state => updateColour(), true);
         }
 
         private void updateColour()
         {
-            Schedule(() => this.FadeColour(themes.Current.Value?.Get(ThemeColour) ?? Colour4.White, TransitionDuration, Easing.OutQuint));
+            var colour = themes?.Get(theme.Value)?.Get(themeColour) ?? Colour4.White;
+            Schedule(() => this.FadeColour(colour, TransitionDuration, Easing.OutQuint));
         }
     }
 }

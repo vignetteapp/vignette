@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using osu.Framework;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using Vignette.Application.IO;
 
@@ -29,11 +28,11 @@ namespace Vignette.Application.Graphics.Themes
                 FileCreated(path);
         }
 
-        protected override Theme Load(string filename, Stream data)
+        protected override Theme Load(Stream data)
         {
             using var reader = new StreamReader(data);
             var deserialized = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd());
-            return new Theme(filename, deserialized);
+            return new Theme(deserialized);
         }
     }
 }
