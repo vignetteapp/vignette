@@ -3,20 +3,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Humanizer;
 using osu.Framework.Graphics;
+using Vignette.Application.IO;
 
 namespace Vignette.Application.Graphics.Themes
 {
-    public class Theme
+    public class Theme : IFileInfo
     {
-        public string Name { get; set; }
+        public string Name { get; }
 
         private readonly Dictionary<ThemeColour, Colour4> colours = new Dictionary<ThemeColour, Colour4>();
 
-        public Theme(string name, IDictionary<string, string> mapping)
+        public Theme(string path, IDictionary<string, string> mapping)
         {
-            Name = name;
+            Name = Path.GetFileNameWithoutExtension(path);
             foreach ((string key, string value) in mapping)
                 colours.Add(Enum.Parse<ThemeColour>(key.Pascalize()), Colour4.FromHex(value));
         }
