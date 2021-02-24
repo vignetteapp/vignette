@@ -96,7 +96,7 @@ namespace Vignette.Application.IO
             }
             catch
             {
-                Logger.Log($"Failed to load theme to load {path}.");
+                Logger.Log($"Failed to load {path}.");
             }
         }
 
