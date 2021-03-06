@@ -28,7 +28,22 @@ namespace Vignette.Application.Graphics.Interface
                     return;
 
                 style = value;
-                updateStyle();
+                UpdateStyle();
+            }
+        }
+
+        private ThemeColour labelColour;
+
+        public ThemeColour LabelColour
+        {
+            get => labelColour;
+            set
+            {
+                if (labelColour == value)
+                    return;
+
+                labelColour = value;
+                UpdateStyle();
             }
         }
 
@@ -53,17 +68,31 @@ namespace Vignette.Application.Graphics.Interface
                 label = CreateLabel(),
             });
 
-            updateStyle();
+            UpdateStyle();
             Enabled.BindValueChanged(state => Colour = state.NewValue ? Colour4.White : Colour4.Gray, true);
         }
 
-        private void updateStyle()
+        protected void UpdateStyle()
         {
-            bool isFilled = Style == ButtonStyle.Filled;
+            background.Alpha = Style == ButtonStyle.Filled ? 1.0f : 0.0f;
 
-            background.Alpha = isFilled ? 1.0f : 0.0f;
-            if (label is IThemeable themeable)
-                themeable.ThemeColour = isFilled ? ThemeColour.White : ThemeColour.ThemePrimary;
+            if (label is not IThemeable themeable)
+                return;
+
+            switch (Style)
+            {
+                case ButtonStyle.Filled:
+                    themeable.ThemeColour = ThemeColour.White;
+                    break;
+
+                case ButtonStyle.NoFill:
+                    themeable.ThemeColour = ThemeColour.ThemePrimary;
+                    break;
+
+                case ButtonStyle.Override:
+                    themeable.ThemeColour = LabelColour;
+                    break;
+            }
         }
 
         protected abstract Drawable CreateLabel();
@@ -106,5 +135,7 @@ namespace Vignette.Application.Graphics.Interface
         Filled,
 
         NoFill,
+
+        Override,
     }
 }
