@@ -24,6 +24,12 @@ namespace Vignette.Application.Graphics.Interface
             set => spriteIcon.Icon = value;
         }
 
+        public Axes IconSizing
+        {
+            get => spriteIcon.RelativeSizeAxes;
+            set => spriteIcon.RelativeSizeAxes = value;
+        }
+
         protected override Drawable CreateLabel() => spriteIcon = new VignetteSpriteIcon
         {
             Anchor = Anchor.Centre,
