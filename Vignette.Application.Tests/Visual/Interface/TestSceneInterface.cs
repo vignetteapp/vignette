@@ -2,14 +2,18 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Testing;
 using osuTK;
+using Vignette.Application.Configuration;
 using Vignette.Application.Graphics.Shapes;
 using Vignette.Application.Graphics.Themes;
+using Vignette.Application.IO;
 
 namespace Vignette.Application.Tests.Visual.Interface
 {
@@ -17,7 +21,7 @@ namespace Vignette.Application.Tests.Visual.Interface
     {
         private readonly FillFlowContainer content;
 
-        private readonly BasicDropdown<Theme> themesDropdown;
+        private readonly BasicDropdown<string> themesDropdown;
 
         public TestSceneInterface()
         {
@@ -32,7 +36,7 @@ namespace Vignette.Application.Tests.Visual.Interface
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                themesDropdown = new BasicDropdown<Theme>
+                themesDropdown = new BasicDropdown<string>
                 {
                     Margin = new MarginPadding(10),
                     Anchor = Anchor.TopRight,
@@ -43,10 +47,10 @@ namespace Vignette.Application.Tests.Visual.Interface
         }
 
         [BackgroundDependencyLoader]
-        private void load(ThemeStore store)
+        private void load(ApplicationConfigManager appConfig, ThemeStore store)
         {
-            store.Current.BindTo(themesDropdown.Current);
-            store.Loaded.BindCollectionChanged((s, e) => Schedule(() => themesDropdown.Items = store.Loaded), true);
+            themesDropdown.Current = appConfig.GetBindable<string>(ApplicationConfig.Theme);
+            store.Loaded.BindCollectionChanged((s, e) => Schedule(() => themesDropdown.Items = store.Loaded.Select(t => t.Name)), true);
         }
 
         public void AddComponent(Drawable drawable) => content.Add(drawable);
