@@ -44,14 +44,6 @@ Your GitHub PAT (personal access token) should have the `read:packages` scope to
 - See [this article](https://docs.github.com/en/packages/guides/configuring-dotnet-cli-for-use-with-github-packages) for more information about configuring GitHub Packages for NuGet and .NET.
 - See [this](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) also for more information about creating a personal access token.
 
-### Setting up the Live2D Cubism SDK
-
-Due to restrictions, we are unable to provide the SDK publicly. However, you can still run Vignette by manually including these files when building.
-1. Download the SDK through [this link](https://www.live2d.com/en/download/cubism-sdk/).
-2. Extract the correct library for your operating system and architecture in the root of the build directory.
-
-With this, the application will be able to pickup the libraries and start.
-
 ## Contributing
 
 The style guide is defined in the [`.editorconfig`](./.editorconfig) at the root of this repository and it will be picked up in intellisense by capable editors. Please follow the provided style for consistency.

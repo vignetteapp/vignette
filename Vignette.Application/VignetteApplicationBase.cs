@@ -11,7 +11,6 @@ using osu.Framework.Platform;
 using Vignette.Application.Configuration;
 using Vignette.Application.Graphics.Themes;
 using Vignette.Application.IO;
-using Vignette.Application.Live2D.Resources;
 
 namespace Vignette.Application
 {
@@ -56,7 +55,6 @@ namespace Vignette.Application
         private void load()
         {
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(typeof(VignetteApplicationBase).Assembly), @"Resources"));
-            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), @"Resources"));
 
             AddFont(Resources, @"Fonts/SegoeUI");
             AddFont(Resources, @"Fonts/SegoeUI-Italic");

@@ -24,7 +24,7 @@ namespace Vignette.Application.Tests.Visual.Recognition
 
         private DrawableCameraWrapper cameraSprite;
 
-        private readonly FaceTracker tracker;
+        private readonly FaceTracker tracker = null;
 
         private readonly Container cameraSpriteContainer;
 
@@ -117,12 +117,10 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 }
             });
 
-            Add(tracker = new FaceRecognitionDotNetFaceTracker());
-
             cameraTypeSelector.Current.BindValueChanged((mode) =>
             {
                 cameraSprite?.Expire();
-                tracker.StopTracking();
+                tracker?.StopTracking();
 
                 switch (mode.NewValue)
                 {
@@ -155,7 +153,7 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 cameraSprite.Height = Camera.Height;
 
                 Camera.Start();
-                tracker.StartTracking(Camera);
+                tracker?.StartTracking(Camera);
                 TrackerChanged(tracker);
             }, true);
 

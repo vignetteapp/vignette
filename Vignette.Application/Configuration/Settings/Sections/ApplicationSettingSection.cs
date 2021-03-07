@@ -7,9 +7,7 @@ using osu.Framework.Graphics.Sprites;
 using Vignette.Application.Configuration.Settings.Components;
 using Vignette.Application.Graphics.Interface;
 using Vignette.Application.Graphics.Themes;
-using Vignette.Application.IO;
 using Humanizer;
-using osu.Framework.Bindables;
 using System.Linq;
 using osu.Framework.Platform;
 
@@ -21,20 +19,17 @@ namespace Vignette.Application.Configuration.Settings.Sections
 
         public override IconUsage Icon => FontAwesome.Solid.Desktop;
 
-        private Bindable<ObservableFile<Theme>> theme = new Bindable<ObservableFile<Theme>>();
+        private ThemeSettingDropdown themesDropdown;
 
         [BackgroundDependencyLoader]
         private void load(ApplicationConfigManager appConfig, ThemeStore themes, Storage storage)
         {
-            var themeConfig = appConfig.GetBindable<string>(ApplicationConfig.Theme);
-
             Children = new Drawable[]
             {
-                new ThemeSettingDropdown
+                themesDropdown = new ThemeSettingDropdown
                 {
                     Label = "Theme",
-                    Current = theme,
-                    ItemSource =  themes.Loaded,
+                    Current = appConfig.GetBindable<string>(ApplicationConfig.Theme),
                 },
                 new ButtonText
                 {
@@ -44,18 +39,18 @@ namespace Vignette.Application.Configuration.Settings.Sections
                 },
             };
 
-            theme.BindValueChanged((e) => themeConfig.Value = e.NewValue.Name, true);
+            themes.Loaded.BindCollectionChanged((s, e) => Schedule(() => { themesDropdown.Items = themes.Loaded.Select(t => t.Name); }), true);
         }
 
-        private class ThemeSettingDropdown : LabelledDropdown<ObservableFile<Theme>>
+        private class ThemeSettingDropdown : LabelledDropdown<string>
         {
             protected override Drawable CreateControl() => new ThemeDropdownControl();
 
-            private class ThemeDropdownControl : VignetteDropdown<ObservableFile<Theme>>
+            private class ThemeDropdownControl : VignetteDropdown<string>
             {
-                protected override string GenerateItemText(ObservableFile<Theme> item)
+                protected override string GenerateItemText(string item)
                 {
-                    return item.Name.Humanize(LetterCasing.Title);
+                    return item.Humanize(LetterCasing.Title);
                 }
             }
         }

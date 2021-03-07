@@ -49,13 +49,29 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 }
             });
 
-            visualizerVisibility.Current.ValueChanged += (state) => visualizer.Alpha = state.NewValue ? 1.0f : 0.0f;
+            visualizerVisibility.Current.ValueChanged += (state) =>
+            {
+                if (visualizer == null)
+                    return;
+
+                visualizer.Alpha = state.NewValue ? 1.0f : 0.0f;
+            };
+
             visualizerVisibility.Current.Value = true;
 
-            regionSelector.Current.BindValueChanged((mode) => visualizer.Region = mode.NewValue, true);
+            regionSelector.Current.BindValueChanged((mode) =>
+            {
+                if (visualizer == null)
+                    return;
+
+                visualizer.Region = mode.NewValue;
+            }, true);
 
             visualizerMode.Current.BindValueChanged((mode) =>
             {
+                if (visualizer == null)
+                    return;
+
                 regionSelector.Alpha = mode.NewValue == VisualizerMode.Regional ? 1.0f : 0.0f;
                 visualizer.Mode = mode.NewValue;
             }, true);
@@ -65,6 +81,9 @@ namespace Vignette.Application.Tests.Visual.Recognition
 
         protected override void TrackerChanged(FaceTracker tracker)
         {
+            if (tracker == null)
+                return;
+
             visualizer?.Expire();
 
             Add(visualizer = new TrackerVisualizer(tracker)
