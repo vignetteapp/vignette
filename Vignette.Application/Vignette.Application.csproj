@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.8.26" />
-    <PackageReference Include="ppy.osu.Framework" Version="2021.204.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2021.317.0" />
     <PackageReference Include="Vignette.Application.Camera" Version="2021.207.0" />
   </ItemGroup>
 
