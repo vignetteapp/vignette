@@ -93,12 +93,11 @@ namespace Vignette.Application.Screens.Intro
 
             branding.Scale = new Vector2(0.98f);
             disclaimer.Scale = new Vector2(0.98f);
-            
+
             branding
                 .FadeInFromZero(1000)
                 .ScaleTo(1, 1000, Easing.OutCubic);
 
-            
             disclaimer
                 .FadeInFromZero(2000)
                 .ScaleTo(1, 2000, Easing.OutCubic);

@@ -45,7 +45,7 @@ namespace Vignette.Application.Input
         }
 
         protected override void Update()
-        { 
+        {
             base.Update();
             Current.Value = ((Clock.CurrentTime - lastInteractionTime) > triggerTime) && (Condition?.Invoke() ?? true);
         }

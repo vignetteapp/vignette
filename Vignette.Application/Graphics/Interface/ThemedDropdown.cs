@@ -91,7 +91,7 @@ namespace Vignette.Application.Graphics.Interface
                     Radius = 4.0f,
                     Hollow = true,
                 };
-                
+
                 MaskingContainer.Add(new ThemedSolidBox
                 {
                     Depth = 1,
