@@ -2,17 +2,20 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Testing;
 using Vignette.Application.Graphics.Interface;
 
 namespace Vignette.Application.Tests.Visual.Interface
 {
-    public class TestSceneSliderBar : TestSceneInterface
+    public class TestSceneSliderBar : TestScene
     {
         public TestSceneSliderBar()
         {
-            AddComponent(new VignetteSliderBar<float>
+            Add(new ThemedSliderBar<float>
             {
                 Width = 200,
+                Margin = new MarginPadding(10),
                 Current = new BindableFloat
                 {
                     MinValue = 0,

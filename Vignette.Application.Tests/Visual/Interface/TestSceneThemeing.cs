@@ -5,80 +5,49 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Testing;
 using osuTK;
-using Vignette.Application.Graphics;
 using Vignette.Application.Graphics.Shapes;
 using Vignette.Application.Graphics.Themes;
 
 namespace Vignette.Application.Tests.Visual.Interface
 {
-    public class TestSceneThemeing : TestSceneInterface
+    public class TestSceneThemeing : TestScene
     {
         private FillFlowContainer themedBoxFlow;
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddComponentRange(new Drawable[]
+            Add(new FillFlowContainer
             {
-                themedBoxFlow = new FillFlowContainer
+                Spacing = new Vector2(0, 10),
+                Direction = FillDirection.Vertical,
+                AutoSizeAxes = Axes.Both,
+                Children = new Drawable[]
                 {
-                    Width = 250,
-                    Direction = FillDirection.Full,
-                    AutoSizeAxes = Axes.Y,
-                },
-                new VignetteBox
-                {
-                    Size = new Vector2(50),
-                    ThemeColour = ThemeColour.ThemePrimary,
-                },
-                new OutlinedBox
-                {
-                    Size = new Vector2(50),
-                    ThemeColour = ThemeColour.ThemePrimary,
-                    BorderThickness = 5.0f,
-                },
-                new FillFlowContainer
-                {
-                    Height = 100,
-                    AutoSizeAxes = Axes.X,
-                    Spacing = new Vector2(20, 0),
-                    Children = new[]
+                    themedBoxFlow = new FillFlowContainer
                     {
-                        new ElevatedContainer(1),
-                        new ElevatedContainer(2),
-                        new ElevatedContainer(3),
+                        Width = 250,
+                        Direction = FillDirection.Full,
+                        AutoSizeAxes = Axes.Y,
+                    },
+                    new ThemedSolidBox
+                    {
+                        Size = new Vector2(50),
+                        ThemeColour = ThemeColour.ThemePrimary,
+                    },
+                    new ThemedOutlinedBox
+                    {
+                        Size = new Vector2(50),
+                        ThemeColour = ThemeColour.ThemePrimary,
+                        BorderThickness = 5.0f,
                     }
-                },
+                }
             });
 
             foreach (var colour in Enum.GetValues<ThemeColour>())
-                themedBoxFlow.Add(new VignetteBox { Size = new Vector2(50), ThemeColour = colour, });
-        }
-
-        private class ElevatedContainer : Container
-        {
-            public ElevatedContainer(int elevation)
-            {
-                Masking = true;
-                Size = new Vector2(100);
-                Child = new VignetteBox { RelativeSizeAxes = Axes.Both };
-
-                switch (elevation)
-                {
-                    case 1:
-                        EdgeEffect = VignetteStyle.ElevationOne;
-                        break;
-
-                    case 2:
-                        EdgeEffect = VignetteStyle.ElevationTwo;
-                        break;
-
-                    case 3:
-                        EdgeEffect = VignetteStyle.ElevationThree;
-                        break;
-                }
-            }
+                themedBoxFlow.Add(new ThemedSolidBox { Size = new Vector2(50), ThemeColour = colour, });
         }
     }
 }

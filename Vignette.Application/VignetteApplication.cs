@@ -2,10 +2,8 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics;
-using osu.Framework.Platform;
-using Vignette.Application.Configuration.Settings;
-using Vignette.Application.Graphics.Interface;
-using Vignette.Application.Input;
+using osu.Framework.Screens;
+using Vignette.Application.Screens.Intro;
 
 namespace Vignette.Application
 {
@@ -13,35 +11,17 @@ namespace Vignette.Application
     {
         public VignetteApplication()
         {
-            Name = @"Vignette";
+            Name = $"Vignette{(IsInsiderBuild ? " Insiders" : string.Empty)}";
         }
-
-        protected virtual SettingsMenu CreateSettingMenu() => new SettingsMenu();
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            Add(new ApplicationActionKeyBindingContainer
+            Add(new ScreenStack(new Loader())
             {
                 RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
-                {
-                    new Background
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
-                    CreateSettingMenu().With(m => m.RelativeSizeAxes = Axes.Both),
-                }
             });
-        }
-
-        public override void SetHost(GameHost host)
-        {
-            base.SetHost(host);
-            host.Window.Title = Name;
         }
     }
 }

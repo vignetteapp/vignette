@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="vignette.ico" />
+    <EmbeddedResource Include="app.ico" />
   </ItemGroup>
 
   <ItemGroup>

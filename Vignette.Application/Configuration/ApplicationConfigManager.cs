@@ -2,13 +2,11 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Configuration;
-using osu.Framework.Graphics;
 using osu.Framework.Platform;
-using osuTK;
 
 namespace Vignette.Application.Configuration
 {
-    public class ApplicationConfigManager : IniConfigManager<ApplicationConfig>
+    public class ApplicationConfigManager : IniConfigManager<ApplicationSetting>
     {
         protected override string Filename => @"app.ini";
 
@@ -19,30 +17,42 @@ namespace Vignette.Application.Configuration
 
         protected override void InitialiseDefaults()
         {
-            Set(ApplicationConfig.Theme, @"Default");
-            Set(ApplicationConfig.BackgroundColour, Colour4.Green);
-            Set(ApplicationConfig.BackgroundImage, string.Empty);
-            Set(ApplicationConfig.BackgroundVideo, string.Empty);
-            Set(ApplicationConfig.BackgroundType, BackgroundTypes.Colour);
-            Set(ApplicationConfig.BackgroundOffset, Vector2.Zero);
-            Set(ApplicationConfig.BackgroundScale, Vector2.One);
+            SetValue(ApplicationSetting.Theme, @"Default");
+            SetValue(ApplicationSetting.WindowResizable, false);
+            SetValue(ApplicationSetting.ShowFpsOverlay, false);
+            SetValue(ApplicationSetting.Background, BackgroundType.Color);
+            SetValue(ApplicationSetting.BackgroundColor, @"00FF00");
+            SetValue(ApplicationSetting.BackgroundVideoFile, string.Empty);
+            SetValue(ApplicationSetting.BackgroundImageFile, string.Empty);
+            SetValue(ApplicationSetting.BackgroundOffsetX, 0.0f);
+            SetValue(ApplicationSetting.BackgroundOffsetY, 0.0f);
+            SetValue(ApplicationSetting.BackgroundScaleXY, 1.0f);
+            SetValue(ApplicationSetting.CameraDevice, string.Empty);
         }
     }
 
-    public enum ApplicationConfig
+    public enum ApplicationSetting
     {
         Theme,
 
-        BackgroundColour,
+        WindowResizable,
 
-        BackgroundImage,
+        ShowFpsOverlay,
 
-        BackgroundVideo,
+        Background,
 
-        BackgroundType,
+        BackgroundColor,
 
-        BackgroundOffset,
+        BackgroundVideoFile,
 
-        BackgroundScale,
+        BackgroundImageFile,
+
+        BackgroundOffsetX,
+
+        BackgroundOffsetY,
+
+        BackgroundScaleXY,
+
+        CameraDevice,
     }
 }

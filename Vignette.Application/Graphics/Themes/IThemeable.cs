@@ -12,10 +12,5 @@ namespace Vignette.Application.Graphics.Themes
         /// The colour to apply on the themeable element.
         /// </summary>
         public ThemeColour ThemeColour { get; set; }
-
-        /// <summary>
-        /// The fade duration of the themeable element. Used when changing between themes.
-        /// </summary>
-        public double TransitionDuration { get; set; }
     }
 }
