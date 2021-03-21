@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using OpenCvSharp;
 using osu.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
@@ -28,8 +29,6 @@ namespace Vignette.Application.Tests.Visual.Recognition
 
         private readonly Container cameraSpriteContainer;
 
-        private readonly CameraManager cameraManager;
-
         private readonly FillFlowContainer virtualCameraControls;
 
         private readonly FillFlowContainer physicalCameraControls;
@@ -50,8 +49,6 @@ namespace Vignette.Application.Tests.Visual.Recognition
 
         public TestSceneRecognition()
         {
-            cameraManager = createSuitableCameraManager(Scheduler);
-
             Add(cameraSpriteContainer = new Container { RelativeSizeAxes = Axes.Both });
 
             Add(new FillFlowContainer
@@ -117,6 +114,26 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 }
             });
 
+            virtualCameraLooping.Current.ValueChanged += (state) =>
+            {
+                if (Camera is CameraVirtual virtualCamera)
+                    virtualCamera.Loop = state.NewValue;
+            };
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(CameraManager cameraManager)
+        {
+            cameraManager.Current.BindTo(currentPhysicalCamera.Current);
+            cameraManager.Current.ValueChanged += (cam) =>
+            {
+                if (cameraSprite is DrawableCameraDevice drawableCameraDevice)
+                    drawableCameraDevice.Expire();
+
+                Camera = new CameraDevice(Array.IndexOf(cameraManager.CameraDeviceNames.ToArray(), cam.NewValue), EncodingFormat.JPEG, encodingparams);
+                cameraSpriteContainer.Add(cameraSprite = new DrawableCameraDevice((CameraDevice)Camera));
+            };
+
             cameraTypeSelector.Current.BindValueChanged((mode) =>
             {
                 cameraSprite?.Expire();
@@ -156,41 +173,10 @@ namespace Vignette.Application.Tests.Visual.Recognition
                 tracker?.StartTracking(Camera);
                 TrackerChanged(tracker);
             }, true);
-
-            virtualCameraLooping.Current.ValueChanged += (state) =>
-            {
-                if (Camera is CameraVirtual virtualCamera)
-                    virtualCamera.Loop = state.NewValue;
-            };
-
-            cameraManager.Current.BindTo(currentPhysicalCamera.Current);
-            cameraManager.Current.ValueChanged += (cam) =>
-            {
-                if (cameraSprite is DrawableCameraDevice drawableCameraDevice)
-                    drawableCameraDevice.Expire();
-
-                Camera = new CameraDevice(Array.IndexOf(cameraManager.CameraDeviceNames.ToArray(), cam.NewValue), EncodingFormat.JPEG, encodingparams);
-                cameraSpriteContainer.Add(cameraSprite = new DrawableCameraDevice((CameraDevice)Camera));
-            };
         }
 
         protected virtual void TrackerChanged(FaceTracker tracker)
         {
-        }
-
-        private static CameraManager createSuitableCameraManager(Scheduler scheduler)
-        {
-            switch (RuntimeInfo.OS)
-            {
-                case RuntimeInfo.Platform.Windows:
-                    return new LegacyWindowsCameraManager(scheduler);
-
-                case RuntimeInfo.Platform.Linux:
-                    return new LinuxCameraManager(scheduler);
-
-                default:
-                    return null;
-            }
         }
 
         private enum CameraType

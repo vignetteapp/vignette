@@ -4,28 +4,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using osu.Framework;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
-using Vignette.Application.IO;
+using osu.Framework.Threading;
+using Vignette.Application.IO.Monitors;
 
 namespace Vignette.Application.Graphics.Themes
 {
-    public class ThemeStore : ObservedDirectoryStore<Theme>
+    public class ThemeStore : MonitoredDirectoryStore<Theme>
     {
         protected override string DirectoryName => @"themes";
 
         protected override IEnumerable<string> Filters => new[] { "*.json" };
 
-        public ThemeStore(Storage storage = null)
-            : base(storage)
+        private IResourceStore<byte[]> store;
+
+        public ThemeStore(Scheduler scheduler, Storage storage = null, IResourceStore<byte[]> store = null)
+            : base(scheduler, storage)
         {
+            this.store = store;
             loadSystemThemes();
         }
 
         private void loadSystemThemes()
         {
-            foreach (string path in Directory.GetFiles(Path.Combine(RuntimeInfo.StartupDirectory, DirectoryName)))
-                FileCreated(path);
+            foreach (var filename in store.GetAvailableResources())
+                Add(filename.Replace(".json", string.Empty), Load(store.GetStream(filename)));
         }
 
         protected override Theme Load(Stream data)

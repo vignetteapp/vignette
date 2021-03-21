@@ -6,17 +6,31 @@ using osu.Framework.Allocation;
 using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Performance;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
+using Vignette.Application.Camera.Platform;
 using Vignette.Application.Configuration;
 using Vignette.Application.Graphics.Themes;
+using Vignette.Application.Input;
 using Vignette.Application.IO;
 
 namespace Vignette.Application
 {
     public class VignetteApplicationBase : Game
     {
-        public bool IsDevelopmentBuild { get; }
+        public string Version => GetType().Assembly.GetName().Version.ToString(3);
+
+        public bool IsDevelopmentBuild { get; private set; }
+
+        public CameraManager Camera { get; private set; }
+
+        public static bool IsInsiderBuild =>
+#if INSIDERS
+                true;
+#else
+                false;
+#endif
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
@@ -27,7 +41,7 @@ namespace Vignette.Application
 
         private readonly Container content;
 
-        protected Storage Storage { get; set; }
+        protected Storage Storage { get; private set; }
 
         protected ApplicationConfigManager LocalConfig;
 
@@ -42,12 +56,16 @@ namespace Vignette.Application
                     RelativeSizeAxes = Axes.Both,
                     Child = new DrawSizePreservingFillContainer
                     {
-                        Child = content = new Container
+                        Child = new GlobalActionContainer(this)
                         {
                             RelativeSizeAxes = Axes.Both,
-                        }
-                    }
-                }
+                            Child = content = new Container
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                        },
+                    },
+                },
             });
         }
 
@@ -69,21 +87,38 @@ namespace Vignette.Application
             AddFont(Resources, @"Fonts/SegoeUI-SemiLight");
             AddFont(Resources, @"Fonts/SegoeUI-SemiLightItalic");
 
-            AddFont(Resources, @"Fonts/Raleway-Bold");
-            AddFont(Resources, @"Fonts/Raleway-BoldItalic");
+            AddFont(Resources, @"Fonts/Spartan-Bold");
+
+            AddFont(Resources, @"Fonts/FluentSystemIcons-Filled");
 
             dependencies.CacheAs(this);
             dependencies.CacheAs(LocalConfig);
-            dependencies.CacheAs(new ThemeStore(Storage));
-            dependencies.CacheAs(new ObservedVideoStore(Storage));
-            dependencies.CacheAs(new ObservedTextureStore(Storage));
+
+            Camera = CameraManager.CreateSuitableManager(Scheduler);
+            dependencies.CacheAs(Camera);
+
+            var files = Storage.GetStorageForDirectory("files");
+            dependencies.CacheAs(new BackgroundImageStore(Scheduler, files));
+            dependencies.CacheAs(new BackgroundVideoStore(Scheduler, files));
+            dependencies.CacheAs(new ThemeStore(Scheduler, files, new NamespacedResourceStore<byte[]>(Resources, "Themes")));
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            var fpsDisplayBindable = LocalConfig.GetBindable<bool>(ApplicationSetting.ShowFpsOverlay);
+            fpsDisplayBindable.ValueChanged += val => { FrameStatistics.Value = val.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None; };
+            fpsDisplayBindable.TriggerChange();
+
+            FrameStatistics.ValueChanged += e => fpsDisplayBindable.Value = e.NewValue != FrameStatisticsMode.None;
         }
 
         public override void SetHost(GameHost host)
         {
             base.SetHost(host);
-            Storage ??= host.Storage;
 
+            Storage ??= host.Storage;
             LocalConfig ??= IsDevelopmentBuild
                 ? new DevelopmentApplicationConfigManager(Storage)
                 : new ApplicationConfigManager(Storage);
@@ -92,7 +127,6 @@ namespace Vignette.Application
         protected override void Dispose(bool isDisposing)
         {
             base.Dispose(isDisposing);
-
             LocalConfig?.Dispose();
         }
     }
