@@ -164,7 +164,16 @@ namespace Vignette.Application.Screens.Main.Sections
             };
 
             resolutionDropdown.Current.BindValueChanged((e) => windowSizeBindable.Value = e.NewValue, true);
-            resizableCheckbox.Current.BindValueChanged((e) => resolutionDropdown.Alpha = !e.NewValue ? 1 : 0, true);
+            resizableCheckbox.Current.BindValueChanged((e) =>
+            {
+                if (host.Window is SDL2DesktopWindow window)
+                    window.Resizable = e.NewValue;
+
+                resolutionDropdown.Alpha = !e.NewValue ? 1 : 0;
+
+                if (!e.NewValue)
+                    resolutionDropdown.Current.TriggerChange();
+            }, true);
 
             var themeConfig = appConfig.GetBindable<string>(ApplicationSetting.Theme);
             themesDropdown.Current.Value = themes.GetReference(themeConfig.Value);
