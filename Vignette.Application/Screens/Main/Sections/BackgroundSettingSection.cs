@@ -52,6 +52,9 @@ namespace Vignette.Application.Screens.Main.Sections
 
         private FillFlowContainer offsetConfigContainer;
 
+        [Resolved]
+        private MainMenu mainMenu { get; set; }
+
         [BackgroundDependencyLoader]
         private void load(ApplicationConfigManager config, BackgroundImageStore images, BackgroundVideoStore videos)
         {
@@ -167,6 +170,17 @@ namespace Vignette.Application.Screens.Main.Sections
                                 },
                                 new ThemedIconButton
                                 {
+                                    Icon = FluentSystemIcons.Filled.Drag24,
+                                    Size = new Vector2(25),
+                                    Style = ButtonStyle.Override,
+                                    Action = enableBackgroundAdjustments,
+                                    IconSize = new Vector2(15),
+                                    LabelColour = ThemeColour.NeutralPrimary,
+                                    Anchor = Anchor.BottomLeft,
+                                    Origin = Anchor.BottomLeft,
+                                },
+                                new ThemedIconButton
+                                {
                                     Icon = FluentSystemIcons.Filled.ArrowUndo24,
                                     Size = new Vector2(25),
                                     Style = ButtonStyle.Override,
@@ -217,6 +231,12 @@ namespace Vignette.Application.Screens.Main.Sections
         {
             ox.Value = oy.Value = 0.0f;
             sx.Value = 1.0f;
+        }
+
+        private void enableBackgroundAdjustments()
+        {
+            mainMenu.Toolbar.Hide();
+            mainMenu.AllowBackgroundAdjustments.Value = true;
         }
 
         private void handleTypeChange(ValueChangedEvent<BackgroundType> e)
