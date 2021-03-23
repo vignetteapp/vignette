@@ -28,6 +28,8 @@ namespace Vignette.Application.Graphics.Interface
 
         private readonly Box preview;
 
+        private readonly Bindable<Vector4> source = new Bindable<Vector4>();
+
         private readonly BindableWithCurrent<Colour4> current = new BindableWithCurrent<Colour4>();
 
         public Bindable<Colour4> Current
@@ -51,7 +53,7 @@ namespace Vignette.Application.Graphics.Interface
                 },
                 new GridContainer
                 {
-                    AutoSizeAxes = Axes.Y,
+                    Height = 50,
                     RelativeSizeAxes = Axes.X,
                     ColumnDimensions = new[]
                     {
@@ -83,16 +85,11 @@ namespace Vignette.Application.Graphics.Interface
                                 {
                                     huePicker = new HuePicker
                                     {
-                                        Current = new BindableFloat
-                                        {
-                                            MinValue = 0,
-                                            MaxValue = 1,
-                                        },
+                                        RelativeSizeAxes = Axes.X,
                                     },
                                     hexText = new HexTextBox
                                     {
                                         RelativeSizeAxes = Axes.X,
-                                        Current = new Bindable<string>(),
                                     },
                                 }
                             }
@@ -101,32 +98,58 @@ namespace Vignette.Application.Graphics.Interface
                 },
             };
 
-            hsvPicker.Hue.BindTo(huePicker.Current);
-            hsvPicker.Hue.ValueChanged += _ => handleHSVChange();
-            hsvPicker.Saturation.ValueChanged += _ => handleHSVChange();
-            hsvPicker.Value.ValueChanged += _ => handleHSVChange();
+            hsvPicker.Current.BindTo(source);
+            huePicker.Current.BindTo(source);
 
-            handleHSVChange();
+            hsvPicker.OnCommit += handleCommit;
+            huePicker.OnCommit += handleCommit;
+
+            Current.BindValueChanged(e => hexText.Current.Value = e.NewValue.ToHex(), true);
+            source.BindValueChanged(e => preview.Colour = Colour4.FromHSV(e.NewValue.X, e.NewValue.Y, 1 - e.NewValue.Z, 1), true);
+
+            hexText.OnCommit += handleTextCommit;
         }
 
-        private void handleHSVChange()
+        private void handleCommit()
         {
-            Current.Value = Colour4.FromHSV(1 - hsvPicker.Hue.Value, hsvPicker.Saturation.Value, 1 - hsvPicker.Value.Value);
-            hexText.Current.Value = Current.Value.ToHex();
-            preview.Colour = Current.Value;
+            var hsv = source.Value;
+            Current.Value = Colour4.FromHSV(hsv.X, hsv.Y, 1 - hsv.Z, 1);
         }
 
-        private class HSVPicker : Container
+        private void handleTextCommit(TextBox sender, bool textChanged)
+        {
+            if (!textChanged)
+                return;
+
+            var hsv = Colour4.FromHex(hexText.Current.Value).ToHSV();
+            source.Value = new Vector4(hsv.X, hsv.Y, 1 - hsv.Z, 1);
+
+            handleCommit();
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            var hsv = Current.Value.ToHSV();
+            source.Value = new Vector4(hsv.X, hsv.Y, 1 - hsv.Z, 1);
+        }
+
+        private class HSVPicker : Container, IHasCurrentValue<Vector4>
         {
             private readonly Box saturation;
 
             private readonly Nub nub;
 
-            public Bindable<float> Hue { get; } = new Bindable<float>();
+            private readonly BindableWithCurrent<Vector4> current = new BindableWithCurrent<Vector4>();
 
-            public Bindable<float> Saturation { get; } = new Bindable<float>();
+            public event Action OnCommit;
 
-            public Bindable<float> Value { get; } = new Bindable<float>();
+            public Bindable<Vector4> Current
+            {
+                get => current.Current;
+                set => current.Current = value;
+            }
 
             public HSVPicker()
             {
@@ -156,15 +179,16 @@ namespace Vignette.Application.Graphics.Interface
                     },
                     nub = new Nub { Origin = Anchor.Centre },
                 };
-                
-                Hue.BindValueChanged(e =>
+
+                Current.BindValueChanged(e =>
                 {
-                    var colour = Colour4.FromHSV(1 - e.NewValue, 1, 1);
+                    float x = MathHelper.Clamp(e.NewValue.Y * DrawWidth, 0, DrawWidth);
+                    float y = MathHelper.Clamp(e.NewValue.Z * DrawHeight, 0, DrawHeight);
+                    nub.MoveTo(new Vector2(x, y), 200, Easing.OutQuint);
+
+                    var colour = Colour4.FromHSV(Current.Value.X, 1, 1, 1);
                     saturation.Colour = ColourInfo.GradientHorizontal(colour.Opacity(0), colour);
                 }, true);
-
-                Saturation.BindValueChanged(e => nub.MoveToX(e.NewValue * DrawWidth, 200, Easing.OutQuint), true);
-                Value.BindValueChanged(e => nub.MoveToY(e.NewValue * DrawHeight, 200, Easing.OutQuint), true);
             }
 
             protected override bool OnMouseDown(MouseDownEvent e)
@@ -181,22 +205,36 @@ namespace Vignette.Application.Graphics.Interface
                 handleMouseEvent(e);
             }
 
-            private void handleMouseEvent(MouseButtonEvent e)
+            protected override void OnMouseUp(MouseUpEvent e)
             {
-                Saturation.Value = Math.Clamp(e.MousePosition.X / DrawWidth, 0, 1);
-                Value.Value = Math.Clamp(e.MousePosition.Y / DrawHeight, 0, 1);
+                base.OnMouseUp(e);
+                OnCommit?.Invoke();
+            }
+
+            private void handleMouseEvent(MouseEvent e)
+            {
+                float xPercent = MathHelper.Clamp(e.MousePosition.X / DrawWidth, 0, 1);
+                float yPercent = MathHelper.Clamp(e.MousePosition.Y / DrawHeight, 0, 1);
+                Current.Value = new Vector4(Current.Value.X, xPercent, yPercent, 1);
             }
         }
 
-        private class HuePicker : SliderBar<float>
+        private class HuePicker : SliderBar<float>, IHasCurrentValue<Vector4>
         {
             private readonly Nub nub;
+
+            public event Action OnCommit;
+
+            public new Bindable<Vector4> Current
+            {
+                get => ((IHasCurrentValue<Vector4>)this).Current;
+                set => ((IHasCurrentValue<Vector4>)this).Current = value;
+            }
 
             public HuePicker()
             {
                 Height = nub_size;
                 RangePadding = nub_size / 2;
-                RelativeSizeAxes = Axes.X;
                 Children = new Drawable[]
                 {
                     new Container
@@ -232,11 +270,41 @@ namespace Vignette.Application.Graphics.Interface
                         },
                     },
                 };
+
+                base.Current = new BindableFloat
+                {
+                    Default = 0,
+                    MinValue = 0,
+                    MaxValue = 1,
+                };
+
+                base.Current.BindValueChanged(e => Current.Value = new Vector4(1 - e.NewValue, Current.Value.Y, Current.Value.Z, 1), true);
+                Current.BindValueChanged(e => UpdateValue(1 - e.NewValue.X), true);
+            }
+
+            private readonly BindableWithCurrent<Vector4> current = new BindableWithCurrent<Vector4>();
+
+            Bindable<Vector4> IHasCurrentValue<Vector4>.Current
+            {
+                get => current.Current;
+                set => current.Current = value;
             }
 
             protected override void UpdateValue(float value)
             {
                 nub.MoveToX(value, 200, Easing.OutQuint);
+            }
+
+            protected override void OnMouseUp(MouseUpEvent e)
+            {
+                base.OnMouseUp(e);
+                OnCommit?.Invoke();
+            }
+
+            protected override void LoadComplete()
+            {
+                base.LoadComplete();
+                Current.TriggerChange();
             }
 
             private class HorizontalGradientBox : Box
@@ -273,6 +341,7 @@ namespace Vignette.Application.Graphics.Interface
             public HexTextBox()
             {
                 LengthLimit = 6;
+                CommitOnFocusLost = true;
                 TextContainer.Padding = new MarginPadding { Left = 20 };
                 Add(new ThemedSpriteIcon
                 {
