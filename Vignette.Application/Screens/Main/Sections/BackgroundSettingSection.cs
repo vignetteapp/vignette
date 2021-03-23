@@ -36,9 +36,13 @@ namespace Vignette.Application.Screens.Main.Sections
 
         private Bindable<float> sx;
 
+        private Bindable<string> colorConfig;
+
         private Bindable<string> imageConfig;
 
         private Bindable<string> videoConfig;
+
+        private ColourPicker colourPicker;
 
         private LabelledFileDropdown<Stream> videosDropdown;
 
@@ -62,6 +66,7 @@ namespace Vignette.Application.Screens.Main.Sections
             ox = config.GetBindable<float>(ApplicationSetting.BackgroundOffsetX);
             oy = config.GetBindable<float>(ApplicationSetting.BackgroundOffsetY);
             sx = config.GetBindable<float>(ApplicationSetting.BackgroundScaleXY);
+            colorConfig = config.GetBindable<string>(ApplicationSetting.BackgroundColor);
             imageConfig = config.GetBindable<string>(ApplicationSetting.BackgroundImageFile);
             videoConfig = config.GetBindable<string>(ApplicationSetting.BackgroundVideoFile);
 
@@ -121,6 +126,10 @@ namespace Vignette.Application.Screens.Main.Sections
                 {
                     Label = "Video",
                     ItemSource = videos.Loaded,
+                },
+                colourPicker = new ColourPicker
+                {
+                    Current = new Bindable<Colour4>(),
                 },
                 new ThemedTextButton
                 {
@@ -204,6 +213,9 @@ namespace Vignette.Application.Screens.Main.Sections
             videosDropdown.Current.ValueChanged += e => videoConfig.Value = e.NewValue?.Name ?? string.Empty;
             videosDropdown.Current.Value = videos.GetReference(videoConfig.Value);
 
+            colourPicker.Current.ValueChanged += e => colorConfig.Value = e.NewValue.ToHex();
+            colourPicker.Current.Value = Colour4.FromHex(colorConfig.Value);
+
             inputOffsetX.ValueChanged += e =>
             {
                 if (float.TryParse(e.NewValue, out float x))
@@ -244,16 +256,19 @@ namespace Vignette.Application.Screens.Main.Sections
             switch (e.NewValue)
             {
                 case BackgroundType.Color:
+                    colourPicker.FadeIn(200, Easing.OutQuint);
                     imagesDropdown.FadeOut(200, Easing.OutQuint);
                     videosDropdown.FadeOut(200, Easing.OutQuint);
                     break;
 
                 case BackgroundType.Image:
+                    colourPicker.FadeOut(200, Easing.OutQuint);
                     imagesDropdown.FadeIn(200, Easing.OutQuint);
                     videosDropdown.FadeOut(200, Easing.OutQuint);
                     break;
 
                 case BackgroundType.Video:
+                    colourPicker.FadeOut(200, Easing.OutQuint);
                     imagesDropdown.FadeOut(200, Easing.OutQuint);
                     videosDropdown.FadeIn(200, Easing.OutQuint);
                     break;
