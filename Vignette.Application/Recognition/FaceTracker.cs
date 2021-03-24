@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Graphics;
-using Vignette.Application.Camera;
 
 namespace Vignette.Application.Recognition
 {
@@ -18,8 +17,6 @@ namespace Vignette.Application.Recognition
 
         public double Delta => Time.Current - lastUpdateTime;
 
-        protected ICamera Camera { get; private set; }
-
         private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
         private bool isDisposed;
@@ -30,9 +27,13 @@ namespace Vignette.Application.Recognition
 
         private Task tracker;
 
-        public virtual void StartTracking(ICamera camera) => Camera = camera;
+        public virtual void StartTracking()
+        {
+        }
 
-        public virtual void StopTracking() => Camera = null;
+        public virtual void StopTracking()
+        {
+        }
 
         protected abstract IEnumerable<Face> Track();
 
@@ -48,9 +49,6 @@ namespace Vignette.Application.Recognition
             {
                 if (cancellationToken.IsCancellationRequested)
                     return;
-
-                if (Camera?.Data == null)
-                    continue;
 
                 faces = Track();
 
