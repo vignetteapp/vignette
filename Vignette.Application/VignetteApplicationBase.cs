@@ -1,12 +1,14 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System.Linq;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Performance;
+using osu.Framework.Input.Handlers.Mouse;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Application.Camera.Platform;
@@ -101,6 +103,10 @@ namespace Vignette.Application
             dependencies.CacheAs(new BackgroundImageStore(Scheduler, files));
             dependencies.CacheAs(new BackgroundVideoStore(Scheduler, files));
             dependencies.CacheAs(new ThemeStore(Scheduler, files, new NamespacedResourceStore<byte[]>(Resources, "Themes")));
+
+            // Fix OS cursor from dissappearing (see: https://github.com/ppy/osu/pull/12161)
+            var mouse = (MouseHandler)Host.AvailableInputHandlers.Single(i => i is MouseHandler);
+            mouse.UseRelativeMode.Value = false;
         }
 
         protected override void LoadComplete()
