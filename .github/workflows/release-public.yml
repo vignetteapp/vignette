@@ -1,6 +1,6 @@
 on: 
   release:
-      types: [prereleased]
+      types: [released]
 jobs:
   test:
      name: Lint
@@ -31,7 +31,7 @@ jobs:
         - name: Build Project
           run: |
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
-             zip -r vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
+             zip -r vignette_stable-${{ github.ref }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
         
         - name: Generate Changelog
           uses: heinrichreimer/github-changelog-generator-action@v2.1.1
@@ -43,7 +43,7 @@ jobs:
              no-pr-wo-labels: true
              no-unreleased: true          
   publish:
-      name: Publish and Notify Insiders
+      name: Publish and Notify Public
       needs: build
       runs-on: ubuntu-latest
       strategy:
@@ -55,15 +55,15 @@ jobs:
           with:
             appName: vignette/Vignette-AB1
             token: ${{ secrets.VS_APP_CENTER_TOKEN }}
-            group: Insiders
-            buildVersion: insider-${{ github.ref }}
-            file: vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip
+            group: Public
+            buildVersion: stable-${{ github.ref }}
+            file: vignette_stable-${{ github.ref }}_${{ matrix.runtime }}.zip
             notifyTesters: true
             releaseNotes: CHANGELOG.md
 
         - name: Notify Insiders
           env:
-            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INS }}
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
           uses: Ilshidur/action-discord@master
           with:
-            args: "Heads up <@&754332732716351618>! Vignette Build `vignette_insider-${{ github.ref }}` is now available! Visit the App Center to get your build."
+            args: "Heads up @everyone! Vignette Build `vignette_stable-${{ github.ref }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build."
