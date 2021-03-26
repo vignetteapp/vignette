@@ -36,17 +36,7 @@ jobs:
         - name: Build Project
           run: |
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
-             zip -r vignette_insider-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
-        
-        - name: Generate Changelog
-          uses: heinrichreimer/github-changelog-generator-action@v2.1.1
-          with:
-             token: ${{ secrets.GITHUB_TOKEN }}
-             repo: vignette-project/vignette
-             no-issues: true
-             no-issues-wo-labels: true
-             no-pr-wo-labels: true
-             no-unreleased: true
+             zip -r vignette-insider-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
 
         - name: Upload to VS App Center
           uses: wzieba/AppCenter-Github-Action@v1.3.2
@@ -55,16 +45,8 @@ jobs:
             token: ${{ secrets.VS_APP_CENTER_TOKEN }}
             group: Insiders
             buildVersion: insider-${{ github.sha }}
-            file: vignette_insider-${{ github.sha }}_${{ matrix.runtime }}.zip
-            notifyTesters: true
-            releaseNotes: CHANGELOG.md
-       
-        - name: Execute SSH Debug 
-          uses: mxschmitt/action-tmate@master
-          with:
-            sudo: true
-          if: ${{ failure() }}
-          timeout-minutes: 120            
+            file: vignette-insider-${{ github.sha }}_${{ matrix.runtime }}.zip
+            notifyTesters: true   
   notify:
      runs-on: ubuntu-latest
      needs: publish
@@ -74,4 +56,4 @@ jobs:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INS }}
           uses: Ilshidur/action-discord@master
           with:
-            args: "Heads up <@&754332732716351618>! Vignette Build `vignette_insider-${{ github.sha }}` is now available! Visit the App Center to get your build."
+            args: "Heads up <@&754332732716351618>! Vignette Build `vignette-insider-${{ github.sha }}` is now available! Visit the App Center to get your build."

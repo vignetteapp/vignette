@@ -1,6 +1,10 @@
-on: 
-  release:
-      types: [released]
+# This canary build pipeline is more than just publishing canaries
+# This is where I playtest configurations before using it on our release pipeline
+# So don't remove this unless you want to get a groundpound
+# - Ayane Satomi 
+name: Lint and Create Canary Build
+on: push
+
 jobs:
   lint:
      name: Lint
@@ -15,8 +19,8 @@ jobs:
            LINTER_RULES_PATH: /
            VALIDATE_EDITORCONFIG: true
            EDITORCONFIG_FILE_NAME: .editorconfig
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
-  publish:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
       name: Build and publish project
       needs: lint
       runs-on: ubuntu-latest
@@ -36,24 +40,9 @@ jobs:
         - name: Build Project
           run: |
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
-             zip -r vignette-stable-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
-
-        - name: Upload to VS App Center
-          uses: wzieba/AppCenter-Github-Action@v1.3.2
-          with:
-            appName: vignette/Vignette-AB1
-            token: ${{ secrets.VS_APP_CENTER_TOKEN }}
-            group: Public
-            buildVersion: stable-${{ github.sha }}
-            file: vignette_stable-${{ github.sha }}_${{ matrix.runtime }}.zip
-            notifyTesters: true           
-  notify:
-     runs-on: ubuntu-latest
-     needs: publish
-     steps:
-        - name: Notify Public
-          env:
-            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
-          uses: Ilshidur/action-discord@master
-          with:
-            args: "Heads up @everyone! Vignette Build `vignette-stable-${{ github.sha }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build."
+             zip -r vignette-canary-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
+        
+        - name: Push Artifact
+          uses: actions/upload-artifact@master
+          name: vignette-canary-${{ github.sha }}_${{ matrix.runtime }}
+          path: vignette-canary-${{ github.sha }}_${{ matrix.runtime }}.zip
