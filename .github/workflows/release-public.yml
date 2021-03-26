@@ -28,6 +28,7 @@ jobs:
 
         - name: Build Project
           run: |
+             dotnet nuget add source https://nuget.pkg.github.com/vignette-project/index.json -n github -u vignette-project -p ${{ secrets.GITHUB_TOKEN }} 
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
              zip -r vignette_stable-${{ github.ref }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
         
