@@ -1,0 +1,61 @@
+on: 
+  release:
+      types: [prereleased]
+jobs:
+  test:
+     name: Lint
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v2
+
+       - name: Lint
+         uses: github/super-linter@v3
+         env:
+           SUPPRESS_POSSUM: true
+           LINTER_RULES_PATH: /
+           VALIDATE_EDITORCONFIG: true
+           EDITORCONFIG_FILE_NAME: .editorconfig
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+  build:
+      name: Build project
+      needs: lint
+      runs-on: ${{ matrix.os }}
+      strategy:
+        matrix:
+          runtime: [ win-x64, linux-x64 ]
+          os: [ ubuntu-latest, windows-latest ]
+      steps:
+        - name: .NET Restore
+          run: dotnet restore
+
+        - name: Build Project
+          run: |
+             dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
+             zip -r vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
+        
+        - name: Generate Changelog
+          uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+          with:
+             token: ${{ secrets.GITHUB_TOKEN }}
+             repo: vignette-project/vignette
+             no-issues: true
+             no-issues-wo-labels: true
+             no-pr-wo-labels: true
+             no-unreleased: true          
+  publish:
+      name: Publish and Notify Insiders
+      needs: build
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          runtime: [ win-x64, linux-x64 ]
+      steps:
+        - name: Upload to VS App Center
+          uses: wzieba/AppCenter-Github-Action@v1.3.2
+          with:
+            appName: vignette/Vignette-AB1
+            token: ${{ secrets.VS_APP_CENTER_TOKEN }}
+            group: Insiders
+            file: vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip
+            notifyTesters: true
+          

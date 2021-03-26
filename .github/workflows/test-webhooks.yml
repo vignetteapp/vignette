@@ -1,0 +1,21 @@
+name: Webhook Test 
+on: push
+jobs:
+  test-release-wh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Release Webhook
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Hello @everyone! This is a production webhook check, if you see me again, that means a real release happened. Stay safe!"
+  test-insider-wh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Release Webhook
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INS }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Hello <@754332732716351618>! This is a production webhook check, if you see me again, that means a real release happened. Stay safe!"
