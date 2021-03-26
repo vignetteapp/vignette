@@ -55,7 +55,6 @@ namespace Vignette.Application.Screens.Main
                     Items = new ToolbarSection[]
                     {
                         new BackgroundSettingSection(),
-                        new CameraSettingSection(),
                         new ApplicationSettingSection(),
                     },
                 },

@@ -9,7 +9,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Performance;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
-using Vignette.Application.Camera.Platform;
 using Vignette.Application.Configuration;
 using Vignette.Application.Graphics.Themes;
 using Vignette.Application.Input;
@@ -22,8 +21,6 @@ namespace Vignette.Application
         public string Version => GetType().Assembly.GetName().Version.ToString(3);
 
         public bool IsDevelopmentBuild { get; private set; }
-
-        public CameraManager Camera { get; private set; }
 
         public static bool IsInsiderBuild =>
 #if INSIDERS
@@ -93,9 +90,6 @@ namespace Vignette.Application
 
             dependencies.CacheAs(this);
             dependencies.CacheAs(LocalConfig);
-
-            Camera = CameraManager.CreateSuitableManager(Scheduler);
-            dependencies.CacheAs(Camera);
 
             var files = Storage.GetStorageForDirectory("files");
             dependencies.CacheAs(new BackgroundImageStore(Scheduler, files));

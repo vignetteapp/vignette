@@ -56,7 +56,7 @@ namespace Vignette.Application.Screens.Main.Sections
 
         private FillFlowContainer offsetConfigContainer;
 
-        [Resolved]
+        [Resolved(CanBeNull = true)]
         private MainMenu mainMenu { get; set; }
 
         [BackgroundDependencyLoader]
@@ -247,6 +247,9 @@ namespace Vignette.Application.Screens.Main.Sections
 
         private void enableBackgroundAdjustments()
         {
+            if (mainMenu == null)
+                return;
+
             mainMenu.Toolbar.Hide();
             mainMenu.AllowBackgroundAdjustments.Value = true;
         }
