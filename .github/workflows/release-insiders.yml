@@ -19,11 +19,10 @@ jobs:
   build:
       name: Build project
       needs: test
-      runs-on: ${{ matrix.os }}
+      runs-on: ubuntu-latest
       strategy:
         matrix:
           runtime: [ win-x64, linux-x64 ]
-          os: [ ubuntu-latest, windows-latest ]
       steps:
         - name: .NET Restore
           run: dotnet restore
