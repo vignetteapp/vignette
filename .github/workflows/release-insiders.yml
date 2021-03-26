@@ -37,7 +37,14 @@ jobs:
              no-issues: true
              no-issues-wo-labels: true
              no-pr-wo-labels: true
-             no-unreleased: true          
+             no-unreleased: true
+             
+        - name: Execute SSH Debug 
+          uses: mxschmitt/action-tmate@master
+          with:
+            sudo: true
+          if: ${{ failure() }}
+          timeout-minutes: 120            
   publish:
       name: Publish and Notify Insiders
       needs: build
