@@ -26,12 +26,17 @@ jobs:
       steps:
         - uses: actions/checkout@v2
 
+        - uses: actions/setup-dotnet@v1.7.2
+          with:
+             dotnet-version: '5.0.x'
+             source-url: https://nuget.pkg.github.com/vignette-project/index.json
+          env:
+             NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
         - name: Build Project
           run: |
-             dotnet nuget remove source github
-             dotnet nuget add source https://nuget.pkg.github.com/vignette-project/index.json -n github -u vignette-project -p ${{ secrets.GITHUB_TOKEN }} 
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
-             zip -r vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
+             zip -r vignette_insider-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
         
         - name: Generate Changelog
           uses: heinrichreimer/github-changelog-generator-action@v2.1.1
@@ -49,8 +54,8 @@ jobs:
             appName: vignette/Vignette-AB1
             token: ${{ secrets.VS_APP_CENTER_TOKEN }}
             group: Insiders
-            buildVersion: insider-${{ github.ref }}
-            file: vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip
+            buildVersion: insider-${{ github.sha }}
+            file: vignette_insider-${{ github.sha }}_${{ matrix.runtime }}.zip
             notifyTesters: true
             releaseNotes: CHANGELOG.md
        
@@ -69,4 +74,4 @@ jobs:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INS }}
           uses: Ilshidur/action-discord@master
           with:
-            args: "Heads up <@&754332732716351618>! Vignette Build `vignette_insider-${{ github.ref }}` is now available! Visit the App Center to get your build."
+            args: "Heads up <@&754332732716351618>! Vignette Build `vignette_insider-${{ github.sha }}` is now available! Visit the App Center to get your build."
