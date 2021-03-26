@@ -2,7 +2,7 @@ on:
   release:
       types: [released]
 jobs:
-  test:
+  lint:
      name: Lint
      runs-on: ubuntu-latest
      steps:
@@ -16,14 +16,16 @@ jobs:
            VALIDATE_EDITORCONFIG: true
            EDITORCONFIG_FILE_NAME: .editorconfig
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
-  build:
-      name: Build project
-      needs: test
+  publish:
+      name: Build and publish project
+      needs: lint
       runs-on: ubuntu-latest
       strategy:
         matrix:
           runtime: [ win-x64, linux-x64 ]
       steps:
+        - uses: actions/checkout@v2
+
         - name: Build Project
           run: |
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
@@ -38,21 +40,7 @@ jobs:
              no-issues-wo-labels: true
              no-pr-wo-labels: true
              no-unreleased: true
-             
-        - name: Execute SSH Debug 
-          uses: mxschmitt/action-tmate@master
-          with:
-            sudo: true
-          if: ${{ failure() }}
-          timeout-minutes: 120          
-  publish:
-      name: Publish and Notify Public
-      needs: build
-      runs-on: ubuntu-latest
-      strategy:
-        matrix:
-          runtime: [ win-x64, linux-x64 ]
-      steps:
+
         - name: Upload to VS App Center
           uses: wzieba/App-Center-action@v1.3.2
           with:
@@ -63,6 +51,13 @@ jobs:
             file: vignette_stable-${{ github.ref }}_${{ matrix.runtime }}.zip
             notifyTesters: true
             releaseNotes: CHANGELOG.md
+       
+        - name: Execute SSH Debug 
+          uses: mxschmitt/action-tmate@master
+          with:
+            sudo: true
+          if: ${{ failure() }}
+          timeout-minutes: 120            
   notify:
      runs-on: ubuntu-latest
      needs: publish
