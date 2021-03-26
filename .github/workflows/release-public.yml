@@ -45,7 +45,7 @@ jobs:
             token: ${{ secrets.VS_APP_CENTER_TOKEN }}
             group: Public
             buildVersion: stable-${{ github.sha }}
-            file: vignette_stable-${{ github.sha }}_${{ matrix.runtime }}.zip
+            file: vignette-stable-${{ github.sha }}_${{ matrix.runtime }}.zip
             notifyTesters: true           
   notify:
      runs-on: ubuntu-latest
