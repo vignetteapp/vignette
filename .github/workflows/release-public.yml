@@ -35,7 +35,7 @@ jobs:
 
         - name: Build Project
           run: |
-             dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
+             dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=false
              zip -r vignette-stable-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
 
         - name: Upload to VS App Center
