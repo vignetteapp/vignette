@@ -42,7 +42,6 @@ jobs:
              dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
              zip -r vignette-canary-${{ github.sha }}_${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
         
-        - name: Push Artifact
-          uses: actions/upload-artifact@master
+        - uses: actions/upload-artifact@master
           name: vignette-canary-${{ github.sha }}_${{ matrix.runtime }}
           path: vignette-canary-${{ github.sha }}_${{ matrix.runtime }}.zip
