@@ -60,8 +60,11 @@ jobs:
             file: vignette_stable-${{ github.ref }}_${{ matrix.runtime }}.zip
             notifyTesters: true
             releaseNotes: CHANGELOG.md
-
-        - name: Notify Insiders
+  notify:
+     runs-on: ubuntu-latest
+     needs: publish
+     steps:
+        - name: Notify Public
           env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
           uses: Ilshidur/action-discord@master

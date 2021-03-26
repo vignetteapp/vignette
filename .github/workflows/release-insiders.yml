@@ -60,7 +60,10 @@ jobs:
             file: vignette_insider-${{ github.ref }}_${{ matrix.runtime }}.zip
             notifyTesters: true
             releaseNotes: CHANGELOG.md
-
+  notify:
+     runs-on: ubuntu-latest
+     needs: publish
+     steps:
         - name: Notify Insiders
           env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INS }}
