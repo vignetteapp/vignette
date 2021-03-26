@@ -42,7 +42,7 @@ jobs:
              no-unreleased: true
 
         - name: Upload to VS App Center
-          uses: wzieba/App-Center-action@v1.3.2
+          uses: wzieba/AppCenter-Github-Action@v1.3.2
           with:
             appName: vignette/Vignette-AB1
             token: ${{ secrets.VS_APP_CENTER_TOKEN }}
