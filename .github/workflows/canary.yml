@@ -3,8 +3,19 @@
 # So don't remove this unless you want to get a groundpound
 # - Ayane Satomi 
 name: Lint and Create Canary Build
-on: push
-
+on:
+  push:
+    paths:
+      - '.github/workflows/canary.yml'
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.sln'
+  pull_request:
+    paths:
+      - '.github/workflows/canary.yml'
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.sln'
 jobs:
   lint:
      name: Lint
