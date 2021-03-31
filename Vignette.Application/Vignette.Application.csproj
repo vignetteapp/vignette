@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.8.26" />
-    <PackageReference Include="ppy.osu.Framework" Version="2021.323.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2021.330.0" />
   </ItemGroup>
 
   <ItemGroup>
