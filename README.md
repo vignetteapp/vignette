@@ -24,7 +24,6 @@ dotnet run --project Vignette.Desktop
 Please make sure you meet the prerequisites:
 - A desktop platform with [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) installed.
 - Have provided proper credentials to access the [GitHub Packages](https://github.com/orgs/vignette-project/packages).
-- Provide your own copy of the [Live2D Cubism SDK](https://www.live2d.com/en/download/cubism-sdk/).
 
 ### Setting up GitHub Packages
 
