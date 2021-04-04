@@ -49,7 +49,7 @@ The style guide is defined in the [`.editorconfig`](./.editorconfig) at the root
 
 ## License
 
-Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under Non-Profit Open Source License v3.0. For the full license text please see the [LICENSE](./LICENSE.md) file in this repository.
+Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under Non-Profit Open Source License v3.0 (NPOSL-3.0). For the full license text please see the [LICENSE](./LICENSE.md) file in this repository.
 
 ## Commercial Use
 
