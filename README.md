@@ -53,4 +53,4 @@ Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, license
 
 ## Commercial Use
 
-While Vignette is NPOSLv3, for-profit agencies who wish to use Vignette for their performers, please contact [Ayane Satomi](mailto:chinodesuuu@gmail.com) for a negotiation.
+While Vignette is NPOSLv3, for-profit agencies who wish to use Vignette for their performers, please [open a ticket](mailto:support@vignette-project.atlassian.net) for a negotiation.
