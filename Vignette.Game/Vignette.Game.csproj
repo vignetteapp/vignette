@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ppy.osu.Framework" Version="2021.402.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vignette.Game.Resources\Vignette.Game.Resources.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup Label="Language">
+    <LangVersion>9.0</LangVersion>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+    <PropertyGroup Label="Analysis">
+      <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+      <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    </PropertyGroup>
+</Project>

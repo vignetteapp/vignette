@@ -1,0 +1,27 @@
+{
+    "psi-header.variables": [
+        ["licenseYearFrom", "2020"],
+        ["licenseYearTo", "2021"],
+        ["licenseType", "NPOSLv3"]
+    ],
+    "psi-header.lang-config": [
+        {
+            "language": "csharp",
+            "begin": "",
+            "prefix": "// ",
+            "end": "",
+            "blankLinesAfter": 1
+        }
+    ],
+    "psi-header.templates": [
+        {
+            "language": "csharp",
+            "template": [
+                "Copyright <<licenseYearFrom>> - <<licenseYearTo>> Vignette Project",
+                "Licensed under <<licenseType>>. See LICENSE for details."
+            ]
+        }
+    ],
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.formatOnType": true
+}

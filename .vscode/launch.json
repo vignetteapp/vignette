@@ -1,0 +1,52 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build (Debug)",
+            "program": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/Vignette.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch (Release)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build (Release)",
+            "program": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/Vignette.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch Tests (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Tests (Debug)",
+            "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Debug/net5.0/Vignette.Game.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch Tests (Release)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Tests (Release)",
+            "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Release/net5.0/Vignette.Game.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+    ]
+}
