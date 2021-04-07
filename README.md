@@ -24,7 +24,6 @@ dotnet run --project Vignette.Desktop
 Please make sure you meet the prerequisites:
 - A desktop platform with [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) installed.
 - Have provided proper credentials to access the [GitHub Packages](https://github.com/orgs/vignette-project/packages).
-- Provide your own copy of the [Live2D Cubism SDK](https://www.live2d.com/en/download/cubism-sdk/).
 
 ### Setting up GitHub Packages
 
@@ -50,8 +49,8 @@ The style guide is defined in the [`.editorconfig`](./.editorconfig) at the root
 
 ## License
 
-Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under Non-Profit Open Source License v3.0. For the full license text please see the [LICENSE](./LICENSE.md) file in this repository.
+Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under Non-Profit Open Source License v3.0 (NPOSL-3.0). For the full license text please see the [LICENSE](./LICENSE.md) file in this repository.
 
 ## Commercial Use
 
-While Vignette is NPOSLv3, for-profit agencies who wish to use Vignette for their performers, please contact [Ayane Satomi](mailto:chinodesuuu@gmail.com) for a negotiation.
+While Vignette is NPOSLv3, for-profit agencies who wish to use Vignette for their performers, please [open a ticket](mailto:support@vignette-project.atlassian.net) for a negotiation.

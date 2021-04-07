@@ -1,15 +1,5 @@
 name: CQ Check - Non-Builds
-on:
-  push:
-    paths:
-      - '!**/*.cs'
-      - '!**/*.csproj'
-      - '!**/*.sln'
-  pull_request:
-    paths:
-      - '!**/*.cs'
-      - '!**/*.csproj'
-      - '!**/*.sln'
+on: [push, pull_request]
 jobs:
   lint:
      name: Lint

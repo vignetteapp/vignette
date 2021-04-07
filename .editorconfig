@@ -7,7 +7,7 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
-file_header_template = Copyright 2020 - 2021 Vignette Project\nLicensed under NPOSLv3. See LICENSE for details.
+file_header_template = Copyright 2020 - 2021 Vignette Project\nLicensed under NPOSL-3.0. See LICENSE for details.
 
 #Roslyn naming styles
 
