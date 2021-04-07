@@ -1,4 +1,7 @@
 {
+    "psi-header.changes-tracking": {
+        "autoHeader": "manualSave"
+    },
     "psi-header.variables": [
         ["licenseYearFrom", "2020"],
         ["licenseYearTo", "2021"],
