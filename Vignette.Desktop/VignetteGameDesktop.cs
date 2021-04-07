@@ -23,6 +23,9 @@ namespace Vignette.Desktop
             window.Resizable = false;
             window.Title = Name;
             window.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "vignette.ico"));
+
+            var resizable = LocalConfig.Config.WindowResizable.GetBoundCopy();
+            resizable.BindValueChanged(e => window.Resizable = e.NewValue, true);
         }
     }
 }
