@@ -39,7 +39,7 @@ namespace Vignette.Game.Configuration
             {
                 using (var stream = storage.GetStream(Filename, FileAccess.Read, FileMode.Open))
                 using (var reader = new StreamReader(stream))
-                    Config = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+                    Config = JsonConvert.DeserializeObject<T>(reader.ReadToEnd(), CreateSerializerSettings());
             }
 
             Config ??= Activator.CreateInstance<T>();
