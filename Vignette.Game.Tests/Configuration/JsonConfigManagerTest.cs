@@ -15,7 +15,7 @@ namespace Vignette.Game.Tests.Configuration
         public void TestSaveLoad()
         {
             const int change = 727;
-            using (var storage = new TemporaryNativeStorage(new Guid().ToString()))
+            using (var storage = new TemporaryNativeStorage(Guid.NewGuid().ToString()))
             {
                 using (var manager = new TestConfigurationManager(storage))
                 {
