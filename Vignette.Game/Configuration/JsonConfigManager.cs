@@ -12,14 +12,9 @@ namespace Vignette.Game.Configuration
     /// <summary>
     /// A config manager backed by a JSON file.
     /// </summary>
-    public abstract class JsonConfigManager<T> : IConfigManager, IDisposable
-        where T : class, new()
+    [Serializable]
+    public abstract class JsonConfigManager : ConfigManager, IDisposable
     {
-        /// <summary>
-        /// The parsed config.
-        /// </summary>
-        public T Config { get; private set; }
-
         /// <summary>
         /// The backing file used to store the config. Null means no persistent storage.
         /// </summary>
@@ -33,28 +28,26 @@ namespace Vignette.Game.Configuration
             Load();
         }
 
-        public void Load()
+        protected override void PerformLoad()
         {
             if (storage.Exists(Filename))
             {
                 using (var stream = storage.GetStream(Filename, FileAccess.Read, FileMode.Open))
                 using (var reader = new StreamReader(stream))
-                    Config = JsonConvert.DeserializeObject<T>(reader.ReadToEnd(), CreateSerializerSettings());
+                    JsonConvert.PopulateObject(reader.ReadToEnd(), this, CreateSerializerSettings());
             }
-
-            Config ??= Activator.CreateInstance<T>();
         }
 
-        public bool Save()
+        protected override bool PerformSave()
         {
-            if (Config == null || string.IsNullOrEmpty(Filename))
+            if (string.IsNullOrEmpty(Filename))
                 return false;
 
             try
             {
                 using (var stream = storage.GetStream(Filename, FileAccess.Write, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
-                    writer.Write(JsonConvert.SerializeObject(Config, CreateSerializerSettings()));
+                    writer.Write(JsonConvert.SerializeObject(this, CreateSerializerSettings()));
             }
             catch
             {
@@ -70,26 +63,5 @@ namespace Vignette.Game.Configuration
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
         };
-
-        #region Disposal
-
-        private bool isDisposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!isDisposed)
-            {
-                Save();
-                isDisposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
 }

@@ -19,30 +19,26 @@ namespace Vignette.Game.Tests.Configuration
             {
                 using (var manager = new TestConfigurationManager(storage))
                 {
-                    Assert.AreEqual(manager.Config.TestNumber, default(int));
-                    manager.Config.TestNumber = change;
-                    Assert.AreEqual(manager.Config.TestNumber, change);
+                    Assert.AreEqual(manager.TestNumber, default(int));
+                    manager.TestNumber = change;
+                    Assert.AreEqual(manager.TestNumber, change);
                 }
 
                 using (var manager = new TestConfigurationManager(storage))
-                    Assert.AreEqual(manager.Config.TestNumber, change);
+                    Assert.AreEqual(manager.TestNumber, change);
             }
         }
 
-        private class TestConfigurationManager : JsonConfigManager<TestConfiguration>
+        private class TestConfigurationManager : JsonConfigManager
         {
             protected override string Filename => "test-config.json";
+
+            public int TestNumber { get; set; }
 
             public TestConfigurationManager(Storage storage)
                 : base(storage)
             {
             }
-        }
-
-        [Serializable]
-        private class TestConfiguration
-        {
-            public int TestNumber { get; set; }
         }
     }
 }
