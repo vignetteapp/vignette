@@ -39,7 +39,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build (Tests)",
+            "label": "Build Tests (Debug)",
             "command": "dotnet",
             "type": "shell",
             "args": [
