@@ -12,7 +12,7 @@ namespace Vignette.Game.IO
     /// <summary>
     /// A storage that monitors and notifies for file changes via the <see cref="FileSystemWatcher"/>
     /// </summary>
-    public class MonitoredStorage : Storage, IDisposable
+    public class MonitoredStorage : WrappedStorage, IDisposable
     {
         /// <summary>
         /// Sets whether this instance should listen for file changes in its target storage.
@@ -45,17 +45,13 @@ namespace Vignette.Game.IO
         /// </summary>
         public event Action<string, string> FileRenamed;
 
-        protected Storage UnderlyingStorage { get; private set; }
-
         protected virtual IEnumerable<string> Filters => Array.Empty<string>();
 
         private readonly FileSystemWatcher watcher;
 
         public MonitoredStorage(Storage underlyingStorage)
-            : base(string.Empty)
+            : base(underlyingStorage)
         {
-            UnderlyingStorage = underlyingStorage;
-
             watcher = new FileSystemWatcher
             {
                 Path = UnderlyingStorage?.GetFullPath(string.Empty, true),
@@ -127,37 +123,5 @@ namespace Vignette.Game.IO
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        public override string GetFullPath(string path, bool createIfNotExisting = false)
-            => UnderlyingStorage.GetFullPath(path, createIfNotExisting);
-
-        public override bool Exists(string path)
-            => UnderlyingStorage.Exists(path);
-
-        public override bool ExistsDirectory(string path)
-            => UnderlyingStorage.ExistsDirectory(path);
-
-        public override void DeleteDirectory(string path)
-            => UnderlyingStorage.DeleteDirectory(path);
-
-        public override void Delete(string path) => UnderlyingStorage.Delete(path);
-
-        public override IEnumerable<string> GetDirectories(string path)
-            => UnderlyingStorage.GetDirectories(path);
-
-        public override IEnumerable<string> GetFiles(string path, string pattern = "*")
-            => UnderlyingStorage.GetFiles(path, pattern);
-
-        public override Stream GetStream(string path, FileAccess access = FileAccess.Read, FileMode mode = FileMode.OpenOrCreate)
-            => UnderlyingStorage.GetStream(path, access, mode);
-
-        public override string GetDatabaseConnectionString(string name)
-            => UnderlyingStorage.GetDatabaseConnectionString(name);
-
-        public override void DeleteDatabase(string name)
-            => UnderlyingStorage.DeleteDatabase(name);
-
-        public override void OpenPathInNativeExplorer(string path)
-            => UnderlyingStorage.OpenPathInNativeExplorer(path);
     }
 }
