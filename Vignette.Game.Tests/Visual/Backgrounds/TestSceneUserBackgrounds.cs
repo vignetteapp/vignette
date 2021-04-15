@@ -13,7 +13,7 @@ using Vignette.Game.Graphics.Backgrounds;
 using Vignette.Game.Screens;
 using Vignette.Game.Screens.Backgrounds;
 
-namespace Vignette.Game.Tests.Visual
+namespace Vignette.Game.Tests.Visual.Backgrounds
 {
     public class TestSceneUserBackgrounds : ManualInputManagerTestScene
     {
