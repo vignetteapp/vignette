@@ -3,10 +3,12 @@
 
 namespace Vignette.Game.Graphics.Backgrounds
 {
-    public enum BackgroundType
+    public enum BackgroundColourBlending
     {
-        Image,
+        Inherit,
 
-        Video,
+        Mixture,
+
+        Additive,
     }
 }

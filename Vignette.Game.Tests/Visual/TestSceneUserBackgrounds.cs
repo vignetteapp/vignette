@@ -6,7 +6,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
-using osu.Framework.Utils;
 using osuTK;
 using osuTK.Input;
 using Vignette.Game.Configuration;
@@ -56,7 +55,6 @@ namespace Vignette.Game.Tests.Visual
             resetAdjustments();
         }
 
-        [TestCase(BackgroundType.Colour)]
         [TestCase(BackgroundType.Image)]
         [TestCase(BackgroundType.Video)]
         public void TestBackgroundType(BackgroundType t)
@@ -64,27 +62,20 @@ namespace Vignette.Game.Tests.Visual
             AddStep("hide controls", () => control.Alpha = 0);
             AddStep("set background type", () => type.Value = t);
 
-            if (t != BackgroundType.Colour)
+            string file = null;
+            switch (t)
             {
-                string file = null;
-                switch (t)
-                {
-                    case BackgroundType.Image:
-                        file = "test-wallpaper.jpg";
-                        break;
+                case BackgroundType.Image:
+                    file = "test-wallpaper.jpg";
+                    break;
 
-                    case BackgroundType.Video:
-                        file = "test-video.mp4";
-                        break;
-                }
+                case BackgroundType.Video:
+                    file = "test-video.mp4";
+                    break;
+            }
 
-                AddStep("clear asset", () => asset.Value = string.Empty);
-                AddStep("set asset", () => asset.Value = file);
-            }
-            else
-            {
-                AddRepeatStep("set random colour", () => colour.Value = new Colour4(RNG.NextSingle(), RNG.NextSingle(), RNG.NextSingle(), 1.0f), 10);
-            }
+            AddStep("clear asset", () => asset.Value = string.Empty);
+            AddStep("set asset", () => asset.Value = file);
         }
 
         [Test]

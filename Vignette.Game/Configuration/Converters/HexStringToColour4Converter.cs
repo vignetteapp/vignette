@@ -7,7 +7,7 @@ using osu.Framework.Graphics;
 
 namespace Vignette.Game.Configuration.Converters
 {
-    public class Colour4Converter : JsonConverter<Colour4>
+    public class HexStringToColour4Converter : JsonConverter<Colour4>
     {
         public override Colour4 ReadJson(JsonReader reader, Type objectType, Colour4 existingValue, bool hasExistingValue, JsonSerializer serializer)
         {

@@ -86,6 +86,7 @@ namespace Vignette.Game.Graphics.Backgrounds
             private const int count = 7;
 
             public Crosshair()
+                : base(true, false)
             {
                 for (int i = 0; i < count; i++)
                 {

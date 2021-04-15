@@ -26,12 +26,14 @@ namespace Vignette.Game.Configuration
             SetDefault(VignetteSetting.WindowResizable, false);
             SetDefault(VignetteSetting.ShowFpsOverlay, false);
             SetDefault(VignetteSetting.CameraDevice, string.Empty);
-            SetDefault(VignetteSetting.BackgroundType, BackgroundType.Colour);
+            SetDefault(VignetteSetting.BackgroundType, BackgroundType.Image);
             SetDefault(VignetteSetting.BackgroundAsset, string.Empty);
             SetDefault(VignetteSetting.BackgroundColour, Colour4.Green);
             SetDefault(VignetteSetting.BackgroundOffset, Vector2.Zero);
             SetDefault(VignetteSetting.BackgroundScale, 1.0f, 0.1f, 10.0f, 0.1f);
             SetDefault(VignetteSetting.BackgroundRotation, 0.0f, 0.0f, 360.0f, 0.1f);
+            SetDefault(VignetteSetting.BackgroundColourBlending, BackgroundColourBlending.Inherit);
+            SetDefault(VignetteSetting.Theme, "Default");
         }
 
         protected override void AddBindable<TBindable>(VignetteSetting lookup, Bindable<TBindable> bindable)
@@ -72,5 +74,9 @@ namespace Vignette.Game.Configuration
         BackgroundScale,
 
         BackgroundRotation,
+
+        BackgroundColourBlending,
+
+        Theme,
     }
 }

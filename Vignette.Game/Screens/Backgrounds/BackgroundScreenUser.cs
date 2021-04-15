@@ -65,14 +65,11 @@ namespace Vignette.Game.Screens.Backgrounds
             switch (type.Value)
             {
                 case BackgroundType.Image:
+                default:
                     return new UserBackgroundImage(asset.Value);
 
                 case BackgroundType.Video:
                     return new UserBackgroundVideo(asset.Value);
-
-                case BackgroundType.Colour:
-                default:
-                    return new UserBackgroundColour();
             }
         }
     }
