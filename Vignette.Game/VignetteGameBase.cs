@@ -2,13 +2,15 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Performance;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
-using Vignette.Game.IO;
+using Vignette.Game.Resources;
 
 namespace Vignette.Game
 {
@@ -27,6 +29,8 @@ namespace Vignette.Game
 
         private Container content;
 
+        private Bindable<bool> showFps;
+
         protected override Container<Drawable> Content => content;
 
         public VignetteGameBase()
@@ -37,9 +41,28 @@ namespace Vignette.Game
         [BackgroundDependencyLoader]
         private void load()
         {
+            Resources.AddStore(new DllResourceStore(VignetteResources.ResourceAssembly));
+
+            AddFont(Resources, @"Fonts/SegoeUI");
+            AddFont(Resources, @"Fonts/SegoeUI-Italic");
+            AddFont(Resources, @"Fonts/SegoeUI-Bold");
+            AddFont(Resources, @"Fonts/SegoeUI-BoldItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-Black");
+            AddFont(Resources, @"Fonts/SegoeUI-BlackItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-Light");
+            AddFont(Resources, @"Fonts/SegoeUI-LightItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiBold");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiBoldItalic");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiLight");
+            AddFont(Resources, @"Fonts/SegoeUI-SemiLightItalic");
+
+            AddFont(Resources, @"Fonts/Spartan-Bold");
+
+            AddFont(Resources, @"Fonts/FluentSystemIcons-Filled");
+
             dependencies.CacheAs(LocalConfig);
 
-            var showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
+            showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
 
             base.Content.Add(new SafeAreaContainer
