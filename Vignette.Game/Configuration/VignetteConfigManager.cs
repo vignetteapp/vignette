@@ -1,44 +1,76 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 using osu.Framework.Bindables;
-using osu.Framework.IO.Serialization;
+using osu.Framework.Configuration;
+using osu.Framework.Graphics;
 using osu.Framework.Platform;
-using Vignette.Game.Configuration.Converters;
-using Vignette.Game.Configuration.Models;
+using osuTK;
+using Vignette.Game.Bindables;
+using Vignette.Game.Graphics.Backgrounds;
 
 namespace Vignette.Game.Configuration
 {
-    public class VignetteConfigManager : JsonConfigManager
+    public class VignetteConfigManager : IniConfigManager<VignetteSetting>
     {
-        protected override string Filename => "config.json";
+        protected override string Filename => "config.ini";
 
-        public Bindable<bool> WindowResizable = new Bindable<bool>();
-
-        public Bindable<bool> ShowFpsOverlay = new Bindable<bool>();
-
-        public Bindable<string> CameraDevice = new Bindable<string>();
-
-        public BackgroundConfig Background = new BackgroundConfig();
-
-        public VignetteConfigManager(Storage storage)
-            : base(storage)
+        public VignetteConfigManager(Storage storage, IDictionary<VignetteSetting, object> defaultOverrides = null)
+            : base(storage, defaultOverrides)
         {
         }
 
-        protected override JsonSerializerSettings CreateSerializerSettings()
+        protected override void InitialiseDefaults()
         {
-            var settings = base.CreateSerializerSettings();
-            settings.Converters = new JsonConverter[]
+            SetDefault(VignetteSetting.WindowResizable, false);
+            SetDefault(VignetteSetting.ShowFpsOverlay, false);
+            SetDefault(VignetteSetting.CameraDevice, string.Empty);
+            SetDefault(VignetteSetting.BackgroundType, BackgroundType.Colour);
+            SetDefault(VignetteSetting.BackgroundAsset, string.Empty);
+            SetDefault(VignetteSetting.BackgroundColour, Colour4.Green);
+            SetDefault(VignetteSetting.BackgroundOffset, Vector2.Zero);
+            SetDefault(VignetteSetting.BackgroundScale, 1.0f, 0.1f, 10.0f, 0.1f);
+            SetDefault(VignetteSetting.BackgroundRotation, 0.0f, 0.0f, 360.0f, 0.1f);
+        }
+
+        protected override void AddBindable<TBindable>(VignetteSetting lookup, Bindable<TBindable> bindable)
+        {
+            switch (lookup)
             {
-                new Vector2Converter(),
-                new Colour4Converter(),
-                new StringEnumConverter(),
-            };
+                case VignetteSetting.BackgroundColour:
+                    base.AddBindable(lookup, new BindableColour4(Colour4.Green));
+                    break;
 
-            return settings;
+                case VignetteSetting.BackgroundOffset:
+                    base.AddBindable(lookup, new BindableVector2());
+                    break;
+
+                default:
+                    base.AddBindable(lookup, bindable);
+                    break;
+            }
         }
+    }
+
+    public enum VignetteSetting
+    {
+        WindowResizable,
+
+        ShowFpsOverlay,
+
+        CameraDevice,
+
+        BackgroundType,
+
+        BackgroundAsset,
+
+        BackgroundColour,
+
+        BackgroundOffset,
+
+        BackgroundScale,
+
+        BackgroundRotation,
     }
 }

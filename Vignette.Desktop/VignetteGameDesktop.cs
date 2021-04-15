@@ -6,6 +6,7 @@ using osu.Framework.Configuration;
 using osu.Framework.Input;
 using osu.Framework.Platform;
 using Vignette.Game;
+using Vignette.Game.Configuration;
 
 namespace Vignette.Desktop
 {
@@ -24,7 +25,7 @@ namespace Vignette.Desktop
             window.Title = Name;
             window.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "vignette.ico"));
 
-            var resizable = LocalConfig.Config.WindowResizable.GetBoundCopy();
+            var resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
             resizable.BindValueChanged(e => window.Resizable = e.NewValue, true);
         }
     }

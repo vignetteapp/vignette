@@ -45,21 +45,31 @@ namespace Vignette.Game.IO
         /// </summary>
         public event Action<string, string> FileRenamed;
 
-        protected virtual IEnumerable<string> Filters => Array.Empty<string>();
+        /// <summary>
+        /// Allow listening to subpaths
+        /// </summary>
+        public bool IncludeSubPaths
+        {
+            get => watcher.IncludeSubdirectories;
+            set => watcher.IncludeSubdirectories = value;
+        }
 
         private readonly FileSystemWatcher watcher;
 
-        public MonitoredStorage(Storage underlyingStorage)
+        public MonitoredStorage(Storage underlyingStorage, IEnumerable<string> filters = null)
             : base(underlyingStorage)
         {
             watcher = new FileSystemWatcher
             {
                 Path = UnderlyingStorage?.GetFullPath(string.Empty, true),
-                NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size,
             };
 
-            foreach (string filter in Filters)
-                watcher.Filters.Add(filter);
+            if (filters != null)
+            {
+                foreach (string filter in filters)
+                    watcher.Filters.Add($"*.{filter.Replace(".", string.Empty)}");
+            }
 
             watcher.Created += (_, e) => OnFileCreated(e.Name);
             watcher.Deleted += (_, e) => OnFileDeleted(e.Name);

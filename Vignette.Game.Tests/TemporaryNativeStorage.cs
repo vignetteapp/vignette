@@ -11,7 +11,7 @@ namespace Vignette.Game.Tests
         public TemporaryNativeStorage(string path, GameHost host = null)
             : base(path, host)
         {
-            GetFullPath("./", true);
+            GetFullPath(string.Empty, true);
         }
 
         public void Dispose()

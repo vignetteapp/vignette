@@ -3,9 +3,12 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Development;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Performance;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.IO;
 
 namespace Vignette.Game
 {
@@ -22,6 +25,10 @@ namespace Vignette.Game
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
+        private Container content;
+
+        protected override Container<Drawable> Content => content;
+
         public VignetteGameBase()
         {
             IsDebugBuild = DebugUtils.IsDebugBuild;
@@ -32,8 +39,21 @@ namespace Vignette.Game
         {
             dependencies.CacheAs(LocalConfig);
 
-            var showFps = LocalConfig.Config.ShowFpsOverlay.GetBoundCopy();
+            var showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
+
+            base.Content.Add(new SafeAreaContainer
+            {
+                RelativeSizeAxes = Axes.Both,
+                Child = new DrawSizePreservingFillContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = content = new Container
+                    {
+                        RelativeSizeAxes = Axes.Both
+                    }
+                }
+            });
         }
 
         public override void SetHost(GameHost host)

@@ -2,28 +2,32 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Cursor;
+using osu.Framework.Testing;
 using Vignette.Game.IO;
 
-namespace Vignette.Game
+namespace Vignette.Game.Tests
 {
-    public class VignetteGame : VignetteGameBase
+    public class VisualTestGame : VignetteGameBase
     {
-        private UserResources resources;
+        private TemporaryUserResources resources;
 
         private DependencyContainer dependencies;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-        public VignetteGame()
-        {
-            Name = @"Vignette";
-        }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            dependencies.CacheAs(resources = new UserResources(Host, Storage));
+            dependencies.CacheAs<UserResources>(resources = new TemporaryUserResources(Host, Storage));
+            Children = new Drawable[]
+            {
+                new TestBrowser("Vignette"),
+                new CursorContainer(),
+            };
         }
 
         protected override void Dispose(bool isDisposing)
