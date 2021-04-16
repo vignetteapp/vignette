@@ -9,7 +9,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
     {
         public TestSceneCheckbox()
         {
-            Add(new Checkbox());
+            Add(new VignetteCheckbox());
         }
     }
 }

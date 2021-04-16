@@ -13,7 +13,7 @@ using Vignette.Game.Graphics.Themes;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class Slider<T> : SliderBar<T>
+    public class VignetteSliderBar<T> : SliderBar<T>
         where T : struct, IComparable<T>, IConvertible, IEquatable<T>
     {
         private Bindable<Theme> theme;
@@ -26,7 +26,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         private readonly Container nubContainer;
 
-        public Slider()
+        public VignetteSliderBar()
         {
             Height = 40;
             RangePadding = 3;

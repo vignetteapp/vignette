@@ -5,14 +5,14 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneTextBox : ThemeProvidedTestScene
+    public class TestSceneDropdown : ThemeProvidedTestScene
     {
-        public TestSceneTextBox()
+        public TestSceneDropdown()
         {
-            Add(new VignetteTextBox
+            Add(new VignetteDropdown<string>
             {
                 Width = 200,
-                PlaceholderText = @"placeholder",
+                Items = new[] { "One", "Two", "Three" },
             });
         }
     }

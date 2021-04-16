@@ -8,7 +8,7 @@ using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class ButtonText : Button, IHasText
+    public class ButtonText : VignetteButton, IHasText
     {
         protected new SpriteText Label => base.Label as SpriteText;
 

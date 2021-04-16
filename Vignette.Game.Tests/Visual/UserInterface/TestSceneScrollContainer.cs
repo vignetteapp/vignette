@@ -14,7 +14,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
     {
         public TestSceneScrollContainer()
         {
-            Add(new ScrollContainer
+            Add(new VignetteScrollContainer
             {
                 Size = new Vector2(200),
                 Child = new Box
@@ -23,7 +23,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                 }
             });
 
-            Add(new ScrollContainer(Direction.Horizontal)
+            Add(new VignetteScrollContainer(Direction.Horizontal)
             {
                 Y = 200,
                 Size = new Vector2(200),

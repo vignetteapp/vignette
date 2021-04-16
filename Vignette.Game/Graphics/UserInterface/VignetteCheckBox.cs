@@ -7,6 +7,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osuTK;
 using Vignette.Game.Graphics.Themes;
@@ -14,7 +15,7 @@ using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class Checkbox : osu.Framework.Graphics.UserInterface.Checkbox
+    public class VignetteCheckbox : Checkbox
     {
         private readonly Container stroke;
 
@@ -30,7 +31,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         private Colour4 colourChecked;
 
-        public Checkbox()
+        public VignetteCheckbox()
         {
             Size = new Vector2(20);
             Children = new Drawable[]

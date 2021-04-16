@@ -11,7 +11,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
     {
         public TestSceneSlider()
         {
-            Add(new Slider<float>
+            Add(new VignetteSliderBar<float>
             {
                 Width = 200,
                 Margin = new MarginPadding(10),

@@ -5,29 +5,15 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using Vignette.Game.Graphics.Themes;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public abstract class Button : osu.Framework.Graphics.UserInterface.Button
+    public abstract class VignetteButton : Button
     {
         protected abstract Drawable CreateLabel();
-
-        private Colour4 disabledColour = Colour4.Black;
-
-        protected Colour4 DisabledColour
-        {
-            get => disabledColour;
-            set
-            {
-                if (disabledColour.Equals(value))
-                    return;
-
-                disabledColour = value;
-                theme?.TriggerChange();
-            }
-        }
 
         private bool isFilled;
 
@@ -50,7 +36,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         private readonly Box overlay;
 
-        public Button()
+        public VignetteButton()
         {
             Height = 40;
             Masking = true;
@@ -82,7 +68,6 @@ namespace Vignette.Game.Graphics.UserInterface
             {
                 background.Colour = IsFilled ? e.NewValue.AccentPrimary : Colour4.Transparent;
                 overlay.Colour = e.NewValue.Black;
-                DisabledColour = e.NewValue.NeutralSecondary;
                 Label.Colour = e.NewValue.White;
             }, true);
         }

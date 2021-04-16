@@ -4,24 +4,25 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using Vignette.Game.Graphics.Themes;
 
 namespace Vignette.Game.Graphics.Containers
 {
-    public class ScrollContainer : ScrollContainer<Drawable>
+    public class VignetteScrollContainer : VignetteScrollContainer<Drawable>
     {
-        public ScrollContainer(Direction scrollDirection = Direction.Vertical)
+        public VignetteScrollContainer(Direction scrollDirection = Direction.Vertical)
             : base(scrollDirection)
         {
         }
     }
 
-    public class ScrollContainer<T> : osu.Framework.Graphics.Containers.ScrollContainer<T>
+    public class VignetteScrollContainer<T> : ScrollContainer<T>
         where T : Drawable
     {
-        public ScrollContainer(Direction scrollDirection = Direction.Vertical)
+        public VignetteScrollContainer(Direction scrollDirection = Direction.Vertical)
             : base(scrollDirection)
         {
         }

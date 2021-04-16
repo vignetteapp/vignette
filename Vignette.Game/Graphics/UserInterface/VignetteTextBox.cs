@@ -15,7 +15,7 @@ using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class TextBox : osu.Framework.Graphics.UserInterface.TextBox
+    public class VignetteTextBox : TextBox
     {
         private Bindable<Theme> theme;
 
@@ -27,7 +27,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         private Colour4 colourUnfocussed;
 
-        public TextBox()
+        public VignetteTextBox()
         {
             Height = 40;
 
@@ -55,7 +55,9 @@ namespace Vignette.Game.Graphics.UserInterface
             this.theme.BindValueChanged(e =>
             {
                 colourFocussed = e.NewValue.NeutralTertiary;
-                placeholderText.Colour = border.BorderColour = colourUnfocussed = e.NewValue.NeutralPrimary;
+                colourUnfocussed = e.NewValue.NeutralPrimary;
+                border.BorderColour = e.NewValue.NeutralPrimary;
+                placeholderText.Colour = e.NewValue.NeutralPrimary;
             }, true);
         }
 
