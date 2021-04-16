@@ -24,9 +24,15 @@ namespace Vignette.Game.Graphics.UserInterface
 
         private Bindable<Theme> theme;
 
+        private Colour4 colourUnhovered;
+
+        private Colour4 colourHovered;
+
+        private Colour4 colourChecked;
+
         public Checkbox()
         {
-            Size = new Vector2(40);
+            Size = new Vector2(20);
             Children = new Drawable[]
             {
                 stroke = new Container
@@ -74,20 +80,26 @@ namespace Vignette.Game.Graphics.UserInterface
             this.theme.BindValueChanged(e =>
             {
                 accentBox.Colour = e.NewValue.AccentPrimary;
-                check.Colour = e.NewValue.White;
-                stroke.BorderColour = e.NewValue.White;
+                colourChecked = e.NewValue.White;
+                colourHovered = check.Colour = e.NewValue.NeutralTertiary;
+                colourUnhovered = stroke.BorderColour = e.NewValue.NeutralPrimary;
             }, true);
         }
 
         protected override void OnUserChange(bool value)
         {
-            check.Alpha = accentBox.Alpha = value ? 1 : 0;
+            check.Alpha = 1;
+            accentBox.Alpha = value ? 1 : 0;
+            check.Colour = value ? colourChecked : colourHovered;
         }
 
         protected override bool OnHover(HoverEvent e)
         {
             if (!Current.Value)
+            {
                 check.Alpha = 1;
+                stroke.BorderColour = colourHovered;
+            }
 
             return base.OnHover(e);
         }
@@ -97,7 +109,10 @@ namespace Vignette.Game.Graphics.UserInterface
             base.OnHoverLost(e);
 
             if (!Current.Value)
+            {
                 check.Alpha = 0;
+                stroke.BorderColour = colourUnhovered;
+            }
         }
     }
 }
