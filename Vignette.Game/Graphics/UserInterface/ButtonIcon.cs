@@ -1,9 +1,12 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
+using Vignette.Game.Graphics.Themes;
 using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Graphics.UserInterface

@@ -3,7 +3,7 @@
 
 using osu.Framework.Screens;
 
-namespace Vignette.Game.Screens
+namespace Vignette.Game.Screens.Backgrounds
 {
     public class BackgroundScreenStack : ScreenStack
     {

@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
 using Vignette.Game.Graphics.Themes;
 
-namespace Vignette.Game.Tests.Visual.UserInterface
+namespace Vignette.Game.Tests.Visual
 {
     public abstract class ThemeProvidedTestScene : TestScene
     {

@@ -8,54 +8,37 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using Vignette.Game.Graphics.Themes;
+using Vignette.Game.Graphics.Typesets;
+using Vignette.Game.Presentations.Menus;
 
-namespace Vignette.Game.Graphics.UserInterface
+namespace Vignette.Game.Screens.Menus
 {
-    public abstract class VignetteButton : Button
+    public class NavigationTabItem : TabItem<MenuSlide>
     {
-        protected abstract Drawable CreateLabel();
-
-        private bool isFilled;
-
-        public bool IsFilled
-        {
-            get => isFilled;
-            set
-            {
-                if (isFilled == value)
-                    return;
-
-                isFilled = value;
-                theme?.TriggerChange();
-            }
-        }
-
-        protected readonly Drawable Label;
-
-        private readonly Box background;
+        private readonly NavigationBarItem item;
 
         private readonly Box overlay;
 
-        public VignetteButton()
+        public NavigationTabItem(MenuSlide value)
+            : base(value)
         {
             Height = 40;
-            Masking = true;
-            CornerRadius = 5;
+            RelativeSizeAxes = Axes.X;
+
             Children = new Drawable[]
             {
-                background = new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
                 overlay = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0,
                 },
-                Label = CreateLabel(),
+                item = new NavigationBarItem
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Icon = FluentSystemIcons.QuestionCircle24,
+                    Text = value.GetType().Name,
+                },
             };
-
-            Enabled.BindValueChanged(_ => theme?.TriggerChange(), true);
         }
 
         private Bindable<Theme> theme;
@@ -66,17 +49,22 @@ namespace Vignette.Game.Graphics.UserInterface
             this.theme = theme.GetBoundCopy();
             this.theme.BindValueChanged(e =>
             {
-                background.Colour = IsFilled ? e.NewValue.AccentPrimary : Colour4.Transparent;
                 overlay.Colour = e.NewValue.Black;
-                Label.Colour = e.NewValue.Black;
+                item.Colour = e.NewValue.Black;
             }, true);
+        }
+
+        protected override void OnActivated()
+        {
+        }
+
+        protected override void OnDeactivated()
+        {
         }
 
         protected override bool OnHover(HoverEvent e)
         {
-            if (Enabled.Value)
-                overlay.Alpha = 0.1f;
-
+            overlay.Alpha = 0.1f;
             return base.OnHover(e);
         }
 
@@ -84,24 +72,20 @@ namespace Vignette.Game.Graphics.UserInterface
         {
             base.OnHoverLost(e);
 
-            if (Enabled.Value && !e.HasAnyButtonPressed)
+            if (!e.HasAnyButtonPressed)
                 overlay.Alpha = 0;
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            if (Enabled.Value)
-                overlay.Alpha = 0.2f;
-
+            overlay.Alpha = 0.2f;
             return base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseUpEvent e)
         {
             base.OnMouseUp(e);
-
-            if (Enabled.Value)
-                overlay.Alpha = ScreenSpaceDrawQuad.Contains(e.ScreenSpaceMousePosition) ? 0.1f : 0;
+            overlay.Alpha = ScreenSpaceDrawQuad.Contains(e.ScreenSpaceMousePosition) ? 0.1f : 0;
         }
     }
 }
