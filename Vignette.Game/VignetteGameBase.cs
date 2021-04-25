@@ -10,7 +10,9 @@ using osu.Framework.Graphics.Performance;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.IO;
 using Vignette.Game.Resources;
+using Vignette.Game.Themeing;
 
 namespace Vignette.Game
 {
@@ -27,9 +29,11 @@ namespace Vignette.Game
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-        private Container content;
+        private UserResources userResources;
 
         private Bindable<bool> showFps;
+
+        private Container content;
 
         protected override Container<Drawable> Content => content;
 
@@ -62,6 +66,10 @@ namespace Vignette.Game
 
             dependencies.CacheAs(LocalConfig);
 
+            userResources = new UserResources(Host, Storage);
+            dependencies.CacheAs(userResources);
+            dependencies.CacheAs(new ThemeManager(userResources, LocalConfig));
+
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
 
@@ -93,6 +101,7 @@ namespace Vignette.Game
         {
             base.Dispose(isDisposing);
             LocalConfig?.Dispose();
+            userResources?.Dispose();
         }
     }
 }

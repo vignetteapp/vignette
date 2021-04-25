@@ -2,53 +2,49 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osuTK;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneButtons : ThemeProvidedTestScene
+    public class TestSceneButtons : UserInterfaceTestScene
     {
         public TestSceneButtons()
         {
-            Add(new FillFlowContainer
+            AddRange(new Drawable[]
             {
-                Direction = FillDirection.Vertical,
-                AutoSizeAxes = Axes.Both,
-                Margin = new MarginPadding(10),
-                Spacing = new Vector2(0, 10),
-                Children = new Drawable[]
-                {
-                    new ButtonText
-                    {
-                        Text = @"Hello World",
-                        Width = 200,
-                        Action = () => { },
-                        IsFilled = true,
-                    },
-                    new ButtonText
-                    {
-                        Text = @"Hello World",
-                        Width = 200,
-                        Action = () => { },
-                    },
-                    new ButtonIcon
-                    {
-                        Icon = FluentSystemIcons.Add24,
-                        Width = 200,
-                        Action = () => { },
-                        IsFilled = true,
-                    },
-                    new ButtonIcon
-                    {
-                        Icon = FluentSystemIcons.Add24,
-                        Width = 200,
-                        Action = () => { },
-                    },
-                }
+                createButton(ButtonStyle.Primary, hasIcon: false),
+                createButton(ButtonStyle.Primary, hasText: false),
+                createButton(ButtonStyle.Primary, isEnabled: false),
+                createButton(ButtonStyle.Primary),
+                createButton(ButtonStyle.Secondary, hasIcon: false),
+                createButton(ButtonStyle.Secondary, hasText: false),
+                createButton(ButtonStyle.Secondary, isEnabled: false),
+                createButton(ButtonStyle.Secondary),
+                createButton(ButtonStyle.Text, hasIcon: false),
+                createButton(ButtonStyle.Text, hasText: false),
+                createButton(ButtonStyle.Text, isEnabled: false),
+                createButton(ButtonStyle.Text),
             });
+        }
+
+        private FluentButton createButton(ButtonStyle style, bool isEnabled = true, bool hasIcon = true, bool hasText = true)
+        {
+            var button = new FluentButton
+            {
+                Style = style,
+                AutoSizeAxes = Axes.X,
+            };
+
+            button.Enabled.Value = isEnabled;
+
+            if (hasText)
+                button.Text = "Button";
+
+            if (hasIcon)
+                button.Icon = FluentSystemIcons.Circle24;
+
+            return button;
         }
     }
 }

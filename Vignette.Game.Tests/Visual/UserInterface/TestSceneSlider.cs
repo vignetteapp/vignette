@@ -7,21 +7,37 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneSlider : ThemeProvidedTestScene
+    public class TestSceneSlider : UserInterfaceTestScene
     {
         public TestSceneSlider()
         {
-            Add(new VignetteSliderBar<float>
+            FluentSlider<int> disabled;
+
+            AddRange(new Drawable[]
             {
-                Width = 200,
-                Margin = new MarginPadding(10),
-                Current = new BindableFloat
+                new FluentSlider<int>
                 {
-                    MinValue = 0,
-                    MaxValue = 1,
-                    Value = 0,
+                    Width = 200,
+                    Current = new BindableInt
+                    {
+                        Value = 3,
+                        MinValue = 0,
+                        MaxValue = 10,
+                    }
+                },
+                disabled = new FluentSlider<int>
+                {
+                    Width = 200,
+                    Current = new BindableInt
+                    {
+                        Value = 3,
+                        MinValue = 0,
+                        MaxValue = 10,
+                    }
                 },
             });
+
+            disabled.Current.Disabled = true;
         }
     }
 }

@@ -3,37 +3,54 @@
 
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
-using Vignette.Game.Graphics.Cursor;
+using Vignette.Game.Graphics.Shapes;
+using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
+using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneContextMenu : ThemeProvidedTestScene
+    public class TestSceneContextMenu : UserInterfaceTestScene
     {
         public TestSceneContextMenu()
         {
-            Add(new VignetteContextMenuContainer
+            Add(new FluentContextMenuContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                Child = new BoxWithContextMenu
-                {
-                    Size = new Vector2(100),
-                }
+                Child = new BoxWithContextMenu(),
             });
         }
 
-        private class BoxWithContextMenu : Box, IHasContextMenu
+        private class BoxWithContextMenu : ThemableBox, IHasContextMenu
         {
-            public MenuItem[] ContextMenuItems => new[]
+            public MenuItem[] ContextMenuItems => new MenuItem[]
             {
-                new VignetteMenuItem("One"),
-                new VignetteMenuItem("Two"),
-                new VignetteMenuItem("Three"),
-                new VignetteMenuItem("Really Long Menu Item"),
+                new FluentMenuItem("Hello World"),
+                new FluentMenuItem("Add To Favorites", FluentSystemIcons.Heart16),
+                new FluentMenuItem("Move to Recycle Bin", FluentSystemIcons.Delete16),
+                new FluentMenuItem("Send Feedback", FluentSystemIcons.ChatBubblesQuestion20),
+                new FluentMenuDivider(),
+                new FluentMenuHeader("Ridiculous"),
+                new FluentMenuItem("Be Sent to Another World", FluentSystemIcons.Globe16),
+                new FluentMenuDivider(),
+                new FluentMenuItem("File Actions")
+                {
+                    Items = new MenuItem[]
+                    {
+                        new FluentMenuHeader("Actions"),
+                        new FluentMenuItem("Add To Recents"),
+                        new FluentMenuItem("Show File in Explorer", FluentSystemIcons.WindowNew24),
+                    }
+                }
             };
+
+            public BoxWithContextMenu()
+            {
+                Size = new Vector2(100);
+                Colour = ThemeSlot.AccentPrimary;
+            }
         }
     }
 }
