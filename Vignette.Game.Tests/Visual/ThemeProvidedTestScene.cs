@@ -7,12 +7,11 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Testing;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual
 {
-    public abstract class ThemeProvidedTestScene : TestScene
+    public abstract class ThemeProvidedTestScene : VignetteTestScene
     {
         [Cached(typeof(IThemeSource))]
         private readonly TestThemeSource content;

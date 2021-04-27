@@ -4,11 +4,10 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Testing;
 
 namespace Vignette.Game.Tests.Visual.Typesetting
 {
-    public abstract class FontUsageTestScene : TestScene
+    public abstract class FontUsageTestScene : VignetteTestScene
     {
         private readonly FillFlowContainer flow;
 

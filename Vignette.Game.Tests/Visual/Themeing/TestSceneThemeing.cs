@@ -17,23 +17,23 @@ namespace Vignette.Game.Tests.Visual.Themeing
         private Box target;
 
         [SetUp]
-        public void SetUp()
+        public void SetUp() => Schedule(() =>
         {
             Clear();
             Selector.Current.Value = Theme.Light;
-        }
+        });
 
         [Test]
         public void TestThemeSwitching()
         {
-            AddStep("create themable", () =>
+            AddStep("create themable", () => Schedule(() =>
             {
                 Add(themable = new ThemableBox
                 {
                     Size = new Vector2(100),
                     Colour = ThemeSlot.White,
                 });
-            });
+            }));
 
             AddAssert("is colour white", () => themable.Target.Colour == Colour4.White);
             AddStep("change theme", () => Selector.Current.Value = Theme.Dark);
@@ -44,7 +44,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
         [TestCase(true)]
         public void TestDrawableDetachment(bool expireTarget)
         {
-            AddStep("create drawables", () =>
+            AddStep("create drawables", () => Schedule(() =>
             {
                 Add(themable = new ThemableBox(false)
                 {
@@ -56,7 +56,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
                     d.RelativeSizeAxes = Axes.None;
                     d.Size = new Vector2(100);
                 }));
-            });
+            }));
 
             AddAssert("is target white", () => target.Colour == Colour4.White);
             AddStep("change theme", () => Selector.Current.Value = Theme.Dark);

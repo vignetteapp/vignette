@@ -24,12 +24,12 @@ namespace Vignette.Game
 
         protected VignetteConfigManager LocalConfig;
 
+        private UserResources userResources;
+
         private DependencyContainer dependencies;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
-
-        private UserResources userResources;
 
         private Bindable<bool> showFps;
 

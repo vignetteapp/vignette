@@ -3,9 +3,12 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2021.402.0" />
+    <!--
+    <PackageReference Include="ppy.osu.Framework" Version="2021.424.1"/>
+    -->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Vignette.Game.Resources\Vignette.Game.Resources.csproj" />
+    <ProjectReference Include="..\Vignette.Game.Resources\Vignette.Game.Resources.csproj"/>
+    <ProjectReference Include="..\..\osu-framework\osu.Framework\osu.Framework.csproj"/>
   </ItemGroup>
 </Project>

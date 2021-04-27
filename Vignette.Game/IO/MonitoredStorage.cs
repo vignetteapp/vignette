@@ -61,7 +61,7 @@ namespace Vignette.Game.IO
         {
             watcher = new FileSystemWatcher
             {
-                Path = UnderlyingStorage?.GetFullPath(string.Empty, true),
+                Path = GetFullPath(string.Empty, true),
                 NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size,
             };
 

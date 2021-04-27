@@ -6,13 +6,12 @@ using System.Reflection;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Testing;
 using osuTK;
 using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Tests.Visual.Typesetting
 {
-    public class TestSceneFluentSystemIcons : TestScene
+    public class TestSceneFluentSystemIcons : VignetteTestScene
     {
         public TestSceneFluentSystemIcons()
         {
