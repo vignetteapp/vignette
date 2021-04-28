@@ -33,7 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer" Version="2.8.26" />
+    <PackageReference Include="Humanizer" Version="2.9.9" />
     <PackageReference Include="ppy.osu.Framework" Version="2021.323.0" />
   </ItemGroup>
 
