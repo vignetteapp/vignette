@@ -1,4 +1,5 @@
 uniform vec2 u_resolution;
+uniform mediump float g_alpha;
 
 // Some useful functions
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -85,5 +86,5 @@ void main() {
 
     color = vec3(snoise(st)*.5+.5);
 
-    gl_FragColor = vec4(color,1.0);
+    gl_FragColor = vec4(color,g_alpha);
 }

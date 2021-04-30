@@ -17,7 +17,20 @@ namespace Vignette.Game.Graphics.Sprites
     {
         private IShader shader;
 
-        public Vector2 Resolution { get; set; } = Vector2.One;
+        private Vector2 resolution = Vector2.One;
+
+        public Vector2 Resolution
+        {
+            get => resolution;
+            set
+            {
+                if (resolution == value)
+                    return;
+
+                resolution = value;
+                Invalidate(Invalidation.DrawNode);
+            }
+        }
 
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
@@ -39,6 +52,8 @@ namespace Vignette.Game.Graphics.Sprites
 
             private Vector2 resolution;
 
+            private float alpha;
+
             private Quad screenSpaceDrawQuad;
 
             public SpriteNoiseDrawNode(IDrawable source)
@@ -55,6 +70,7 @@ namespace Vignette.Game.Graphics.Sprites
             {
                 base.ApplyState();
 
+                alpha = Source.Alpha;
                 shader = Source.shader;
                 resolution = Source.Resolution;
                 screenSpaceDrawQuad = Source.ScreenSpaceDrawQuad;
@@ -67,6 +83,7 @@ namespace Vignette.Game.Graphics.Sprites
                 shader.Bind();
 
                 shader.GetUniform<Vector2>("u_resolution").UpdateValue(ref resolution);
+                shader.GetUniform<float>("g_alpha").UpdateValue(ref alpha);
 
                 DrawQuad(Texture.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
 
