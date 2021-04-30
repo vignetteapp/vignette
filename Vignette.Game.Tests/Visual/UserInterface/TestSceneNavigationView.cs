@@ -5,20 +5,20 @@ using System.Collections.Generic;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
-using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneNavigationView : ThemeProvidedTestScene
+    public class TestSceneNavigationView : UserInterfaceTestScene
     {
-        private IReadOnlyList<TestItemWithIcon> items => new[]
+        private IReadOnlyList<TestItem> items => new[]
         {
-            new TestItemWithIcon("User", FluentSystemIcons.Person24),
-            new TestItemWithIcon("Gift", FluentSystemIcons.Gift24),
-            new TestItemWithIcon("Ban", FluentSystemIcons.Gavel24),
+            new TestItem("User", FluentSystemIcons.Person24),
+            new TestItem("Gift", FluentSystemIcons.Gift24),
+            new TestItem("Ban", FluentSystemIcons.Gavel24),
         };
 
         public TestSceneNavigationView()
@@ -40,60 +40,105 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                 {
                     new Drawable[]
                     {
-                        new NavigationViewVertical<TestItemWithIcon>
+                        new TestNavigationViewVertical
                         {
-                            Items = items
+                            Items = items,
                         }
                     },
                     new Drawable[]
                     {
-                        new NavigationViewHorizontal<TestItemWithIcon>
+                        new TestNavigationViewHorizontal
                         {
-                            Items = items
+                            Items = items,
                         },
-                        new NavigationViewHorizontal<TestItem>
+                        new TestNavigationViewHorizontalWithoutIcon
                         {
-                            Items = new[]
-                            {
-                                new TestItem("User"),
-                                new TestItem("Gift"),
-                                new TestItem("Ban"),
-                            }
+                            Items = items,
                         },
                     },
                 },
             };
         }
 
-        private class TestItem : Drawable, IHasText
+        private class TestNavigationViewVertical : NavigationViewVertical<TestItem>
         {
-            private LocalisableString text;
+            protected override NavigationViewTabControl CreateTabControl()
+                => new TestNavigationViewVerticalTabControl();
 
-            public LocalisableString Text
+            protected class TestNavigationViewVerticalTabControl : NavigationViewVerticalTabControl
             {
-                get => text;
-                set => text = value;
+                protected override TabItem<TestItem> CreateTabItem(TestItem value)
+                    => new TestNavigationViewVerticalTabItem(value);
             }
 
-            public TestItem(string text)
+            protected class TestNavigationViewVerticalTabItem : NavigationViewVerticalTabItem
             {
-                Text = text;
+                protected override LocalisableString? Text => Value.Name;
+
+                protected override IconUsage? Icon => Value.Icon;
+
+                public TestNavigationViewVerticalTabItem(TestItem value)
+                    : base(value)
+                {
+                }
             }
         }
 
-        private class TestItemWithIcon : TestItem, IHasIcon
+        private class TestNavigationViewHorizontal : NavigationViewHorizontal<TestItem>
         {
-            private IconUsage icon;
+            protected override NavigationViewTabControl CreateTabControl()
+                => new TestNavigationViewHorizontalTabControl();
 
-            public IconUsage Icon
+            protected class TestNavigationViewHorizontalTabControl : NavigationViewTabControl
             {
-                get => icon;
-                set => icon = value;
+                protected override TabItem<TestItem> CreateTabItem(TestItem value)
+                    => new TestNavigationViewHorizontalTabItem(value);
             }
 
-            public TestItemWithIcon(string text, IconUsage icon)
-                : base(text)
+            protected class TestNavigationViewHorizontalTabItem : NavigationViewHorizontalTabItem
             {
+                protected override LocalisableString? Text => Value.Name;
+
+                protected override IconUsage? Icon => Value.Icon;
+
+                public TestNavigationViewHorizontalTabItem(TestItem value)
+                    : base(value)
+                {
+                }
+            }
+        }
+
+        private class TestNavigationViewHorizontalWithoutIcon : NavigationViewHorizontal<TestItem>
+        {
+            protected override NavigationViewTabControl CreateTabControl()
+                => new TestNavigationViewHorizontalTabControlWithoutIcon();
+
+            protected class TestNavigationViewHorizontalTabControlWithoutIcon : NavigationViewTabControl
+            {
+                protected override TabItem<TestItem> CreateTabItem(TestItem value)
+                    => new TestNavigationViewHorizontalTabItemWithoutIcon(value);
+            }
+
+            protected class TestNavigationViewHorizontalTabItemWithoutIcon : NavigationViewHorizontalTabItem
+            {
+                protected override LocalisableString? Text => Value.Name;
+
+                public TestNavigationViewHorizontalTabItemWithoutIcon(TestItem value)
+                    : base(value)
+                {
+                }
+            }
+        }
+
+        private struct TestItem
+        {
+            public string Name { get; set; }
+
+            public IconUsage Icon { get; set; }
+
+            public TestItem(string name, IconUsage icon)
+            {
+                Name = name;
                 Icon = icon;
             }
         }

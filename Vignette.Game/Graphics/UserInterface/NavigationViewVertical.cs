@@ -4,14 +4,12 @@
 using System;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.UserInterface;
 using osuTK;
-using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class NavigationViewVertical<T> : NavigationView<T>
+    public abstract class NavigationViewVertical<T> : NavigationView<T>
     {
         public Action OnBack;
 
@@ -38,7 +36,7 @@ namespace Vignette.Game.Graphics.UserInterface
                             Size = new Vector2(44),
                             Icon = FluentSystemIcons.ArrowLeft24,
                             Style = ButtonStyle.Text,
-                            Action = OnBack,
+                            Action = () => OnBack?.Invoke(),
                         },
                     },
                     new Drawable[]
@@ -54,7 +52,11 @@ namespace Vignette.Game.Graphics.UserInterface
                     new Drawable[]
                     {
                         Control
-                    }
+                    },
+                    new Drawable[]
+                    {
+                        CreateEndControl(),
+                    },
                 }
             });
         }
@@ -67,29 +69,22 @@ namespace Vignette.Game.Graphics.UserInterface
             isExpanded = !isExpanded;
         }
 
-        protected override NavigationViewTabControl CreateTabControl()
-            => new NavigationViewVerticalTabControl();
+        protected virtual Drawable CreateEndControl() => null;
 
-        protected class NavigationViewVerticalTabControl : NavigationViewTabControl
+        protected abstract class NavigationViewVerticalTabControl : NavigationViewTabControl
         {
             public NavigationViewVerticalTabControl()
             {
                 TabContainer.Direction = FillDirection.Vertical;
                 TabContainer.AllowMultiline = true;
             }
-
-            protected override TabItem<T> CreateTabItem(T value)
-                => new NavigationViewVerticalTabItem(value);
         }
 
-        protected class NavigationViewVerticalTabItem : NavigationViewTabItem
+        protected abstract class NavigationViewVerticalTabItem : NavigationViewTabItem
         {
             public NavigationViewVerticalTabItem(T value)
                 : base(value)
             {
-                if (value is not IHasIcon)
-                    throw new InvalidOperationException($"{typeof(T)} must implement IHasIcon to be a valid item.");
-
                 Height = 44;
                 RelativeSizeAxes = Axes.X;
 

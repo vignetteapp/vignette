@@ -7,11 +7,12 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
+using Vignette.Game.Tests.Visual.UserInterface;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual.Themeing
 {
-    public class TestSceneThemeSlots : ThemeProvidedTestScene
+    public class TestSceneThemeSlots : UserInterfaceTestScene
     {
         private readonly FillFlowContainer flow;
 

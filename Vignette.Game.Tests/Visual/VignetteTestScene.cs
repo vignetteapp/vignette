@@ -2,22 +2,29 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System;
-using System.IO;
-using osu.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Platform;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Testing;
+using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual
 {
     public abstract class VignetteTestScene : TestScene
     {
-        // protected Storage LocalStorage => new TemporaryNativeStorage(Path.Combine(RuntimeInfo.StartupDirectory, $"{GetType().Name}-{Guid.NewGuid()}"));
+        [Cached(typeof(IThemeSource))]
+        protected readonly TestThemeSource Provider;
 
-        // protected new DependencyContainer Dependencies { get; private set; }
+        protected override Container<Drawable> Content => Provider;
 
-        // protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-        //     => Dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+        public VignetteTestScene()
+        {
+            base.Content.Add(Provider = new TestThemeSource
+            {
+                RelativeSizeAxes = Axes.Both
+            });
+        }
 
         protected override ITestSceneTestRunner CreateRunner() => new VignetteTestSceneTestRunner();
 
@@ -31,6 +38,20 @@ namespace Vignette.Game.Tests.Visual
             }
 
             public void RunTestBlocking(TestScene test) => runner.RunTestBlocking(test);
+        }
+
+        protected class TestThemeSource : Container, IThemeSource
+        {
+            public event Action SourceChanged;
+
+            public readonly Bindable<Theme> Current = new Bindable<Theme>(Theme.Light);
+
+            public TestThemeSource()
+            {
+                Current.BindValueChanged(_ => SourceChanged?.Invoke(), true);
+            }
+
+            public Theme GetCurrent() => Current.Value;
         }
     }
 }

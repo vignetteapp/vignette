@@ -2,11 +2,13 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.Collections.Generic;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
@@ -17,6 +19,12 @@ namespace Vignette.Game.Graphics.UserInterface
 {
     public abstract class NavigationView<T> : Container
     {
+        public Bindable<T> Current
+        {
+            get => Control.Current;
+            set => Control.Current = value;
+        }
+
         public IReadOnlyList<T> Items
         {
             get => Control.Items;
@@ -31,12 +39,6 @@ namespace Vignette.Game.Graphics.UserInterface
             {
                 d.RelativeSizeAxes = Axes.Both;
             });
-
-            Add(new ThemableBox
-            {
-                Colour = ThemeSlot.White,
-                RelativeSizeAxes = Axes.Both,
-            });
         }
 
         protected abstract NavigationViewTabControl CreateTabControl();
@@ -50,11 +52,15 @@ namespace Vignette.Game.Graphics.UserInterface
         {
             private readonly ThemableBox background;
 
+            private ThemableSpriteText text;
+
+            private ThemableSpriteIcon icon;
+
+            protected virtual LocalisableString? Text => null;
+
+            protected virtual IconUsage? Icon => null;
+
             protected readonly ThemableBox Highlight;
-
-            protected readonly ThemableSpriteText Text;
-
-            protected readonly ThemableSpriteIcon Icon;
 
             protected readonly Container LabelContainer;
 
@@ -80,11 +86,11 @@ namespace Vignette.Game.Graphics.UserInterface
                     RelativeSizeAxes = Axes.Y,
                 });
 
-                if (value is IHasIcon valueIcon)
+                if (Icon != null)
                 {
-                    LabelContainer.Add(Icon = new ThemableSpriteIcon
+                    LabelContainer.Add(icon = new ThemableSpriteIcon
                     {
-                        Icon = valueIcon.Icon,
+                        Icon = Icon ?? default,
                         Size = new Vector2(16),
                         Colour = ThemeSlot.Black,
                         Anchor = Anchor.CentreLeft,
@@ -92,11 +98,11 @@ namespace Vignette.Game.Graphics.UserInterface
                     });
                 }
 
-                if (value is IHasText valueText)
+                if (Text != null)
                 {
-                    LabelContainer.Add(Text = new ThemableSpriteText
+                    LabelContainer.Add(text = new ThemableSpriteText
                     {
-                        Text = valueText.Text,
+                        Text = Text ?? string.Empty,
                         Font = SegoeUI.Regular.With(size: 18),
                         Colour = ThemeSlot.Black,
                         Anchor = Anchor.CentreLeft,
@@ -104,8 +110,8 @@ namespace Vignette.Game.Graphics.UserInterface
                     });
                 }
 
-                if (Icon != null || ForceTextMargin)
-                    Text.Margin = new MarginPadding { Left = TextLeftMargin };
+                if ((Icon != null && Text != null) || ForceTextMargin)
+                    text.Margin = new MarginPadding { Left = TextLeftMargin };
 
                 updateBackground();
             }

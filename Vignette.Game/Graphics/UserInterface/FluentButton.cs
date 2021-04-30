@@ -5,8 +5,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
@@ -19,20 +17,12 @@ namespace Vignette.Game.Graphics.UserInterface
     /// <summary>
     /// A button where an action is performed when clicked on.
     /// </summary>
-    public class FluentButton : Button, IHasText, IHasIcon, IHasTooltip
+    public class FluentButton : FluentButtonBase, IHasText, IHasIcon, IHasTooltip
     {
         /// <summary>
         /// Gets or sets the tooltip text shown when hovered over.
         /// </summary>
         public virtual string TooltipText { get; set; }
-
-        private readonly FillFlowContainer label;
-
-        private readonly ThemableMaskedBox background;
-
-        private ThemableSpriteText text;
-
-        private ThemableSpriteIcon icon;
 
         private ButtonStyle style = ButtonStyle.Secondary;
 
@@ -126,6 +116,14 @@ namespace Vignette.Game.Graphics.UserInterface
             }
         }
 
+        private readonly FillFlowContainer label;
+
+        private readonly ThemableMaskedBox background;
+
+        private ThemableSpriteText text;
+
+        private ThemableSpriteIcon icon;
+
         public FluentButton()
         {
             Height = 32;
@@ -141,14 +139,12 @@ namespace Vignette.Game.Graphics.UserInterface
                     RelativeSizeAxes = Axes.Y,
                     AutoSizeAxes = Axes.X,
                     Direction = FillDirection.Horizontal,
-                    Padding = new MarginPadding(8),
                     Spacing = new Vector2(8, 0),
+                    Margin = new MarginPadding { Horizontal = 8 },
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
             };
-
-            Enabled.BindValueChanged(_ => Scheduler.AddOnce(updateState), true);
         }
 
         protected override void LoadComplete()
@@ -157,42 +153,16 @@ namespace Vignette.Game.Graphics.UserInterface
             base.LoadComplete();
         }
 
-        private bool isHovered;
-        private bool isPressed;
-        private ThemeSlot backgroundHovered;
-        private ThemeSlot backgroundPressed;
-        private ThemeSlot backgroundResting;
-        private ThemeSlot backgroundDisabled;
-        private ThemeSlot labelResting;
-        private ThemeSlot labelDisabled;
+        protected override void UpdateBackground(ThemeSlot slot)
+            => background.Colour = slot;
 
-        private void updateState()
+        protected override void UpdateLabel(ThemeSlot slot)
         {
-            if (Enabled.Value)
-            {
-                if (isPressed)
-                    background.Colour = backgroundPressed;
-                else if (IsHovered)
-                    background.Colour = backgroundHovered;
-                else
-                    background.Colour = backgroundResting;
+            if (text != null)
+                text.Colour = slot;
 
-                if (text != null)
-                    text.Colour = labelResting;
-
-                if (icon != null)
-                    icon.Colour = labelResting;
-            }
-            else
-            {
-                background.Colour = backgroundDisabled;
-
-                if (text != null)
-                    text.Colour = labelDisabled;
-
-                if (icon != null)
-                    icon.Colour = labelDisabled;
-            }
+            if (icon != null)
+                icon.Colour = slot;
         }
 
         private void updateStyle()
@@ -200,24 +170,30 @@ namespace Vignette.Game.Graphics.UserInterface
             switch (Style)
             {
                 case ButtonStyle.Primary:
-                    labelResting = ThemeSlot.White;
-                    backgroundResting = ThemeSlot.AccentPrimary;
-                    backgroundHovered = ThemeSlot.AccentDarkAlt;
-                    backgroundPressed = ThemeSlot.AccentDark;
+                    LabelResting = ThemeSlot.White;
+                    BackgroundResting = ThemeSlot.AccentPrimary;
+                    BackgroundHovered = ThemeSlot.AccentDarkAlt;
+                    BackgroundPressed = ThemeSlot.AccentDark;
+                    break;
+
+                case ButtonStyle.Secondary:
+                    LabelResting = ThemeSlot.Gray190;
+                    BackgroundResting = ThemeSlot.White;
+                    BackgroundHovered = ThemeSlot.Gray20;
+                    BackgroundPressed = ThemeSlot.Gray30;
                     break;
 
                 case ButtonStyle.Text:
-                case ButtonStyle.Secondary:
-                    labelResting = ThemeSlot.Gray190;
-                    backgroundResting = ThemeSlot.White;
-                    backgroundHovered = ThemeSlot.Gray20;
-                    backgroundPressed = ThemeSlot.Gray30;
+                    LabelResting = ThemeSlot.Gray190;
+                    BackgroundResting = ThemeSlot.Transparent;
+                    BackgroundHovered = ThemeSlot.Gray20;
+                    BackgroundPressed = ThemeSlot.Gray30;
                     break;
             }
 
-            labelDisabled = ThemeSlot.Gray90;
+            LabelDisabled = ThemeSlot.Gray90;
 
-            backgroundDisabled = Style != ButtonStyle.Text
+            BackgroundDisabled = Style != ButtonStyle.Text
                 ? ThemeSlot.Gray20
                 : ThemeSlot.Transparent;
 
@@ -229,57 +205,7 @@ namespace Vignette.Game.Graphics.UserInterface
                 ? 0.0f
                 : 1.5f;
 
-            updateState();
-        }
-
-        protected override bool OnMouseDown(MouseDownEvent e)
-        {
-            if (isPressed)
-                return false;
-
-            isPressed = true;
-            updateState();
-
-            if (!Enabled.Value)
-                return false;
-
-            return base.OnMouseDown(e);
-        }
-
-        protected override void OnMouseUp(MouseUpEvent e)
-        {
-            if (!isPressed)
-                return;
-
-            isPressed = false;
-            updateState();
-
-            base.OnMouseUp(e);
-        }
-
-        protected override bool OnHover(HoverEvent e)
-        {
-            if (isHovered)
-                return false;
-
-            isHovered = true;
-            updateState();
-
-            if (!Enabled.Value)
-                return false;
-
-            return base.OnHover(e);
-        }
-
-        protected override void OnHoverLost(HoverLostEvent e)
-        {
-            if (!isHovered)
-                return;
-
-            isHovered = false;
-            updateState();
-
-            base.OnHoverLost(e);
+            UpdateState();
         }
     }
 

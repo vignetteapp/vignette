@@ -6,11 +6,12 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
+using Vignette.Game.Tests.Visual.UserInterface;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual.Themeing
 {
-    public class TestSceneThemeing : ThemeProvidedTestScene
+    public class TestSceneThemeing : UserInterfaceTestScene
     {
         private ThemableBox themable;
 

@@ -6,7 +6,7 @@ using osu.Framework.Graphics.UserInterface;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class NavigationViewHorizontal<T> : NavigationView<T>
+    public abstract class NavigationViewHorizontal<T> : NavigationView<T>
     {
         public NavigationViewHorizontal()
         {
@@ -15,16 +15,7 @@ namespace Vignette.Game.Graphics.UserInterface
             Add(Control);
         }
 
-        protected override NavigationViewTabControl CreateTabControl()
-            => new NavigationViewHorizontalTabControl();
-
-        protected class NavigationViewHorizontalTabControl : NavigationViewTabControl
-        {
-            protected override TabItem<T> CreateTabItem(T value)
-                => new NavigationViewHorizontalTabItem(value);
-        }
-
-        protected class NavigationViewHorizontalTabItem : NavigationViewTabItem
+        protected abstract class NavigationViewHorizontalTabItem : NavigationViewTabItem
         {
             protected override bool ForceTextMargin => false;
 

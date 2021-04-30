@@ -24,7 +24,7 @@ namespace Vignette.Game
 
         protected VignetteConfigManager LocalConfig;
 
-        private UserResources userResources;
+        protected UserResources UserResources;
 
         private DependencyContainer dependencies;
 
@@ -63,12 +63,13 @@ namespace Vignette.Game
             AddFont(Resources, @"Fonts/Spartan-Bold");
 
             AddFont(Resources, @"Fonts/FluentSystemIcons-Filled");
+            AddFont(Resources, @"Fonts/Vignette");
 
             dependencies.CacheAs(LocalConfig);
 
-            userResources = new UserResources(Host, Storage);
-            dependencies.CacheAs(userResources);
-            dependencies.CacheAs(new ThemeManager(userResources, LocalConfig));
+            UserResources = new UserResources(Host, Storage);
+            dependencies.CacheAs(UserResources);
+            dependencies.CacheAs(new ThemeManager(UserResources, LocalConfig));
 
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
@@ -101,7 +102,7 @@ namespace Vignette.Game
         {
             base.Dispose(isDisposing);
             LocalConfig?.Dispose();
-            userResources?.Dispose();
+            UserResources?.Dispose();
         }
     }
 }

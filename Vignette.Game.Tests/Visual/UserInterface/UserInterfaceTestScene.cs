@@ -3,17 +3,20 @@
 
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public abstract class UserInterfaceTestScene : ThemeProvidedTestScene
+    public abstract class UserInterfaceTestScene : VignetteTestScene
     {
         private FillFlowContainer content;
 
         protected override Container<Drawable> Content => content;
+
+        protected readonly BasicDropdown<Theme> Selector;
 
         public UserInterfaceTestScene()
         {
@@ -29,8 +32,22 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                     Direction = FillDirection.Vertical,
                     Spacing = new Vector2(0, 10),
                     RelativeSizeAxes = Axes.Both,
+                },
+                Selector = new BasicDropdown<Theme>
+                {
+                    Width = 200,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Margin = new MarginPadding(20),
+                    Items = new[]
+                    {
+                        Theme.Light,
+                        Theme.Dark,
+                    }
                 }
             });
+
+            Selector.Current = Provider.Current;
         }
     }
 }

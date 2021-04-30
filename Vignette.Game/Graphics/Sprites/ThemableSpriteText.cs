@@ -4,6 +4,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
+using osuTK;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Themeing;
 
@@ -21,6 +22,12 @@ namespace Vignette.Game.Graphics.Sprites
         {
             get => Target.Font;
             set => Target.Font = value;
+        }
+
+        public Vector2 Spacing
+        {
+            get => Target.Spacing;
+            set => Target.Spacing = value;
         }
 
         public ThemableSpriteText(bool attached = true)
