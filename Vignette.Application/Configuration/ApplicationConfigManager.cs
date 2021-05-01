@@ -17,7 +17,7 @@ namespace Vignette.Application.Configuration
 
         protected override void InitialiseDefaults()
         {
-            SetValue(ApplicationSetting.Theme, @"Default");
+            SetValue(ApplicationSetting.Theme, @"default");
             SetValue(ApplicationSetting.WindowResizable, false);
             SetValue(ApplicationSetting.ShowFpsOverlay, false);
             SetValue(ApplicationSetting.Background, BackgroundType.Color);
