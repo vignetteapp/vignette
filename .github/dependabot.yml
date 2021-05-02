@@ -1,0 +1,64 @@
+version: 2
+registries:
+  nuget-feed-nuget-pkg-github-com-vignette-project-index-json:
+    type: nuget-feed
+    url: https://nuget.pkg.github.com/vignette-project/index.json
+    username: "${{secrets.NUGET_FEED_NUGET_PKG_GITHUB_COM_VIGNETTE_PROJECT_INDEX_JSON_USERNAME}}"
+    password: "${{secrets.NUGET_FEED_NUGET_PKG_GITHUB_COM_VIGNETTE_PROJECT_INDEX_JSON_PASSWORD}}"
+
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: ppy.osu.Framework
+    versions:
+    - 2021.128.0
+    - 2021.204.0
+    - 2021.215.0
+    - 2021.219.1
+    - 2021.222.0
+    - 2021.225.0
+    - 2021.226.0
+    - 2021.302.0
+    - 2021.309.0
+    - 2021.317.0
+    - 2021.323.0
+    - 2021.329.0
+    - 2021.330.0
+    - 2021.402.0
+    - 2021.407.0
+    - 2021.410.0
+    - 2021.413.0
+    - 2021.415.0
+    - 2021.416.0
+    - 2021.419.0
+    - 2021.422.0
+    - 2021.422.1
+    - 2021.424.1
+  - dependency-name: Vignette.Application.Camera
+    versions:
+    - 2021.204.0
+    - 2021.319.0
+  - dependency-name: Microsoft.NET.Test.Sdk
+    versions:
+    - 16.9.1
+  - dependency-name: FaceRecognitionDotNet
+    versions:
+    - 1.3.0.3
+  - dependency-name: NUnit
+    versions:
+    - 3.13.1
+  - dependency-name: OpenCvSharp4.runtime.ubuntu.18.04-x64
+    versions:
+    - 4.5.1.20210208
+  - dependency-name: OpenCvSharp4.runtime.win
+    versions:
+    - 4.5.1.20210208
+  - dependency-name: Vignette.Application.Live2D.Native
+    versions:
+    - 2021.203.0
+  registries:
+  - nuget-feed-nuget-pkg-github-com-vignette-project-index-json
