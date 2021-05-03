@@ -58,6 +58,7 @@ namespace Vignette.Game.Graphics.Containers
             {
                 this.text = text;
                 this.link = linkInline.Url ?? string.Empty;
+                AutoSizeAxes = Axes.Both;
             }
 
             [BackgroundDependencyLoader]
