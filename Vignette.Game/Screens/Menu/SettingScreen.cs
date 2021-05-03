@@ -5,12 +5,12 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Typesets;
 
-namespace Vignette.Game.Screens.Menu.Guides
+namespace Vignette.Game.Screens.Menu
 {
-    public class GuideScreen : MenuScreen
+    public class SettingScreen : MenuScreen
     {
-        public override LocalisableString Title => "Help";
+        public override LocalisableString Title => "Settings";
 
-        public override IconUsage Icon => FluentSystemIcons.Book24;
+        public override IconUsage Icon => FluentSystemIcons.Settings24;
     }
 }

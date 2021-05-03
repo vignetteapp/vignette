@@ -6,12 +6,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Screens;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Screens.Menu.Avatars;
-using Vignette.Game.Screens.Menu.Backgrounds;
-using Vignette.Game.Screens.Menu.Cameras;
-using Vignette.Game.Screens.Menu.Guides;
-using Vignette.Game.Screens.Menu.Home;
-using Vignette.Game.Screens.Menu.Settings;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Screens.Menu
@@ -57,9 +51,6 @@ namespace Vignette.Game.Screens.Menu
                                     {
                                         new HomeScreen(),
                                         new GuideScreen(),
-                                        new AvatarConfigScreen(),
-                                        new BackgroundConfigScreen(),
-                                        new CameraConfigScreen(),
                                     },
                                 },
                             }
