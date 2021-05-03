@@ -6,9 +6,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
-using osuTK;
 using Vignette.Game.Bindables;
-using Vignette.Game.Graphics.Backgrounds;
 
 namespace Vignette.Game.Configuration
 {
@@ -26,13 +24,7 @@ namespace Vignette.Game.Configuration
             SetDefault(VignetteSetting.WindowResizable, false);
             SetDefault(VignetteSetting.ShowFpsOverlay, false);
             SetDefault(VignetteSetting.CameraDevice, string.Empty);
-            SetDefault(VignetteSetting.BackgroundType, BackgroundType.Image);
-            SetDefault(VignetteSetting.BackgroundAsset, string.Empty);
             SetDefault(VignetteSetting.BackgroundColour, Colour4.Green);
-            SetDefault(VignetteSetting.BackgroundOffset, Vector2.Zero);
-            SetDefault(VignetteSetting.BackgroundScale, 1.0f, 0.1f, 10.0f, 0.1f);
-            SetDefault(VignetteSetting.BackgroundRotation, 0.0f, 0.0f, 360.0f, 0.1f);
-            SetDefault(VignetteSetting.BackgroundColourBlending, BackgroundColourBlending.Inherit);
             SetDefault(VignetteSetting.Theme, "Light");
         }
 
@@ -42,10 +34,6 @@ namespace Vignette.Game.Configuration
             {
                 case VignetteSetting.BackgroundColour:
                     base.AddBindable(lookup, new BindableColour4(Colour4.Green));
-                    break;
-
-                case VignetteSetting.BackgroundOffset:
-                    base.AddBindable(lookup, new BindableVector2());
                     break;
 
                 default:
@@ -63,19 +51,7 @@ namespace Vignette.Game.Configuration
 
         CameraDevice,
 
-        BackgroundType,
-
-        BackgroundAsset,
-
         BackgroundColour,
-
-        BackgroundOffset,
-
-        BackgroundScale,
-
-        BackgroundRotation,
-
-        BackgroundColourBlending,
 
         Theme,
     }
