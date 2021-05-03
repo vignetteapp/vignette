@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Performance;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.Graphics.Containers;
 using Vignette.Game.IO;
 using Vignette.Game.Resources;
 using Vignette.Game.Themeing;
@@ -69,7 +70,7 @@ namespace Vignette.Game
 
             UserResources = new UserResources(Host, Storage);
             dependencies.CacheAs(UserResources);
-            dependencies.CacheAs(new ThemeManager(UserResources, LocalConfig));
+            dependencies.CacheAs<IThemeSource>(new ThemeManager(UserResources, LocalConfig));
 
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
@@ -80,11 +81,15 @@ namespace Vignette.Game
                 Child = new DrawSizePreservingFillContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = content = new Container
+                    Child = new FluentTooltipContainer
                     {
-                        RelativeSizeAxes = Axes.Both
-                    }
-                }
+                        RelativeSizeAxes = Axes.Both,
+                        Child = content = new Container
+                        {
+                            RelativeSizeAxes = Axes.Both
+                        },
+                    },
+                },
             });
         }
 
