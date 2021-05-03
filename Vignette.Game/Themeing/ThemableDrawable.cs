@@ -22,7 +22,33 @@ namespace Vignette.Game.Themeing
 
         private bool hasCreated;
 
-        private bool isAttached;
+        private double lifetimeStart = double.MinValue;
+
+        public override double LifetimeStart
+        {
+            get => Target?.LifetimeStart ?? lifetimeStart;
+            set
+            {
+                if (Target != null)
+                    Target.LifetimeStart = value;
+
+                lifetimeStart = value;
+            }
+        }
+
+        private double lifetimeEnd = double.MaxValue;
+
+        public override double LifetimeEnd
+        {
+            get => Target?.LifetimeEnd ?? lifetimeEnd;
+            set
+            {
+                if (Target != null)
+                    Target.LifetimeEnd = value;
+
+                lifetimeEnd = value;
+            }
+        }
 
         private ThemeSlot colour = ThemeSlot.White;
 
@@ -47,7 +73,7 @@ namespace Vignette.Game.Themeing
         /// <param name="attached">Whether to add the drawable as its child.</param>
         public ThemableDrawable(bool attached = true)
         {
-            if (isAttached = attached)
+            if (attached)
                 AddInternal(Create());
         }
 
@@ -71,22 +97,6 @@ namespace Vignette.Game.Themeing
         {
             CurrentSource = source;
             CurrentSource.SourceChanged += ScheduleThemeChange;
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
-            if (!Target.IsAlive && hasCreated)
-                Expire();
-        }
-
-        protected override void Dispose(bool isDisposing)
-        {
-            if (!isAttached)
-                Target.Expire();
-
-            base.Dispose(isDisposing);
         }
 
         protected void ScheduleThemeChange()
