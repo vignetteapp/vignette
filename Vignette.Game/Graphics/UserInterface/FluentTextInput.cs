@@ -248,7 +248,7 @@ namespace Vignette.Game.Graphics.UserInterface
         /// </summary>
         protected class TextInputContainer : TextBox
         {
-            public new ThemableSpriteText Placeholder = new ThemableSpriteText(false);
+            public new ThemableSpriteText Placeholder;
 
             public new FillFlowContainer TextFlow => base.TextFlow;
 
@@ -271,17 +271,17 @@ namespace Vignette.Game.Graphics.UserInterface
             protected override Caret CreateCaret()
                 => new FluentCaret { CaretWidth = 1 };
 
-            protected override SpriteText CreatePlaceholder() => Placeholder.Create().With(d =>
+            protected override SpriteText CreatePlaceholder()
             {
-                d.Font = SegoeUI.Regular;
-                d.Anchor = Anchor.CentreLeft;
-                d.Origin = Anchor.CentreLeft;
-            });
+                Placeholder = new ThemableSpriteText(false);
+                Schedule(() => Add(Placeholder));
 
-            protected override void LoadComplete()
-            {
-                Add(Placeholder);
-                base.LoadComplete();
+                return Placeholder.Create().With(d =>
+                {
+                    d.Font = SegoeUI.Regular;
+                    d.Anchor = Anchor.CentreLeft;
+                    d.Origin = Anchor.CentreLeft;
+                });
             }
 
             protected override Drawable GetDrawableCharacter(char c) => new ThemableSpriteText
