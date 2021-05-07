@@ -26,7 +26,6 @@ namespace Vignette.Game.Screens.Menu.Settings.Sections
 
         private readonly IBindableList<WindowMode> windowModes = new BindableList<WindowMode>();
         private readonly IBindable<Display> currentDisplay = new Bindable<Display>();
-        private readonly Bindable<Size> windowSize = new Bindable<Size>(new Size(1366, 768));
         private readonly BindableList<Size> resolutions = new BindableList<Size>();
 
 
@@ -61,18 +60,25 @@ namespace Vignette.Game.Screens.Menu.Settings.Sections
                 resolutionWindowedSetting = new ResolutionDropdown
                 {
                     Label = "Resolution",
-                    Current = windowSize,
+                    Current = gameConfig.GetBindable<Size>(VignetteSetting.WindowSize),
                 },
             });
 
             // We cannot disable the bindable obtained from framework config as it is internally modified.
             var frameworkWindowSize = frameworkConfig.GetBindable<Size>(FrameworkSetting.WindowedSize);
-            windowSize.BindValueChanged(e => frameworkWindowSize.Value = e.NewValue, true);
+
+            resolutionWindowedSetting.Current.BindValueChanged(e =>
+            {
+                if (!resizableSetting.Current.Value)
+                    frameworkWindowSize.Value = e.NewValue;
+            });
 
             resizableSetting.Current.BindValueChanged(e =>
             {
                 if (host.Window is SDL2DesktopWindow window)
                     window.Resizable = e.NewValue;
+
+                resolutionWindowedSetting.Current.TriggerChange();
 
                 windowModeSetting.Current.Disabled = e.NewValue;
                 resolutionWindowedSetting.Current.Disabled = e.NewValue;

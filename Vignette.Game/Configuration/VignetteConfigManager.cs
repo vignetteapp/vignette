@@ -2,6 +2,7 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.Collections.Generic;
+using System.Drawing;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
@@ -22,6 +23,7 @@ namespace Vignette.Game.Configuration
         protected override void InitialiseDefaults()
         {
             SetDefault(VignetteSetting.WindowResizable, false);
+            SetDefault(VignetteSetting.WindowSize, new Size(1366, 768));
             SetDefault(VignetteSetting.ShowFpsOverlay, false);
             SetDefault(VignetteSetting.CameraDevice, string.Empty);
             SetDefault(VignetteSetting.BackgroundColour, Colour4.Green);
@@ -36,6 +38,10 @@ namespace Vignette.Game.Configuration
                     base.AddBindable(lookup, new BindableColour4(Colour4.Green));
                     break;
 
+                case VignetteSetting.WindowSize:
+                    base.AddBindable(lookup, new BindableSize(new Size(1366, 768)));
+                    break;
+
                 default:
                     base.AddBindable(lookup, bindable);
                     break;
@@ -46,6 +52,8 @@ namespace Vignette.Game.Configuration
     public enum VignetteSetting
     {
         WindowResizable,
+
+        WindowSize,
 
         ShowFpsOverlay,
 
