@@ -9,7 +9,7 @@ namespace Vignette.Desktop
     {
         public static void Main(string[] args)
         {
-            using var host = Host.GetSuitableHost("vignette", false, true);
+            using var host = Host.GetSuitableHost("vignette");
             host.Run(new VignetteGameDesktop());
         }
     }

@@ -97,6 +97,7 @@ namespace Vignette.Game.Themeing
         {
             CurrentSource = source;
             CurrentSource.SourceChanged += ScheduleThemeChange;
+            ScheduleThemeChange();
         }
 
         protected void ScheduleThemeChange()

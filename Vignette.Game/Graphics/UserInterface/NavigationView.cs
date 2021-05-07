@@ -1,8 +1,6 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using System.Collections.Generic;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -17,36 +15,9 @@ using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public abstract class NavigationView<T> : Container
+    public abstract class NavigationView<T> : TabControl<T>
     {
-        public Bindable<T> Current
-        {
-            get => Control.Current;
-            set => Control.Current = value;
-        }
-
-        public IReadOnlyList<T> Items
-        {
-            get => Control.Items;
-            set => Control.Items = value;
-        }
-
-        protected NavigationViewTabControl Control;
-
-        public NavigationView()
-        {
-            Control = CreateTabControl().With(d =>
-            {
-                d.RelativeSizeAxes = Axes.Both;
-            });
-        }
-
-        protected abstract NavigationViewTabControl CreateTabControl();
-
-        protected abstract class NavigationViewTabControl : TabControl<T>
-        {
-            protected override Dropdown<T> CreateDropdown() => null;
-        }
+        protected override Dropdown<T> CreateDropdown() => null;
 
         protected abstract class NavigationViewTabItem : TabItem<T>
         {

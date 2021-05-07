@@ -2,7 +2,6 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.UserInterface;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -11,8 +10,6 @@ namespace Vignette.Game.Graphics.UserInterface
         public NavigationViewHorizontal()
         {
             Height = 44;
-            RelativeSizeAxes = Axes.X;
-            Add(Control);
         }
 
         protected abstract class NavigationViewHorizontalTabItem : NavigationViewTabItem

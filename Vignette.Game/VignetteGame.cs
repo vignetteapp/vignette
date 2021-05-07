@@ -2,13 +2,15 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Allocation;
-using osu.Framework.Screens;
+using Vignette.Game.Screens;
 using Vignette.Game.Screens.Menu;
 
 namespace Vignette.Game
 {
     public class VignetteGame : VignetteGameBase
     {
+        private VignetteScreenStack screenStack;
+
         public VignetteGame()
         {
             Name = @"Vignette";
@@ -17,7 +19,8 @@ namespace Vignette.Game
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new ScreenStack(new MainMenu()));
+            Add(screenStack = new VignetteScreenStack());
+            screenStack.Push(new MainMenu());
         }
     }
 }

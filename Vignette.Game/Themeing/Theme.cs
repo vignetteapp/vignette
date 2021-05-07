@@ -45,6 +45,27 @@ namespace Vignette.Game.Themeing
         }
 
         /// <summary>
+        /// Create an unnamed empty theme.
+        /// </summary>
+        public Theme()
+        {
+            addConstants();
+        }
+
+        /// <summary>
+        /// Sets the name of an unnamed theme.
+        /// </summary>
+        /// <param name="name">The name of this theme.</param>
+        public Theme SetName(string name)
+        {
+            if (!string.IsNullOrEmpty(Name))
+                throw new InvalidOperationException("This theme already has a name and it cannot be overriden.");
+
+            Name = name;
+            return this;
+        }
+
+        /// <summary>
         /// Adds a colour to the colour mappings. If a slot is already defined, it will be overwritten.
         /// </summary>
         /// </summary>
@@ -98,6 +119,10 @@ namespace Vignette.Game.Themeing
                     }
                 }
             }
+
+            // neutralSecondaryAlt does not exist when created via the Theme Designer
+            // we'll forcibly use a default instead
+            AddColour(ThemeSlot.Gray110, "8a8886");
         }
 
         private void addConstants()
@@ -115,16 +140,19 @@ namespace Vignette.Game.Themeing
 
         public override string ToString() => Name;
 
-        public static Theme Light = new Theme("Light")
-            .AddColour(ThemeSlot.AccentDarker, "004578")
-            .AddColour(ThemeSlot.AccentDark, "005a9e")
-            .AddColour(ThemeSlot.AccentDarkAlt, "106ebe")
-            .AddColour(ThemeSlot.AccentPrimary, "0078d4")
-            .AddColour(ThemeSlot.AccentSecondary, "2b88d8")
-            .AddColour(ThemeSlot.AccentTertiary, "71afe5")
-            .AddColour(ThemeSlot.AccentLight, "c7e0f4")
-            .AddColour(ThemeSlot.AccentLighter, "deecf9")
-            .AddColour(ThemeSlot.AccentLighterAlt, "eff6fc")
+        private static Theme base_theme => new Theme()
+            .AddColour(ThemeSlot.AccentDarker, "6b3172")
+            .AddColour(ThemeSlot.AccentDark, "91439b")
+            .AddColour(ThemeSlot.AccentDarkAlt, "ab4fb8")
+            .AddColour(ThemeSlot.AccentPrimary, "BE58CB")
+            .AddColour(ThemeSlot.AccentSecondary, "c669d2")
+            .AddColour(ThemeSlot.AccentTertiary, "d794e0")
+            .AddColour(ThemeSlot.AccentLight, "ebc7f0")
+            .AddColour(ThemeSlot.AccentLighter, "f4e0f7")
+            .AddColour(ThemeSlot.AccentLighterAlt, "fcf7fd");
+
+        public static Theme Light = base_theme
+            .SetName("Light")
             .AddColour(ThemeSlot.Black, "000000")
             .AddColour(ThemeSlot.Gray190, "201f1e")
             .AddColour(ThemeSlot.Gray160, "323130")
@@ -140,16 +168,8 @@ namespace Vignette.Game.Themeing
             .AddColour(ThemeSlot.Gray10, "faf9f8")
             .AddColour(ThemeSlot.White, "ffffff");
 
-        public static Theme Dark = new Theme("Dark")
-            .AddColour(ThemeSlot.AccentDarker, "004578")
-            .AddColour(ThemeSlot.AccentDark, "005a9e")
-            .AddColour(ThemeSlot.AccentDarkAlt, "106ebe")
-            .AddColour(ThemeSlot.AccentPrimary, "0078d4")
-            .AddColour(ThemeSlot.AccentSecondary, "2b88d8")
-            .AddColour(ThemeSlot.AccentTertiary, "71afe5")
-            .AddColour(ThemeSlot.AccentLight, "c7e0f4")
-            .AddColour(ThemeSlot.AccentLighter, "deecf9")
-            .AddColour(ThemeSlot.AccentLighterAlt, "eff6fc")
+        public static Theme Dark = base_theme
+            .SetName("Dark")
             .AddColour(ThemeSlot.Black, "ffffff")
             .AddColour(ThemeSlot.Gray190, "faf9f8")
             .AddColour(ThemeSlot.Gray160, "f3f2f1")

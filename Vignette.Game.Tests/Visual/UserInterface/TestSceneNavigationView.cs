@@ -42,7 +42,9 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                     {
                         new TestNavigationViewVertical
                         {
+                            Width = 200,
                             Items = items,
+                            RelativeSizeAxes = Axes.Y,
                         }
                     },
                     new Drawable[]
@@ -50,10 +52,12 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                         new TestNavigationViewHorizontal
                         {
                             Items = items,
+                            RelativeSizeAxes = Axes.X,
                         },
                         new TestNavigationViewHorizontalWithoutIcon
                         {
                             Items = items,
+                            RelativeSizeAxes = Axes.X,
                         },
                     },
                 },
@@ -62,14 +66,8 @@ namespace Vignette.Game.Tests.Visual.UserInterface
 
         private class TestNavigationViewVertical : NavigationViewVertical<TestItem>
         {
-            protected override NavigationViewTabControl CreateTabControl()
-                => new TestNavigationViewVerticalTabControl();
-
-            protected class TestNavigationViewVerticalTabControl : NavigationViewVerticalTabControl
-            {
-                protected override TabItem<TestItem> CreateTabItem(TestItem value)
-                    => new TestNavigationViewVerticalTabItem(value);
-            }
+            protected override TabItem<TestItem> CreateTabItem(TestItem value)
+                => new TestNavigationViewVerticalTabItem(value);
 
             protected class TestNavigationViewVerticalTabItem : NavigationViewVerticalTabItem
             {
@@ -86,14 +84,8 @@ namespace Vignette.Game.Tests.Visual.UserInterface
 
         private class TestNavigationViewHorizontal : NavigationViewHorizontal<TestItem>
         {
-            protected override NavigationViewTabControl CreateTabControl()
-                => new TestNavigationViewHorizontalTabControl();
-
-            protected class TestNavigationViewHorizontalTabControl : NavigationViewTabControl
-            {
-                protected override TabItem<TestItem> CreateTabItem(TestItem value)
-                    => new TestNavigationViewHorizontalTabItem(value);
-            }
+            protected override TabItem<TestItem> CreateTabItem(TestItem value)
+                => new TestNavigationViewHorizontalTabItem(value);
 
             protected class TestNavigationViewHorizontalTabItem : NavigationViewHorizontalTabItem
             {
@@ -110,14 +102,8 @@ namespace Vignette.Game.Tests.Visual.UserInterface
 
         private class TestNavigationViewHorizontalWithoutIcon : NavigationViewHorizontal<TestItem>
         {
-            protected override NavigationViewTabControl CreateTabControl()
-                => new TestNavigationViewHorizontalTabControlWithoutIcon();
-
-            protected class TestNavigationViewHorizontalTabControlWithoutIcon : NavigationViewTabControl
-            {
-                protected override TabItem<TestItem> CreateTabItem(TestItem value)
-                    => new TestNavigationViewHorizontalTabItemWithoutIcon(value);
-            }
+            protected override TabItem<TestItem> CreateTabItem(TestItem value)
+                => new TestNavigationViewHorizontalTabItemWithoutIcon(value);
 
             protected class TestNavigationViewHorizontalTabItemWithoutIcon : NavigationViewHorizontalTabItem
             {

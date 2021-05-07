@@ -49,7 +49,7 @@ namespace Vignette.Game.Themeing
         Gray30,
         [Description("neutralLighter")]
         Gray20,
-        [Description("neutralLigtherAlt")]
+        [Description("neutralLighterAlt")]
         Gray10,
         [Description("white")]
         White,

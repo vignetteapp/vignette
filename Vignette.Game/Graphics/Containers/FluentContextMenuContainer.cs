@@ -4,8 +4,9 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.UserInterface;
+using Vignette.Game.Graphics.UserInterface;
 
-namespace Vignette.Game.Graphics.UserInterface
+namespace Vignette.Game.Graphics.Containers
 {
     public class FluentContextMenuContainer : ContextMenuContainer
     {

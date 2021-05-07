@@ -12,6 +12,7 @@ using osu.Framework.Input;
 using osu.Framework.Testing.Input;
 using osuTK;
 using osuTK.Graphics;
+using Vignette.Game.Input;
 
 namespace Vignette.Game.Tests.Visual
 {
@@ -36,10 +37,14 @@ namespace Vignette.Game.Tests.Visual
                 InputManager = new ManualInputManager
                 {
                     UseParentInput = true,
-                    Child = content = new Container
+                    Child = new GlobalActionContainer(null)
                     {
                         RelativeSizeAxes = Axes.Both,
-                    }
+                        Child = content = new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                        },
+                    },
                 },
                 new Container
                 {

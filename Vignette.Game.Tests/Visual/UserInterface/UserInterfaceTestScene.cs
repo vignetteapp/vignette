@@ -10,7 +10,7 @@ using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public abstract class UserInterfaceTestScene : VignetteTestScene
+    public abstract class UserInterfaceTestScene : ThemeProvidedTestScene
     {
         private FillFlowContainer content;
 

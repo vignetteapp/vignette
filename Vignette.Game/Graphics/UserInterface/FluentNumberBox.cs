@@ -24,7 +24,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         public new Bindable<T> Current
         {
-            get => current;
+            get => current.Current;
             set
             {
                 if (value == null)
@@ -40,6 +40,7 @@ namespace Vignette.Game.Graphics.UserInterface
         public FluentNumberBox()
         {
             CommitOnFocusLost = true;
+
             AddInternal(new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,

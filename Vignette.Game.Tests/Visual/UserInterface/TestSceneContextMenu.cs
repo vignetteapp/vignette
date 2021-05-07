@@ -1,7 +1,6 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
@@ -16,11 +15,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
     {
         public TestSceneContextMenu()
         {
-            Add(new FluentContextMenuContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = new BoxWithContextMenu(),
-            });
+            Add(new BoxWithContextMenu());
         }
 
         private class BoxWithContextMenu : ThemableBox, IHasContextMenu

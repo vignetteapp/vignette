@@ -52,7 +52,7 @@ namespace Vignette.Game.Graphics.UserInterface
             {
                 if (text == null)
                 {
-                    label.Insert(1, text = new ThemableSpriteText
+                    Label.Insert(1, text = new ThemableSpriteText
                     {
                         Font = SegoeUI.SemiBold.With(size: 14),
                         Anchor = Anchor.Centre,
@@ -89,7 +89,7 @@ namespace Vignette.Game.Graphics.UserInterface
             {
                 if (icon == null)
                 {
-                    label.Insert(0, icon = new ThemableSpriteIcon
+                    Label.Insert(0, icon = new ThemableSpriteIcon
                     {
                         Size = new Vector2(16),
                         Anchor = Anchor.Centre,
@@ -116,7 +116,7 @@ namespace Vignette.Game.Graphics.UserInterface
             }
         }
 
-        private readonly FillFlowContainer label;
+        protected readonly FillFlowContainer Label;
 
         private readonly ThemableMaskedBox background;
 
@@ -134,7 +134,7 @@ namespace Vignette.Game.Graphics.UserInterface
                     RelativeSizeAxes = Axes.Both,
                     BorderColour = ThemeSlot.Gray110,
                 },
-                label = new FillFlowContainer
+                Label = new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.Y,
                     AutoSizeAxes = Axes.X,

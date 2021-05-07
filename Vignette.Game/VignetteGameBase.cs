@@ -1,6 +1,8 @@
 ﻿// Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
+using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
@@ -11,6 +13,7 @@ using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Containers;
+using Vignette.Game.Input;
 using Vignette.Game.IO;
 using Vignette.Game.Resources;
 using Vignette.Game.Themeing;
@@ -20,6 +23,22 @@ namespace Vignette.Game
     public class VignetteGameBase : osu.Framework.Game
     {
         public bool IsDebugBuild { get; private set; }
+
+        public virtual Version AssemblyVersion => Assembly.GetExecutingAssembly()?.GetName().Version ?? new Version();
+
+        public virtual string Version
+        {
+            get
+            {
+                if (!IsDeployedBuild)
+                    return @"local " + (DebugUtils.IsDebugBuild ? @"debug" : @"release");
+
+                var version = AssemblyVersion;
+                return $"{version.Major}.{version.Minor}.{version.Build}";
+            }
+        }
+
+        public bool IsDeployedBuild => AssemblyVersion.Major > 0;
 
         protected Storage Storage;
 
@@ -66,11 +85,15 @@ namespace Vignette.Game
             AddFont(Resources, @"Fonts/FluentSystemIcons-Filled");
             AddFont(Resources, @"Fonts/Vignette");
 
+            dependencies.CacheAs(this);
             dependencies.CacheAs(LocalConfig);
 
             UserResources = new UserResources(Host, Storage);
             dependencies.CacheAs(UserResources);
-            dependencies.CacheAs<IThemeSource>(new ThemeManager(UserResources, LocalConfig));
+
+            var themeManager = new ThemeManager(Scheduler, UserResources, LocalConfig);
+            dependencies.CacheAs(themeManager);
+            dependencies.CacheAs<IThemeSource>(themeManager);
 
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
@@ -81,13 +104,24 @@ namespace Vignette.Game
                 Child = new DrawSizePreservingFillContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = new FluentTooltipContainer
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both,
-                        Child = content = new Container
+                        new FluentContextMenuContainer
                         {
-                            RelativeSizeAxes = Axes.Both
+                            RelativeSizeAxes = Axes.Both,
+                            Child = new FluentTooltipContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Child = content = new Container
+                                {
+                                    RelativeSizeAxes = Axes.Both
+                                },
+                            },
                         },
+                        new GlobalActionContainer(this)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                        }
                     },
                 },
             });

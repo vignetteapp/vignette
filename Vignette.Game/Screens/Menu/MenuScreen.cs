@@ -20,21 +20,11 @@ namespace Vignette.Game.Screens.Menu
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+            RelativeSizeAxes = Axes.Both;
         }
 
-        protected override void PopIn()
-        {
-            this
-                .ScaleTo(1.1f)
-                .ScaleTo(1.0f, 200, Easing.OutQuint)
-                .FadeInFromZero(200, Easing.OutQuint);
-        }
+        protected override void PopIn() => this.FadeIn();
 
-        protected override void PopOut()
-        {
-            this
-                .ScaleTo(1.1f, 200, Easing.OutQuint)
-                .FadeOutFromOne();
-        }
+        protected override void PopOut() => this.FadeOut();
     }
 }
