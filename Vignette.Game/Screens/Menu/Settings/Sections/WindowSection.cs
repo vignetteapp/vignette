@@ -74,9 +74,6 @@ namespace Vignette.Game.Screens.Menu.Settings.Sections
                 if (host.Window is SDL2DesktopWindow window)
                     window.Resizable = e.NewValue;
 
-                if (!e.NewValue)
-                    windowSize.TriggerChange();
-
                 windowModeSetting.Current.Disabled = e.NewValue;
                 resolutionWindowedSetting.Current.Disabled = e.NewValue;
                 resolutionFullscreenSetting.Current.Disabled = e.NewValue;
