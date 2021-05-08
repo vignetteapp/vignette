@@ -111,11 +111,6 @@ namespace Vignette.Game.Screens.Menu.Settings.Sections
                             .Select(m => m.Size)
                             .Distinct()
                     );
-
-                    resolutionWindowedSetting.Items = new Size[] { new Size(1366, 768) }
-                        .Concat(resolutions)
-                        .OrderByDescending(m => Math.Max(m.Height, m.Width))
-                        .Skip(1);
                 }
             }), true);
         }
