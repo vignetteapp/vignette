@@ -14,37 +14,37 @@ name: Tests
 
 jobs:
   lint:
-     name: Lint
-     runs-on: ubuntu-latest
-     steps:
-       - name: Checkout
-         uses: actions/checkout@v2
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-       - name: Lint
-         uses: github/super-linter@v3
-         env:
-           SUPPRESS_POSSUM: true
-           LINTER_RULES_PATH: /
-           VALIDATE_EDITORCONFIG: true
-           EDITORCONFIG_FILE_NAME: .editorconfig
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint
+        uses: github/super-linter@v3
+        env:
+          SUPPRESS_POSSUM: true
+          LINTER_RULES_PATH: /
+          VALIDATE_EDITORCONFIG: true
+          EDITORCONFIG_FILE_NAME: .editorconfig
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      name: Test
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        - name: Install .NET
-          uses: actions/setup-dotnet@v1
-          with:
-            dotnet-version: 5.0
+      - name: Install .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0
 
-        - name: Test
-          run: dotnet test --logger:nunit
+      - name: Test
+        run: dotnet test --logger:nunit
 
-        - name: Report
-          uses: MirrorNG/nunit-reporter@v1.0.9
-          with:
-            path: 'Vignette.Game.Tests/TestResults/*.xml'
-            access-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Report
+        uses: MirrorNG/nunit-reporter@v1.0.9
+        with:
+          path: 'Vignette.Game.Tests/TestResults/*.xml'
+          access-token: ${{ secrets.GITHUB_TOKEN }}

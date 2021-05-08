@@ -4,7 +4,7 @@ name: Deploy
 
 jobs:
   variables:
-    name: Get Build Version
+    name: Set Variables
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set-variables.outputs.version }}
