@@ -115,7 +115,7 @@ namespace Vignette.Game.Screens.Menu.Settings.Sections
 
                 // Check if the framework default window size is present and append it if it isn't so the window size
                 // wouldn't suddenly jump to an unexpected value when entering settings.
-                if (!resolutionWindowedSetting.Items.FirstOrDefault(m => m.Width == 1366 && m.Height == 768).Equals(default(Size)))
+                if (resolutions.FirstOrDefault(m => m.Width == 1366 && m.Height == 768).Equals(default(Size)))
                 {
                     resolutionWindowedSetting.Items = resolutions
                         .Append(new Size(1366, 768))
