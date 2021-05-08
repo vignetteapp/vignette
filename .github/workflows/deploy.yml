@@ -1,0 +1,81 @@
+on: release
+
+name: Deploy
+
+jobs:
+  variables:
+    name: Get Build Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-variables.outputs.version }}
+      channel: ${{ steps.set-variables.outputs.channel }}
+      discord: ${{ steps.set-variables.outputs.discord }}
+      message: ${{ steps.set-variables.outputs.message }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get Version
+        shell: pwsh
+        id: get-version
+        run: ./.github/workflows/get-version.ps1 ${{ github.repository }}
+
+      - name: Set Variables
+        id: set-variables
+        run: |
+          if [ ${{ github.event.action }} == 'prereleased' ]; then
+            echo "::set-output name=CHANNEL::Insiders"
+            echo "::set-output name=VERSION::${{ steps.get-version.outputs.verison }}-insiders"
+            echo "::set-output name=DISCORD::${{ secrets.DISCORD_WEBHOOK_INS }}"
+            echo "::set-output name=MESSAGE::Heads up <@&754332732716351618>! `${{ steps.get-version.outputs.verison }}` is now available! Visit the App Center to get your build."
+          else
+            echo "::set-output name=CHANNEL::Public"
+            echo "::set-output name=VERSION::${{ steps.get-version.outputs.verison }}"
+            echo "::set-output name=DISCORD::${{ secrets.DISCORD_WEBHOOK_REL }}"
+            echo "::set-output name=MESSAGE::Heads up @everyone! `${{ steps.get-version.outputs.verison }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build."
+          fi
+
+  deploy:
+    name: Deploy
+    needs: variables
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runtimes: [ win-x64, linux-x64 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: '5.0.x'
+          source-url: https://nuget.pkg.github.com/vignette-project/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ github.token }}
+
+      - name: Build
+        run: |
+          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=false -p:Version=${{ needs.variables.outputs.version }}
+          zip -r Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
+
+      - name: Upload Build
+        uses: wzieba/AppCenter-Github-Action@v1.3.2
+          with:
+            appName: vignette/Vignette-AB1
+            token: ${{ secrets.VS_APP_CENTER_TOKEN }}
+            group: ${{ needs.variables.outputs.channel }}
+            buildVersion: ${{ needs.variables.outputs.version }}
+            file: Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip
+            notifyTesters: true
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [ variables, deploy ]
+    steps:
+      - name: Notify
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ${{ needs.variables.outputs.message }}
+        env:
+          DISCORD_WEBHOOK: ${{ needs.variables.outputs.discord }}
