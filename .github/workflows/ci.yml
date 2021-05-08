@@ -28,6 +28,7 @@ jobs:
           EDITORCONFIG_FILE_NAME: .editorconfig
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  test:
     name: Test
     runs-on: ubuntu-latest
     steps:

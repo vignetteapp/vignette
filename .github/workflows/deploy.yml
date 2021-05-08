@@ -17,7 +17,7 @@ jobs:
       - name: Get Version
         shell: pwsh
         id: get-version
-        run: ./.github/workflows/get-version.ps1 ${{ github.repository }}
+        run: ./.github/workflows/get-version.ps1 ${{ github.repository }} ${{ github.token }}
 
       - name: Set Variables
         id: set-variables
