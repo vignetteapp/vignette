@@ -112,6 +112,21 @@ namespace Vignette.Game.Screens.Menu.Settings.Sections
                             .Distinct()
                     );
                 }
+
+                    // Check if the framework default window size is present and append it if it isn't so the window size
+                    // wouldn't suddenly jump to an unexpected value when entering settings.
+                    if (resolutionWindowedSetting.Items.FirstOrDefault(m => m.Width == 1366 && m.Height == 768) == default(Size))
+                    {
+                        resolutionWindowedSetting.Items = resolutions
+                            .Append(new Size(1366, 768))
+                            .OrderByDescending(m => Math.Max(m.Height, m.Width))
+                            .Skip(1);
+                    }
+                    else
+                    {
+                        // Don't include the first item as it is basically borderless.
+                        resolutionWindowedSetting.Items = resolutions.Skip(1);
+                    }
             }), true);
         }
 
