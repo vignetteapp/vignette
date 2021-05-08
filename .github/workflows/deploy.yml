@@ -1,5 +1,7 @@
 name: Deploy
-on: release
+on:
+  release:
+    types: [ released, prereleased ]
 
 jobs:
   variables:
@@ -9,23 +11,15 @@ jobs:
       version: ${{ steps.set-variables.outputs.version }}
       channel: ${{ steps.set-variables.outputs.channel }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Get Version
-        shell: pwsh
-        id: get-version
-        run: ./.github/workflows/get-version.ps1 ${{ github.repository }} ${{ github.token }}
-
       - name: Set Variables
         id: set-variables
         run: |
           if [ ${{ github.event.action }} == 'prereleased' ]; then
             echo "::set-output name=CHANNEL::Insiders"
-            echo "::set-output name=VERSION::${{ steps.get-version.outputs.verison }}-insiders"
+            echo "::set-output name=VERSION::${{ github.event.release.tag_name }}-insiders"
           else
             echo "::set-output name=CHANNEL::Public"
-            echo "::set-output name=VERSION::${{ steps.get-version.outputs.verison }}"
+            echo "::set-output name=VERSION::${{ github.event.release.tag_name }}"
           fi
 
   deploy:
