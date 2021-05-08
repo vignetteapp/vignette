@@ -40,4 +40,11 @@ jobs:
           dotnet-version: 5.0
 
       - name: Test
-        run: dotnet test --logger:nunit
+        run: dotnet test --logger "trx;LogFileName=TestResults-Vignette.Game.Tests.trx"
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: TestResults-Vignette.Game.Tests
+          path: ${{ github.workspace }}/Vignette.Game.Tests/TestResults/TestResults-Vignette.Game.Tests.trx
