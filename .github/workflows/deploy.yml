@@ -52,7 +52,7 @@ jobs:
           appName: vignette/Vignette-AB1
           token: ${{ secrets.VS_APP_CENTER_TOKEN }}
           group: ${{ needs.variables.outputs.channel }}
-          buildVersion: ${{ needs.variables.outputs.version }}
+          buildVersion: ${{ needs.variables.outputs.version }}-${{ matrix.runtime }}
           file: Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip
           notifyTesters: true
 
