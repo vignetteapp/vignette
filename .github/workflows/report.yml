@@ -11,7 +11,9 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion != 'cancelled' }}
     steps:
       - name: Report
-        uses: MirrorNG/nunit-reporter@v1.0.9
+        uses: dorny/test-reporter@v1.4.2
         with:
-          path: 'Vignette.Game.Tests/TestResults/*.xml'
-          access-token: ${{ secrets.GITHUB_TOKEN }}
+          artifact: TestResults-Vignette.Game.Tests
+          name: Test Results
+          path: "*.trx"
+          reporter: dotnet-trx
