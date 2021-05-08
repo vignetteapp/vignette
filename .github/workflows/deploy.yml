@@ -64,18 +64,18 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
-    needs: [ deploy ]
+    needs: [ variables, deploy ]
     steps:
       - name: Notify Insiders
         uses: Ilshidur/action-discord@master
         with:
-          args: Heads up <@&754332732716351618>! `${{ steps.get-version.outputs.verison }}` is now available! Visit the App Center to get your build.
+          args: Heads up <@&754332732716351618>! `${{ needs.variables.outputs.version }}` is now available! Visit the App Center to get your build.
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_INS }}
 
       - name: Notify Public
         uses: Ilshidur/action-discord@master
         with:
-          args: Heads up @everyone! `${{ steps.get-version.outputs.verison }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build
+          args: Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
