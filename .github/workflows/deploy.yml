@@ -1,6 +1,5 @@
-on: release
-
 name: Deploy
+on: release
 
 jobs:
   variables:

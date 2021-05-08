@@ -1,3 +1,4 @@
+name: Continuous Integration
 on:
   push:
     paths:
@@ -9,8 +10,6 @@ on:
       - '**/*.cs'
       - '**/*.csproj'
       - '**/*.sln'
-
-name: Tests
 
 jobs:
   lint:
@@ -42,9 +41,3 @@ jobs:
 
       - name: Test
         run: dotnet test --logger:nunit
-
-      - name: Report
-        uses: MirrorNG/nunit-reporter@v1.0.9
-        with:
-          path: 'Vignette.Game.Tests/TestResults/*.xml'
-          access-token: ${{ secrets.GITHUB_TOKEN }}
