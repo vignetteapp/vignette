@@ -1,0 +1,17 @@
+name: Report
+on:
+  workflow_run:
+    workflows: [ 'Continuous Integration' ]
+    types:
+      - completed
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion != 'cancelled' }}
+    steps:
+      - name: Report
+        uses: MirrorNG/nunit-reporter@v1.0.9
+        with:
+          path: 'Vignette.Game.Tests/TestResults/*.xml'
+          access-token: ${{ secrets.GITHUB_TOKEN }}
