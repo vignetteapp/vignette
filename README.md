@@ -1,9 +1,11 @@
 <p align="center">
-   <img width=200px src="branding.svg" >
+   <img width=200px src="https://avatars.githubusercontent.com/u/69518398?s=200&v=4" >
 </p>
 <br/>
 
 [![Discord](https://img.shields.io/discord/746656644196335647?color=7289DA&label=%20&logo=discord&logoColor=white)](https://discord.gg/3yMf3Y9) [![GitHub Super-Linter](https://github.com/vignette-project/vignette/workflows/Lint/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
+
 
 Vignette is a face tracking software for characters using [osu!framework](https://github.com/ppy/osu-framework). Unlike most solutions, Vignette is:
 
