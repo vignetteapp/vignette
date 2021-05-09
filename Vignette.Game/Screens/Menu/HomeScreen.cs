@@ -71,7 +71,7 @@ namespace Vignette.Game.Screens.Menu
                                 },
                                 new HomeButton
                                 {
-                                    Url = " https://discord.gg/3yMf3Y9",
+                                    Url = "https://discord.gg/3yMf3Y9",
                                     Text = "Discord",
                                     Icon = FontAwesome.Brands.Discord,
                                     SubText = "Join the community",

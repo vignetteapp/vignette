@@ -1,6 +1,7 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -101,7 +102,7 @@ namespace Vignette.Game.Screens.Menu.Home
         [BackgroundDependencyLoader]
         private void load(GameHost host)
         {
-            if (!string.IsNullOrEmpty(Url))
+            if (!string.IsNullOrEmpty(Url) && Uri.IsWellFormedUriString(Url, UriKind.Absolute))
                 Action = () => host.OpenUrlExternally(Url);
         }
     }
