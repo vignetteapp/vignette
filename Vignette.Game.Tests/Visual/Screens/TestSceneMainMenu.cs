@@ -19,8 +19,8 @@ namespace Vignette.Game.Tests.Visual.Screens
         [Test]
         public void TestMenuNavigationControls()
         {
-            AddStep("toggle side panel", () => Schedule(() => menu.ToggleNavigationView()));
-            AddStep("select help tab", () => Schedule(() => menu.SelectTab(typeof(HelpScreen))));
+            AddStep("toggle side panel", () => menu.ToggleNavigationView());
+            AddStep("select help tab", () => menu.SelectTab(typeof(HelpScreen)));
         }
     }
 }
