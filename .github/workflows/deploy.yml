@@ -43,8 +43,9 @@ jobs:
 
       - name: Build
         run: |
-          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=false -p:Version=${{ needs.variables.outputs.version }}
-          zip -r Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip ./release/${{ matrix.runtime }}
+          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
+          cd ./release/${{ matrix.runtime }}/
+          zip -r ${{ github.workspace }}/Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip $(pwd)
 
       - name: Upload Build
         uses: wzieba/AppCenter-Github-Action@v1.3.2
