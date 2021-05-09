@@ -3,12 +3,17 @@
 
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
+using Vignette.Game.Graphics.Sprites;
+using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Input;
 using Vignette.Game.Screens.Backgrounds;
@@ -28,10 +33,15 @@ namespace Vignette.Game.Screens.Menu
 
         private Spinner spinner;
 
+        private ExitButton exitButton;
+
+        private IBindable<WindowMode> windowMode;
+
         public MainMenu()
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+
             InternalChild = new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
@@ -62,32 +72,61 @@ namespace Vignette.Game.Screens.Menu
                                 },
                             }
                         },
-                        new Container
+                        new GridContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Children = new Drawable[]
+                            RowDimensions = new[]
                             {
-                                new ThemableBox
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension(),
+                            },
+                            Content = new Drawable[][]
+                            {
+                                new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = ThemeSlot.White,
+                                    exitButton = new ExitButton
+                                    {
+                                        Size = new Vector2(32, 24),
+                                        Anchor = Anchor.TopRight,
+                                        Origin = Anchor.TopRight,
+                                    }
                                 },
-                                spinner = new Spinner
+                                new Drawable[]
                                 {
-                                    Size = new Vector2(48),
-                                    Alpha = 0,
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                },
-                                tabView = new Container<MenuScreen>
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                },
-                            }
+                                    new Container
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Children = new Drawable[]
+                                        {
+                                            spinner = new Spinner
+                                            {
+                                                Size = new Vector2(48),
+                                                Alpha = 0,
+                                                Anchor = Anchor.Centre,
+                                                Origin = Anchor.Centre,
+                                            },
+                                            tabView = new Container<MenuScreen>
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                            },
+                                        }
+                                    }
+                                }
+                            },
                         }
                     }
                 }
             };
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(FrameworkConfigManager frameworkConfig)
+        {
+            windowMode = frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
+            windowMode.BindValueChanged(e =>
+            {
+                exitButton.Alpha = e.NewValue != WindowMode.Windowed ? 1 : 0;
+            }, true);
         }
 
         /// <summary>
@@ -179,6 +218,44 @@ namespace Vignette.Game.Screens.Menu
 
         public void OnReleased(GlobalAction action)
         {
+        }
+
+        private class ExitButton : FluentButtonBase
+        {
+            private readonly ThemableBox background;
+
+            public ExitButton()
+            {
+                BackgroundResting = ThemeSlot.Transparent;
+                BackgroundHovered = ThemeSlot.Error;
+                BackgroundPressed = ThemeSlot.ErrorBackground;
+                BackgroundDisabled = ThemeSlot.Transparent;
+
+                Children = new Drawable[]
+                {
+                    background = new ThemableBox
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    new ThemableSpriteIcon
+                    {
+                        Icon = FluentSystemIcons.Dismiss28,
+                        Size = new Vector2(9),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Colour = ThemeSlot.Black,
+                    },
+                };
+            }
+
+            protected override void UpdateBackground(ThemeSlot slot)
+                => background.Colour = slot;
+
+            [BackgroundDependencyLoader]
+            private void load(GameHost host)
+            {
+                Action = () => host.Exit();
+            }
         }
     }
 }
