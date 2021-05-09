@@ -17,9 +17,8 @@ namespace Vignette.Game.Screens.Menu.Home
     {
         private Box background;
 
-        private static Colour4 gradient_part_a = Colour4.FromHex("BE58CB");
-
-        private static Colour4 gradient_part_b = Colour4.FromHex("F10E5A");
+        [Resolved]
+        private VignetteGameBase game { get; set; }
 
         public HomeBanner()
         {
@@ -35,7 +34,7 @@ namespace Vignette.Game.Screens.Menu.Home
                 background = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = ColourInfo.GradientHorizontal(gradient_part_a, gradient_part_b),
+                    Colour = getGradient(),
                 },
                 new Container
                 {
@@ -88,10 +87,31 @@ namespace Vignette.Game.Screens.Menu.Home
         {
             base.LoadComplete();
             background
-                .FadeColour(ColourInfo.GradientHorizontal(gradient_part_b, gradient_part_a), 5000, Easing.InSine)
+                .FadeColour(getGradient(), 5000, Easing.InSine)
                 .Then()
-                .FadeColour(ColourInfo.GradientHorizontal(gradient_part_a, gradient_part_b), 5000, Easing.OutSine)
+                .FadeColour(getGradient(true), 5000, Easing.OutSine)
                 .Loop();
+        }
+
+        private static Colour4 grad_pub_a = Colour4.FromHex("BE58CB");
+        private static Colour4 grad_pub_b = Colour4.FromHex("F10E5A");
+        private static Colour4 grad_ins_a = Colour4.FromHex("58CB86");
+        private static Colour4 grad_ins_b = Colour4.FromHex("0EBBF1");
+
+        private ColourInfo getGradient(bool flipped = false)
+        {
+            if (game.IsInsidersBuild)
+            {
+                return flipped
+                    ? ColourInfo.GradientHorizontal(grad_ins_b, grad_ins_a)
+                    : ColourInfo.GradientHorizontal(grad_ins_a, grad_ins_b);
+            }
+            else
+            {
+                return flipped
+                    ? ColourInfo.GradientHorizontal(grad_pub_b, grad_pub_a)
+                    : ColourInfo.GradientHorizontal(grad_pub_a, grad_pub_b);
+            }
         }
     }
 }
