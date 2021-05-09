@@ -22,8 +22,8 @@ jobs:
             echo "::set-output name=VERSION::${{ github.event.release.tag_name }}"
           fi
 
-  deploy:
-    name: Deploy
+  build:
+    name: Build
     needs: variables
     runs-on: ${{ matrix.os.runner }}
     strategy:
@@ -48,15 +48,37 @@ jobs:
           dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.os.runtime }} -r ${{ matrix.os.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
           7z a -tzip Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip release/${{ matrix.os.runtime }}/*
 
-      - name: Upload Build
-        uses: wzieba/AppCenter-Github-Action@v1.3.2
+      - name: Stage Artifact for AppCenter
+        uses: actions/upload-artifact@v2
         with:
-          appName: vignette/Vignette-AB1
-          token: ${{ secrets.VS_APP_CENTER_TOKEN }}
-          group: ${{ needs.variables.outputs.channel }}
-          buildVersion: ${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}
-          file: Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip
-          notifyTesters: true
+          name: ${{ needs.variables.outputs-version }}-${{ matrix.os.runtime }}
+          path: ${{ github.workspace }}/${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip
+          retention-days: 1
+
+  deploy:
+     name: Deploy
+     needs: [ variables, build ]
+     runs-on: ubuntu-latest
+     strategy:
+        matrix:
+           runtime: ['win-x64', 'linux-x64']
+     steps:
+       - name: Download Artifact
+         uses: actions/download-artifact@v2
+         with:
+            name: ${{ needs.variables.outputs-version }}-${{ matrix.runtime }}
+            path: ${{ github.workspace }}
+
+       - name: Upload Build
+         uses: wzieba/AppCenter-Github-Action@v1.3.2
+         with:
+           appName: vignette/Vignette-AB1
+           token: ${{ secrets.VS_APP_CENTER_TOKEN }}
+           group: ${{ needs.variables.outputs.channel }}
+           buildVersion: ${{ needs.variables.outputs.version }}-${{ matrix.runtime }}
+           file: Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip
+           notifyTesters: true
+
 
   notify:
     name: Notify
