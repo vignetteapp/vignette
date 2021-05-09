@@ -9,6 +9,8 @@ using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Performance;
+using osu.Framework.Input;
+using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
@@ -20,7 +22,7 @@ using Vignette.Game.Themeing;
 
 namespace Vignette.Game
 {
-    public class VignetteGameBase : osu.Framework.Game
+    public class VignetteGameBase : osu.Framework.Game, IKeyBindingHandler<FrameworkAction>
     {
         public bool IsDebugBuild { get; private set; }
 
@@ -52,6 +54,8 @@ namespace Vignette.Game
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
         private Bindable<bool> showFps;
+
+        private Bindable<bool> resizable;
 
         private Container content;
 
@@ -98,6 +102,8 @@ namespace Vignette.Game
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
 
+            resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
+
             base.Content.Add(new SafeAreaContainer
             {
                 RelativeSizeAxes = Axes.Both,
@@ -125,6 +131,19 @@ namespace Vignette.Game
                     },
                 },
             });
+        }
+
+        // Override framework level keybind actions as we're controlling bindables responsible to it
+        bool IKeyBindingHandler<FrameworkAction>.OnPressed(FrameworkAction action)
+        {
+            switch (action)
+            {
+                case FrameworkAction.ToggleFullscreen:
+                    return !resizable.Value ? base.OnPressed(action) : false;
+
+                default:
+                    return base.OnPressed(action);
+            };
         }
 
         public override void SetHost(GameHost host)
