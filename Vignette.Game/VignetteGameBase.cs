@@ -2,6 +2,7 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -41,6 +42,8 @@ namespace Vignette.Game
         }
 
         public bool IsDeployedBuild => AssemblyVersion.Major > 0;
+
+        public bool IsInsidersBuild => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.Contains("insiders");
 
         protected Storage Storage;
 
