@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ needs.variables.outputs-version }}-${{ matrix.os.runtime }}
-          path: ${{ github.workspace }}/Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip
+          path: ${{ github.workspace }}/Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip
           retention-days: 1
 
   deploy:
