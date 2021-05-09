@@ -1,6 +1,7 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using NUnit.Framework;
 using Vignette.Game.Screens.Menu;
 
 namespace Vignette.Game.Tests.Visual.Screens
@@ -13,8 +14,13 @@ namespace Vignette.Game.Tests.Visual.Screens
         {
             base.SetupSteps();
             AddStep("load main menu", () => LoadScreen(menu = new MainMenu()));
+        }
+
+        [Test]
+        public void TestMenuNavigationControls()
+        {
             AddStep("toggle side panel", () => menu.ToggleNavigationView());
-            AddStep("select settings tab", () => menu.SelectTab(typeof(GameSettingScreen)));
+            AddStep("select help tab", () => menu.SelectTab(typeof(HelpScreen)));
         }
     }
 }

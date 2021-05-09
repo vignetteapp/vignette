@@ -42,7 +42,7 @@ namespace Vignette.Game.Screens.Menu
 
                 state = value;
 
-                this.ResizeWidthTo(State == NavigationPanelState.Contracted ? 44 : 200, 200, Easing.OutQuint);
+                Schedule(() => this.ResizeWidthTo(State == NavigationPanelState.Contracted ? 44 : 200, 200, Easing.OutQuint));
                 StateChanged?.Invoke(State);
             }
         }

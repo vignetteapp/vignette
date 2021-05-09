@@ -2,7 +2,7 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.Reflection;
-using osu.Framework.Configuration;
+using osu.Framework.Bindables;
 using osu.Framework.Input;
 using osu.Framework.Platform;
 using Vignette.Game;
@@ -12,6 +12,8 @@ namespace Vignette.Desktop
 {
     public class VignetteGameDesktop : VignetteGame
     {
+        private IBindable<bool> resizable;
+
         public override void SetHost(GameHost host)
         {
             base.SetHost(host);
@@ -20,12 +22,10 @@ namespace Vignette.Desktop
                 return;
 
             window.ConfineMouseMode.Value = ConfineMouseMode.Never;
-            window.WindowMode.Value = WindowMode.Windowed;
-            window.Resizable = false;
             window.Title = Name;
             window.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "vignette.ico"));
 
-            var resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
+            resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
             resizable.BindValueChanged(e => window.Resizable = e.NewValue, true);
         }
     }
