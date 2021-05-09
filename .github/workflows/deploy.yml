@@ -25,10 +25,12 @@ jobs:
   deploy:
     name: Deploy
     needs: variables
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os.runner }}
     strategy:
       matrix:
-        runtime: [ win-x64, linux-x64 ]
+        os:
+          - { runner: windows-latest, runtime: win-x64 }
+          - { runner: ubuntu-latest, runtime: linux-x64 }
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,9 +45,9 @@ jobs:
 
       - name: Build
         run: |
-          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
-          cd ./release/${{ matrix.runtime }}/
-          zip -r ${{ github.workspace }}/Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip $(pwd)
+          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.os.runtime }} -r ${{ matrix.os.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
+          cd ./release/${{ matrix.os.runtime }}/
+          zip -r -j ${{ github.workspace }}/Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip release/${{ matrix.os.runtime }}/
 
       - name: Upload Build
         uses: wzieba/AppCenter-Github-Action@v1.3.2
@@ -53,8 +55,8 @@ jobs:
           appName: vignette/Vignette-AB1
           token: ${{ secrets.VS_APP_CENTER_TOKEN }}
           group: ${{ needs.variables.outputs.channel }}
-          buildVersion: ${{ needs.variables.outputs.version }}-${{ matrix.runtime }}
-          file: Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip
+          buildVersion: ${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}
+          file: Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip
           notifyTesters: true
 
   notify:
