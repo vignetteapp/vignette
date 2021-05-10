@@ -96,7 +96,7 @@ jobs:
       - name: Notify Public
         uses: Ilshidur/action-discord@master
         with:
-          args: Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build
+          args: Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build.
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
         if: ${{ github.event.action == 'released' }}
