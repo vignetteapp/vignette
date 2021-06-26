@@ -5,9 +5,9 @@
     <Version>0.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2021.424.1"/>
+    <PackageReference Include="ppy.osu.Framework" Version="2021.623.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Vignette.Game.Resources\Vignette.Game.Resources.csproj"/>
+    <ProjectReference Include="..\Vignette.Game.Resources\Vignette.Game.Resources.csproj" />
   </ItemGroup>
 </Project>
