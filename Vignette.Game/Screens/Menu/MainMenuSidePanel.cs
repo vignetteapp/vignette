@@ -11,6 +11,9 @@ using osu.Framework.Graphics.Containers;
 using osuTK;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
+using Vignette.Game.Screens.Menu.Help;
+using Vignette.Game.Screens.Menu.Home;
+using Vignette.Game.Screens.Menu.Settings;
 
 namespace Vignette.Game.Screens.Menu
 {
@@ -18,15 +21,15 @@ namespace Vignette.Game.Screens.Menu
     {
         public Action OnScene = null;
 
-        public MenuScreen SelectedTab { get; private set; }
+        public MenuPage SelectedTab { get; private set; }
 
-        public Action<MenuScreen> OnTabSelect;
+        public Action<MenuPage> OnTabSelect;
 
         private readonly MainMenuNavigationView mainNavigation;
 
         private readonly MainMenuNavigationView bottomNavigation;
 
-        private IEnumerable<MenuScreen> tabs => mainNavigation.Items.Concat(bottomNavigation.Items);
+        private IEnumerable<MenuPage> tabs => mainNavigation.Items.Concat(bottomNavigation.Items);
 
         public event Action<NavigationPanelState> StateChanged;
 
@@ -87,13 +90,12 @@ namespace Vignette.Game.Screens.Menu
                     {
                         mainNavigation = new MainMenuNavigationView
                         {
-                            Items = new MenuScreen[]
+                            Items = new MenuPage[]
                             {
-                                new HomeScreen(),
-                                new SceneSettingScreen(),
-                                new TrackerSettingScreen(),
-                                new KeybindSettingScreen(),
-                                new HelpScreen(),
+                                new HomePage(),
+                                new SceneSettings(),
+                                new TrackerSettings(),
+                                new KeybindSettings(),
                             },
                         }
                     },
@@ -102,9 +104,9 @@ namespace Vignette.Game.Screens.Menu
                         bottomNavigation = new MainMenuNavigationView
                         {
                             SelectFirstTabByDefault = false,
-                            Items = new MenuScreen[]
+                            Items = new MenuPage[]
                             {
-                                new GameSettingScreen(),
+                                new GameSettings(),
                             },
                         }
                     },
@@ -118,11 +120,12 @@ namespace Vignette.Game.Screens.Menu
         /// <summary>
         /// Selects a tab.
         /// </summary>
-        /// <param name="menuScreenType">The <see cref="MenuScreen"/> as a type to select.</param>
+        /// <param name="menuScreenType">The <see cref="MenuPage"/> as a type to select.</param>
         /// <returns>Whether the tab was successfully selected or not.</returns>
-        public bool SelectTab(Type menuScreenType)
+        public bool SelectTab<T>()
+            where T : MenuPage
         {
-            var target = tabs.FirstOrDefault(s => s?.GetType() == menuScreenType);
+            var target = tabs.FirstOrDefault(s => s?.GetType() == typeof(T));
 
             if (target == null)
                 return false;
@@ -135,7 +138,7 @@ namespace Vignette.Game.Screens.Menu
             return true;
         }
 
-        private void handleTabSelection(ValueChangedEvent<MenuScreen> e)
+        private void handleTabSelection(ValueChangedEvent<MenuPage> e)
         {
             if (e.NewValue == null)
                 return;

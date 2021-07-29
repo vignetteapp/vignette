@@ -20,7 +20,7 @@ namespace Vignette.Game.Graphics.UserInterface
     /// </summary>
     public class FluentCheckbox : Checkbox, IHasText
     {
-        private readonly ThemableMaskedBox box;
+        private readonly ThemableEffectBox box;
 
         private readonly ThemableSpriteIcon check;
 
@@ -64,7 +64,7 @@ namespace Vignette.Game.Graphics.UserInterface
                     Size = new Vector2(20),
                     Children = new Drawable[]
                     {
-                        box = new ThemableMaskedBox
+                        box = new ThemableEffectBox
                         {
                             CornerRadius = 2.5f,
                             RelativeSizeAxes = Axes.Both,

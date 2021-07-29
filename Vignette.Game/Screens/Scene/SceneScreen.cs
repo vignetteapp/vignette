@@ -13,12 +13,14 @@ using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Input;
-using Vignette.Game.Screens.Backgrounds;
 using Vignette.Game.Screens.Menu;
+using Vignette.Game.Screens.Menu.Help;
+using Vignette.Game.Screens.Menu.Home;
+using Vignette.Game.Screens.Menu.Settings;
 
 namespace Vignette.Game.Screens.Scene
 {
-    public class SceneScreen : VignetteScreen, IHasContextMenu, IKeyBindingHandler<GlobalAction>
+    public class SceneScreen : Screen, IHasContextMenu, IKeyBindingHandler<GlobalAction>
     {
         [Resolved(canBeNull: true)]
         private MainMenu menuScreen { get; set; }
@@ -47,14 +49,12 @@ namespace Vignette.Game.Screens.Scene
             colour.BindValueChanged(e => background.Colour = e.NewValue, true);
         }
 
-        protected override BackgroundScreen CreateBackground() => new BackgroundScreenTheme();
-
         public MenuItem[] ContextMenuItems => new MenuItem[]
         {
-            new FluentMenuItem("Home", () => menuScreen?.SelectTab(typeof(HomeScreen))),
-            new FluentMenuItem("Configure Scene", () => menuScreen?.SelectTab(typeof(SceneSettingScreen))),
+            new FluentMenuItem("Home", () => menuScreen?.SelectTab<HomePage>()),
+            new FluentMenuItem("Configure Scene", () => menuScreen?.SelectTab<SceneSettings>()),
             new FluentMenuDivider(),
-            new FluentMenuItem("Help", () => menuScreen?.SelectTab(typeof(HelpScreen)), FluentSystemIcons.Book24),
+            new FluentMenuItem("Help", () => menuScreen?.SelectTab<HelpPage>(), FluentSystemIcons.Book24),
         };
 
         public override void OnEntering(IScreen last)

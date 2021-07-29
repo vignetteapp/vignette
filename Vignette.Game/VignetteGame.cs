@@ -2,14 +2,17 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Allocation;
-using Vignette.Game.Screens;
+using osu.Framework.Graphics;
+using osu.Framework.Screens;
+using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Screens.Menu;
+using Vignette.Game.Themeing;
 
 namespace Vignette.Game
 {
     public class VignetteGame : VignetteGameBase
     {
-        private VignetteScreenStack screenStack;
+        private ScreenStack screenStack;
 
         public VignetteGame()
         {
@@ -19,7 +22,16 @@ namespace Vignette.Game
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(screenStack = new VignetteScreenStack());
+            AddRange(new Drawable[]
+            {
+                new ThemableBox
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = ThemeSlot.White,
+                },
+                screenStack = new ScreenStack(),
+            });
+
             screenStack.Push(new MainMenu());
         }
     }

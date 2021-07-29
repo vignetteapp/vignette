@@ -1,7 +1,6 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
@@ -16,18 +15,17 @@ using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Input;
-using Vignette.Game.Screens.Backgrounds;
 using Vignette.Game.Screens.Scene;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Screens.Menu
 {
     [Cached]
-    public class MainMenu : VignetteScreen, IKeyBindingHandler<GlobalAction>
+    public class MainMenu : Screen, IKeyBindingHandler<GlobalAction>
     {
-        public MenuScreen CurrentScreen { get; private set; }
+        public MenuPage CurrentScreen { get; private set; }
 
-        private readonly Container<MenuScreen> tabView;
+        private readonly Container<MenuPage> tabView;
 
         private MainMenuSidePanel sidePanel;
 
@@ -42,80 +40,88 @@ namespace Vignette.Game.Screens.Menu
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            InternalChild = new GridContainer
+            InternalChildren = new Drawable[]
             {
-                RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = new[]
+                new ThemableBox
                 {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(GridSizeMode.Distributed),
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = ThemeSlot.White,
                 },
-                Content = new Drawable[][]
+                new GridContainer
                 {
-                    new Drawable[]
+                    RelativeSizeAxes = Axes.Both,
+                    ColumnDimensions = new[]
                     {
-                        new Container
+                        new Dimension(GridSizeMode.AutoSize),
+                        new Dimension(GridSizeMode.Distributed),
+                    },
+                    Content = new Drawable[][]
+                    {
+                        new Drawable[]
                         {
-                            AutoSizeAxes = Axes.X,
-                            RelativeSizeAxes = Axes.Y,
-                            Children = new Drawable[]
+                            new Container
                             {
-                                new ThemableBox
+                                AutoSizeAxes = Axes.X,
+                                RelativeSizeAxes = Axes.Y,
+                                Children = new Drawable[]
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = ThemeSlot.Gray10,
-                                },
-                                sidePanel = new MainMenuSidePanel
-                                {
-                                    OnScene = openScene,
-                                    OnTabSelect = e => addScreen(e),
-                                },
-                            }
-                        },
-                        new GridContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            RowDimensions = new[]
-                            {
-                                new Dimension(GridSizeMode.AutoSize),
-                                new Dimension(),
-                            },
-                            Content = new Drawable[][]
-                            {
-                                new Drawable[]
-                                {
-                                    exitButton = new ExitButton
+                                    sidePanel = new MainMenuSidePanel
                                     {
-                                        Size = new Vector2(32, 24),
-                                        Anchor = Anchor.TopRight,
-                                        Origin = Anchor.TopRight,
-                                    }
-                                },
-                                new Drawable[]
-                                {
-                                    new Container
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
-                                        Children = new Drawable[]
-                                        {
-                                            spinner = new Spinner
-                                            {
-                                                Size = new Vector2(48),
-                                                Alpha = 0,
-                                                Anchor = Anchor.Centre,
-                                                Origin = Anchor.Centre,
-                                            },
-                                            tabView = new Container<MenuScreen>
-                                            {
-                                                RelativeSizeAxes = Axes.Both,
-                                            },
-                                        }
-                                    }
+                                        OnScene = openScene,
+                                        OnTabSelect = e => addScreen(e),
+                                    },
                                 }
                             },
+                            new GridContainer
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                RowDimensions = new[]
+                                {
+                                    new Dimension(GridSizeMode.AutoSize),
+                                    new Dimension(),
+                                },
+                                Content = new Drawable[][]
+                                {
+                                    new Drawable[]
+                                    {
+                                        exitButton = new ExitButton
+                                        {
+                                            Size = new Vector2(32, 24),
+                                            Anchor = Anchor.TopRight,
+                                            Origin = Anchor.TopRight,
+                                        }
+                                    },
+                                    new Drawable[]
+                                    {
+                                        new Container
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            Children = new Drawable[]
+                                            {
+                                                new ThemableBox
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Colour = ThemeSlot.Gray10,
+                                                },
+                                                spinner = new Spinner
+                                                {
+                                                    Size = new Vector2(48),
+                                                    Alpha = 0,
+                                                    Anchor = Anchor.Centre,
+                                                    Origin = Anchor.Centre,
+                                                },
+                                                tabView = new Container<MenuPage>
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                },
+                                            }
+                                        }
+                                    }
+                                },
+                            }
                         }
                     }
-                }
+                },
             };
         }
 
@@ -123,23 +129,21 @@ namespace Vignette.Game.Screens.Menu
         private void load(FrameworkConfigManager frameworkConfig)
         {
             windowMode = frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
-            windowMode.BindValueChanged(e =>
-            {
-                exitButton.Alpha = e.NewValue != WindowMode.Windowed ? 1 : 0;
-            }, true);
+            windowMode.BindValueChanged(e => exitButton.Alpha = e.NewValue != WindowMode.Windowed ? 1 : 0, true);
         }
 
         /// <summary>
         /// Selects a tab from the side panel. It forces <see cref="MainMenu"/> to be the current screen if it isn't.
         /// </summary>
-        /// <param name="menuScreenType">The <see cref="MenuScreen"/> as a type to select.</param>
+        /// <typeparam name="T">The <see cref="MenuPage"/> as a type to select.</typeparam>
         /// <returns>Whether the tab was successfully selected or not.</returns>
-        public bool SelectTab(Type menuScreenType)
+        public bool SelectTab<T>()
+            where T : MenuPage
         {
             if (!this.IsCurrentScreen())
                 this.MakeCurrent();
 
-            return sidePanel.SelectTab(menuScreenType);
+            return sidePanel.SelectTab<T>();
         }
 
         /// <summary>
@@ -160,9 +164,6 @@ namespace Vignette.Game.Screens.Menu
         public void ContractNavigationView()
             => sidePanel.Contract();
 
-        protected override BackgroundScreen CreateBackground()
-            => new BackgroundScreenTheme();
-
         public override void OnResuming(IScreen last)
         {
             base.OnEntering(last);
@@ -180,7 +181,7 @@ namespace Vignette.Game.Screens.Menu
                 .FadeOutFromOne(250, Easing.OutQuint);
         }
 
-        private void addScreen(MenuScreen nextScreen)
+        private void addScreen(MenuPage nextScreen)
         {
             CurrentScreen?.Hide();
 

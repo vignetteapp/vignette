@@ -8,7 +8,7 @@ using osu.Framework.Localisation;
 
 namespace Vignette.Game.Screens.Menu
 {
-    public abstract class MenuScreen : VisibilityContainer
+    public abstract class MenuPage : VisibilityContainer
     {
         public abstract LocalisableString Title { get; }
 
@@ -16,7 +16,7 @@ namespace Vignette.Game.Screens.Menu
 
         protected override bool StartHidden => true;
 
-        public MenuScreen()
+        public MenuPage()
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;

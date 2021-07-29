@@ -20,7 +20,7 @@ namespace Vignette.Game.Graphics.UserInterface
             ScrollbarVisible = false;
             BackgroundColour = Colour4.Transparent;
             ItemsContainer.Padding = new MarginPadding(1);
-            AddInternal(new ThemableMaskedBox
+            AddInternal(new ThemableEffectBox
             {
                 Depth = 1,
                 Colour = ThemeSlot.White,

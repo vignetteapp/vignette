@@ -7,15 +7,15 @@ using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Screens.Menu.Settings.Sections;
 
-namespace Vignette.Game.Screens.Menu
+namespace Vignette.Game.Screens.Menu.Settings
 {
-    public class SceneSettingScreen : SettingsScreen
+    public class SceneSettings : SettingsPage
     {
         public override LocalisableString Title => "Scene";
 
         public override IconUsage Icon => FluentSystemIcons.Wallpaper24;
 
-        public SceneSettingScreen()
+        public SceneSettings()
         {
             AddRange(new Drawable[]
             {

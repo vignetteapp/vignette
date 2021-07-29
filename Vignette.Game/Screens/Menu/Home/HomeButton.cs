@@ -19,7 +19,7 @@ namespace Vignette.Game.Screens.Menu.Home
 {
     public class HomeButton : FluentButtonBase
     {
-        private ThemableMaskedBox border;
+        private ThemableEffectBox background;
 
         private ThemableSpriteIcon icon;
 
@@ -49,18 +49,17 @@ namespace Vignette.Game.Screens.Menu.Home
 
         public HomeButton()
         {
-            Size = new Vector2(240, 80);
-            BackgroundResting = ThemeSlot.Transparent;
+            Size = new Vector2(320, 80);
+            BackgroundResting = ThemeSlot.White;
             BackgroundHovered = ThemeSlot.Gray20;
             BackgroundPressed = ThemeSlot.Gray30;
             BackgroundDisabled = ThemeSlot.Transparent;
             Children = new Drawable[]
             {
-                border = new ThemableMaskedBox
+                background = new ThemableEffectBox
                 {
-                    BorderThickness = 3.0f,
+                    Shadow = true,
                     RelativeSizeAxes = Axes.Both,
-                    Colour = ThemeSlot.Transparent,
                 },
                 new Container
                 {
@@ -68,14 +67,24 @@ namespace Vignette.Game.Screens.Menu.Home
                     Padding = new MarginPadding(15),
                     Children = new Drawable[]
                     {
-                        icon = new ThemableSpriteIcon
+                        new Container
                         {
-                            Colour = ThemeSlot.AccentPrimary,
-                            Size = new Vector2(28),
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Size = new Vector2(80),
+                            Child = icon = new ThemableSpriteIcon
+                            {
+                                Colour = ThemeSlot.AccentPrimary,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Size = new Vector2(28),
+                            },
                         },
                         new FillFlowContainer
                         {
-                            Margin = new MarginPadding { Left = 40 },
+                            Margin = new MarginPadding { Left = 100 },
+                            AutoSizeAxes = Axes.X,
+                            RelativeSizeAxes = Axes.Y,
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
@@ -97,7 +106,7 @@ namespace Vignette.Game.Screens.Menu.Home
         }
 
         protected override void UpdateBackground(ThemeSlot slot)
-            => border.BorderColour = slot;
+            => background.Colour = slot;
 
         [BackgroundDependencyLoader]
         private void load(GameHost host)

@@ -24,9 +24,9 @@ namespace Vignette.Game.Graphics.UserInterface
     /// </summary>
     public abstract class FluentTextInput : CompositeDrawable, IHasCurrentValue<string>
     {
-        private readonly ThemableMaskedBox background;
+        private readonly ThemableEffectBox background;
 
-        private readonly ThemableMaskedBox border;
+        private readonly ThemableEffectBox border;
 
         protected TextInputContainer Input { get; private set; }
 
@@ -125,12 +125,12 @@ namespace Vignette.Game.Graphics.UserInterface
 
             InternalChildren = new Drawable[]
             {
-                background = new ThemableMaskedBox
+                background = new ThemableEffectBox
                 {
                     Depth = 1,
                     RelativeSizeAxes = Axes.Both,
                 },
-                border = new ThemableMaskedBox
+                border = new ThemableEffectBox
                 {
                     Depth = -1,
                 }

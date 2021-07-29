@@ -3,6 +3,7 @@
 
 using NUnit.Framework;
 using Vignette.Game.Screens.Menu;
+using Vignette.Game.Screens.Menu.Help;
 
 namespace Vignette.Game.Tests.Visual.Screens
 {
@@ -20,7 +21,7 @@ namespace Vignette.Game.Tests.Visual.Screens
         public void TestMenuNavigationControls()
         {
             AddStep("toggle side panel", () => menu.ToggleNavigationView());
-            AddStep("select help tab", () => menu.SelectTab(typeof(HelpScreen)));
+            AddStep("select help tab", () => menu.SelectTab<HelpPage>());
         }
     }
 }

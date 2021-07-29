@@ -26,7 +26,7 @@ namespace Vignette.Game.Graphics.Containers
 
                 Children = new Drawable[]
                 {
-                    new ThemableMaskedBox
+                    new ThemableEffectBox
                     {
                         Colour = ThemeSlot.Gray10,
                         BorderColour = ThemeSlot.Gray30,

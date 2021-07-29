@@ -33,7 +33,7 @@ namespace Vignette.Game.Graphics.Containers
             public FluentScrollbar(Direction direction)
                 : base(direction)
             {
-                Child = new ThemableMaskedBox
+                Child = new ThemableEffectBox
                 {
                     RelativeSizeAxes = Axes.Both,
                     CornerRadius = 2.5f,

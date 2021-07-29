@@ -1,7 +1,6 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using System;
 using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -12,12 +11,11 @@ using osuTK;
 using Vignette.Game.Graphics.Containers;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.UserInterface;
-using Vignette.Game.Screens.Menu.Settings;
 using Vignette.Game.Themeing;
 
-namespace Vignette.Game.Screens.Menu
+namespace Vignette.Game.Screens.Menu.Settings
 {
-    public abstract class SettingsScreen : MenuScreen
+    public abstract class SettingsPage : MenuPage
     {
         protected override Container<Drawable> Content => sectionFlow;
 
@@ -29,7 +27,7 @@ namespace Vignette.Game.Screens.Menu
 
         private FluentSearchBox searchBox;
 
-        public SettingsScreen()
+        public SettingsPage()
         {
             InternalChild = new GridContainer
             {
@@ -50,6 +48,11 @@ namespace Vignette.Game.Screens.Menu
                             AutoSizeAxes = Axes.Y,
                             Children = new Drawable[]
                             {
+                                new ThemableBox
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = ThemeSlot.White,
+                                },
                                 new ThemableBox
                                 {
                                     Height = 2,
@@ -96,6 +99,11 @@ namespace Vignette.Game.Screens.Menu
                             AutoSizeAxes = Axes.Y,
                             Children = new Drawable[]
                             {
+                                new ThemableBox
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = ThemeSlot.White,
+                                },
                                 new ThemableBox
                                 {
                                     Height = 2,

@@ -6,13 +6,12 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
 using Vignette.Game.Graphics.Containers;
-using Vignette.Game.Screens;
 
 namespace Vignette.Game.Tests.Visual.Screens
 {
     public abstract class ScreenTestScene : VignetteManualInputManagerTestScene
     {
-        protected readonly VignetteScreenStack Stack;
+        protected readonly ScreenStack Stack;
 
         private readonly Container content;
 
@@ -28,7 +27,7 @@ namespace Vignette.Game.Tests.Visual.Screens
                     Child = new FluentTooltipContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Child = Stack = new VignetteScreenStack { RelativeSizeAxes = Axes.Both },
+                        Child = Stack = new ScreenStack { RelativeSizeAxes = Axes.Both },
                     },
                 },
                 content = new Container { RelativeSizeAxes = Axes.Both },

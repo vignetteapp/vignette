@@ -22,7 +22,6 @@ namespace Vignette.Game.Screens.Menu.Home
 
         public HomeBanner()
         {
-            AutoSizeAxes = Axes.Y;
             RelativeSizeAxes = Axes.X;
         }
 
@@ -38,11 +37,9 @@ namespace Vignette.Game.Screens.Menu.Home
                 },
                 new Container
                 {
-                    Margin = new MarginPadding { Vertical = 40, Left = 20 },
+                    Margin = new MarginPadding { Top = 50, Left = 20 },
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
                     Children = new Drawable[]
                     {
                         new Sprite
