@@ -12,7 +12,7 @@ namespace Vignette.Game.Themeing
 {
     public class ThemeManager : IThemeSource
     {
-        public readonly Bindable<Theme> Current = new Bindable<Theme>(Theme.Light);
+        public readonly Bindable<Theme> Current;
 
         public readonly BindableList<Theme> UseableThemes = new BindableList<Theme>();
 
@@ -24,12 +24,15 @@ namespace Vignette.Game.Themeing
 
         public event Action SourceChanged;
 
-        public ThemeManager(Scheduler scheduler, UserResources resources, VignetteConfigManager config)
+        public ThemeManager(Scheduler scheduler, UserResources resources, VignetteConfigManager config, bool useInsidersColours = false)
         {
             this.scheduler = scheduler;
 
-            UseableThemes.Add(Theme.Light);
-            UseableThemes.Add(Theme.Dark);
+            var lightTheme = Theme.GetLightTheme(useInsidersColours);
+            var darkTheme = Theme.GetDarkTheme(useInsidersColours);
+
+            Current = new Bindable<Theme>(lightTheme);
+            UseableThemes.AddRange(new[] { lightTheme, darkTheme });
 
             store = resources.Themes;
             store.FileCreated += onFileCreated;
@@ -45,7 +48,7 @@ namespace Vignette.Game.Themeing
                 if (e.NewValue == Current.Value.Name)
                     return;
 
-                Current.Value = UseableThemes.FirstOrDefault(t => t.Name == e.NewValue) ?? Theme.Light;
+                Current.Value = UseableThemes.FirstOrDefault(t => t.Name == e.NewValue) ?? UseableThemes.FirstOrDefault();
 
                 SourceChanged?.Invoke();
             }, true);
