@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Vignette.Game\Vignette.Game.csproj" />
@@ -7,12 +7,12 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>WinExe</OutputType>
+    <AssemblyName>Vignette</AssemblyName>
   </PropertyGroup>
 
   <Choose>
     <When Condition="!$(Version.Contains('insiders'))">
       <PropertyGroup>
-        <AssemblyName>vignette</AssemblyName>
         <ApplicationIcon>vignette.ico</ApplicationIcon>
       </PropertyGroup>
       <ItemGroup>
@@ -21,7 +21,6 @@
     </When>
     <When Condition="$(Version.Contains('insiders'))">
       <PropertyGroup>
-        <AssemblyName>vignette-insiders</AssemblyName>
         <ApplicationIcon>vignette-insiders.ico</ApplicationIcon>
       </PropertyGroup>
       <ItemGroup>
