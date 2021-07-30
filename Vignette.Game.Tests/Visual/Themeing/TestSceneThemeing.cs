@@ -21,7 +21,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
         public void SetUp() => Schedule(() =>
         {
             Clear();
-            Selector.Current.Value = Theme.Light;
+            Selector.Current.Value = Theme.GetLightTheme(false);
         });
 
         [Test]
@@ -37,7 +37,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
             }));
 
             AddAssert("is colour white", () => themable.Target.Colour == Colour4.White);
-            AddStep("change theme", () => Selector.Current.Value = Theme.Dark);
+            AddStep("change theme", () => Selector.Current.Value = Theme.GetDarkTheme(false));
             AddAssert("is colour black", () => themable.Target.Colour == Colour4.Black);
         }
 
@@ -60,7 +60,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
             }));
 
             AddAssert("is target white", () => target.Colour == Colour4.White);
-            AddStep("change theme", () => Selector.Current.Value = Theme.Dark);
+            AddStep("change theme", () => Selector.Current.Value = Theme.GetDarkTheme(false));
             AddAssert("is target black", () => target.Colour == Colour4.Black);
 
             string toExpire = expireTarget ? "target" : "themable";

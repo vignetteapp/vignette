@@ -4,15 +4,29 @@
     <ProjectReference Include="..\Vignette.Game\Vignette.Game.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="vignette.ico" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Vignette</AssemblyName>
-    <ApplicationIcon>vignette.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <Choose>
+    <When Condition="!$(Version.Contains('insiders'))">
+      <PropertyGroup>
+        <ApplicationIcon>vignette.ico</ApplicationIcon>
+      </PropertyGroup>
+      <ItemGroup>
+        <EmbeddedResource Include="vignette.ico" />
+      </ItemGroup>
+    </When>
+    <When Condition="$(Version.Contains('insiders'))">
+      <PropertyGroup>
+        <ApplicationIcon>vignette-insiders.ico</ApplicationIcon>
+      </PropertyGroup>
+      <ItemGroup>
+        <EmbeddedResource Include="vignette-insiders.ico"/>
+      </ItemGroup>
+    </When>
+  </Choose>
 
 </Project>
