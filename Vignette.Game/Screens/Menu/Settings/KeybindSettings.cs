@@ -6,15 +6,15 @@ using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Screens.Menu.Settings.Sections;
 
-namespace Vignette.Game.Screens.Menu
+namespace Vignette.Game.Screens.Menu.Settings
 {
-    public class KeybindSettingScreen : SettingsScreen
+    public class KeybindSettings : SettingsPage
     {
         public override LocalisableString Title => "Keybinds";
 
         public override IconUsage Icon => FluentSystemIcons.Keyboard24;
 
-        public KeybindSettingScreen()
+        public KeybindSettings()
         {
             Add(new GlobalActionsSection());
         }

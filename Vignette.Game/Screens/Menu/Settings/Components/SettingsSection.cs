@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Effects;
 using osu.Framework.Localisation;
+using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
@@ -19,7 +21,7 @@ namespace Vignette.Game.Screens.Menu.Settings
 
         protected override Container<Drawable> Content => flow;
 
-        private readonly ThemableMaskedBox background;
+        private readonly ThemableEffectBox flash;
 
         private readonly FillFlowContainer flow;
 
@@ -41,7 +43,13 @@ namespace Vignette.Game.Screens.Menu.Settings
             RelativeSizeAxes = Axes.X;
             InternalChildren = new Drawable[]
             {
-                background = new ThemableMaskedBox
+                new ThemableEffectBox
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = ThemeSlot.White,
+                    Shadow = true,
+                },
+                flash = new ThemableEffectBox
                 {
                     Alpha = 0,
                     RelativeSizeAxes = Axes.Both,
@@ -68,7 +76,7 @@ namespace Vignette.Game.Screens.Menu.Settings
 
         public void Highlight()
         {
-            background
+            flash
                 .FadeInFromZero()
                 .FadeOutFromOne(1000, Easing.OutQuint);
         }

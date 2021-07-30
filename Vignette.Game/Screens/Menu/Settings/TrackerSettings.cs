@@ -7,15 +7,15 @@ using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Screens.Menu.Settings.Sections;
 
-namespace Vignette.Game.Screens.Menu
+namespace Vignette.Game.Screens.Menu.Settings
 {
-    public class TrackerSettingScreen : SettingsScreen
+    public class TrackerSettings : SettingsPage
     {
         public override LocalisableString Title => "Tracking";
 
         public override IconUsage Icon => FluentSystemIcons.Accessibility24;
 
-        public TrackerSettingScreen()
+        public TrackerSettings()
         {
             AddRange(new Drawable[]
             {

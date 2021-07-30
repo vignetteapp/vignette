@@ -9,12 +9,11 @@ using osuTK;
 using Vignette.Game.Graphics.Containers;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Screens.Menu.Help;
 using Vignette.Game.Themeing;
 
-namespace Vignette.Game.Screens.Menu
+namespace Vignette.Game.Screens.Menu.Help
 {
-    public class HelpScreen : MenuScreen
+    public class HelpPage : MenuPage
     {
         public override LocalisableString Title => "Knowledgebase";
 
@@ -26,7 +25,7 @@ namespace Vignette.Game.Screens.Menu
 
         private SearchContainer articleFlow;
 
-        public HelpScreen()
+        public HelpPage()
         {
             Child = new GridContainer
             {

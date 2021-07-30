@@ -118,7 +118,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         protected readonly FillFlowContainer Label;
 
-        private readonly ThemableMaskedBox background;
+        private readonly ThemableEffectBox background;
 
         private ThemableSpriteText text;
 
@@ -129,7 +129,7 @@ namespace Vignette.Game.Graphics.UserInterface
             Height = 32;
             InternalChildren = new Drawable[]
             {
-                background = new ThemableMaskedBox
+                background = new ThemableEffectBox
                 {
                     RelativeSizeAxes = Axes.Both,
                     BorderColour = ThemeSlot.Gray110,

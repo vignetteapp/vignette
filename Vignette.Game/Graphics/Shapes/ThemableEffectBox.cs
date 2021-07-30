@@ -3,12 +3,14 @@
 
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
+using osuTK;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Graphics.Shapes
 {
-    public class ThemableMaskedBox : ThemableDrawable<Container>
+    public class ThemableEffectBox : ThemableDrawable<Container>
     {
         private ThemeSlot borderColour;
 
@@ -37,7 +39,22 @@ namespace Vignette.Game.Graphics.Shapes
             set => Target.CornerRadius = value;
         }
 
-        public ThemableMaskedBox(bool attached = true)
+        private bool shadow;
+
+        public bool Shadow
+        {
+            get => shadow;
+            set
+            {
+                if (shadow == value)
+                    return;
+
+                shadow = value;
+                ScheduleThemeChange();
+            }
+        }
+
+        public ThemableEffectBox(bool attached = true)
             : base(attached)
         {
         }
@@ -56,6 +73,19 @@ namespace Vignette.Game.Graphics.Shapes
         {
             Target.Child.Colour = theme.GetColour(Colour);
             Target.BorderColour = theme.GetColour(BorderColour);
+
+            if (!shadow)
+                return;
+
+            Target.EdgeEffect = new EdgeEffectParameters
+            {
+                Type = EdgeEffectType.Shadow,
+                Offset = new Vector2(0, 2),
+                Colour = theme.GetColour(ThemeSlot.Black).Opacity(0.1f),
+                Hollow = true,
+                Radius = 5,
+                Roundness = 5,
+            };
         }
     }
 }

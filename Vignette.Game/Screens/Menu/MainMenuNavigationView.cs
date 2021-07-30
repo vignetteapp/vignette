@@ -9,7 +9,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Screens.Menu
 {
-    public class MainMenuNavigationView : NavigationViewVertical<MenuScreen>
+    public class MainMenuNavigationView : NavigationViewVertical<MenuPage>
     {
         public MainMenuNavigationView()
         {
@@ -20,7 +20,7 @@ namespace Vignette.Game.Screens.Menu
             TabContainer.AutoSizeAxes = Axes.Y;
         }
 
-        protected override TabItem<MenuScreen> CreateTabItem(MenuScreen value)
+        protected override TabItem<MenuPage> CreateTabItem(MenuPage value)
             => new MainMenuNavigationTabItem(value);
 
         protected class MainMenuNavigationTabItem : NavigationViewVerticalTabItem
@@ -29,7 +29,7 @@ namespace Vignette.Game.Screens.Menu
 
             protected override IconUsage? Icon => Value.Icon;
 
-            public MainMenuNavigationTabItem(MenuScreen value)
+            public MainMenuNavigationTabItem(MenuPage value)
                 : base(value)
             {
             }

@@ -40,9 +40,9 @@ namespace Vignette.Game.Graphics.UserInterface
 
         protected class FluentDropdownHeader : DropdownHeader
         {
-            private ThemableMaskedBox background;
+            private ThemableEffectBox background;
 
-            private ThemableMaskedBox border;
+            private ThemableEffectBox border;
 
             private ThemableSpriteIcon chevron;
 
@@ -97,11 +97,11 @@ namespace Vignette.Game.Graphics.UserInterface
 
                 Background.Children = new Drawable[]
                 {
-                    background = new ThemableMaskedBox
+                    background = new ThemableEffectBox
                     {
                         RelativeSizeAxes = Axes.Both,
                     },
-                    border = new ThemableMaskedBox(),
+                    border = new ThemableEffectBox(),
                 };
 
                 Foreground.Padding = new MarginPadding { Horizontal = 8 };
@@ -224,7 +224,7 @@ namespace Vignette.Game.Graphics.UserInterface
                 ScrollbarVisible = false;
                 BackgroundColour = Colour4.Transparent;
                 ItemsContainer.Padding = new MarginPadding(1);
-                AddInternal(new ThemableMaskedBox
+                AddInternal(new ThemableEffectBox
                 {
                     Depth = 1,
                     Colour = ThemeSlot.White,
