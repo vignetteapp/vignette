@@ -5,7 +5,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Screens.Menu;
+using Vignette.Game.Screens.Main;
 using Vignette.Game.Themeing;
 
 namespace Vignette.Game
@@ -32,7 +32,7 @@ namespace Vignette.Game
                 screenStack = new ScreenStack(),
             });
 
-            screenStack.Push(new MainMenu());
+            screenStack.Push(new MainScreen());
         }
     }
 }
