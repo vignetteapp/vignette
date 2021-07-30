@@ -23,7 +23,9 @@ namespace Vignette.Desktop
 
             window.ConfineMouseMode.Value = ConfineMouseMode.Never;
             window.Title = Name;
-            window.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "vignette.ico"));
+
+            string icon = IsInsidersBuild ? "vignette-insiders.ico" : "vignette.ico";
+            window.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), icon));
 
             resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
             resizable.BindValueChanged(e => window.Resizable = e.NewValue, true);
