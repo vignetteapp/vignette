@@ -41,8 +41,8 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                     Margin = new MarginPadding(20),
                     Items = new[]
                     {
-                        Theme.Light,
-                        Theme.Dark,
+                        Theme.GetLightTheme(false),
+                        Theme.GetDarkTheme(false),
                     }
                 }
             });

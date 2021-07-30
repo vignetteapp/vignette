@@ -29,7 +29,7 @@ namespace Vignette.Game.Tests.Visual
         {
             public event Action SourceChanged;
 
-            public readonly Bindable<Theme> Current = new Bindable<Theme>(Theme.Light);
+            public readonly Bindable<Theme> Current = new Bindable<Theme>(Theme.GetLightTheme(false));
 
             public TestThemeSource()
             {
