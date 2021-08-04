@@ -3,7 +3,7 @@
 </p>
 <br/>
 
-[![Discord](https://img.shields.io/discord/746656644196335647?color=7289DA&label=%20&logo=discord&logoColor=white)](https://discord.gg/3yMf3Y9) [![GitHub Super-Linter](https://github.com/vignette-project/vignette/workflows/Lint/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![Discord](https://img.shields.io/discord/746656644196335647?color=7289DA&label=%20&logo=discord&logoColor=white)](https://discord.gg/rsPNAxwweg) [![GitHub Super-Linter](https://github.com/vignette-project/vignette/workflows/Lint/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 
 
