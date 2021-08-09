@@ -1,10 +1,13 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Bindings;
 using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Screens.Main.Menu.Settings.Sections;
+using Vignette.Game.Input;
+using Vignette.Game.Screens.Main.Menu.Settings.Components;
 
 namespace Vignette.Game.Screens.Main.Menu.Settings
 {
@@ -19,9 +22,16 @@ namespace Vignette.Game.Screens.Main.Menu.Settings
             Add(new GlobalActionsSection());
         }
 
-        private class GlobalActionsSection : WorkInProgressSection
+        private class GlobalActionsSection : SettingsSection
         {
             public override LocalisableString Header => "Global";
+
+            [BackgroundDependencyLoader]
+            private void load(VignetteKeyBindManager keybindManager)
+            {
+                foreach (var keybind in keybindManager.Global)
+                    Add(new SettingsButtonKeybind(keybind));
+            }
         }
     }
 }

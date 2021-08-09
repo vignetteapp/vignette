@@ -105,6 +105,9 @@ namespace Vignette.Game
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
 
+            var keybindings = new VignetteKeyBindManager(Storage);
+            dependencies.CacheAs(keybindings);
+
             resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
 
             base.Content.Add(new SafeAreaContainer
@@ -127,7 +130,7 @@ namespace Vignette.Game
                                 },
                             },
                         },
-                        new GlobalActionContainer(this)
+                        new GlobalActionContainer(this, keybindings)
                         {
                             RelativeSizeAxes = Axes.Both,
                         }

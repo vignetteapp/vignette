@@ -7,6 +7,7 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.Screens;
 using Vignette.Game.Input;
 using Vignette.Game.Screens.Main.Menu;
+using Vignette.Game.Screens.Main.Menu.Settings;
 using Vignette.Game.Screens.Main.Scene;
 
 namespace Vignette.Game.Screens.Main
@@ -33,6 +34,10 @@ namespace Vignette.Game.Screens.Main
             {
                 case GlobalAction.ToggleMainMenu:
                     mainMenu?.ToggleVisibility();
+                    return true;
+
+                case GlobalAction.OpenSettings:
+                    mainMenu?.SelectTab<GameSettings>();
                     return true;
             }
 

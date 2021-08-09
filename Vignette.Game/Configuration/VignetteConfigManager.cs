@@ -52,15 +52,10 @@ namespace Vignette.Game.Configuration
     public enum VignetteSetting
     {
         WindowResizable,
-
         WindowSize,
-
         ShowFpsOverlay,
-
         CameraDevice,
-
         BackgroundColour,
-
         Theme,
     }
 }

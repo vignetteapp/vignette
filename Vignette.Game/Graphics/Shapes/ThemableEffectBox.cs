@@ -54,6 +54,36 @@ namespace Vignette.Game.Graphics.Shapes
             }
         }
 
+        private float shadowRadius = 5;
+
+        public float ShadowRadius
+        {
+            get => shadowRadius;
+            set
+            {
+                if (shadowRadius == value)
+                    return;
+
+                shadowRadius = value;
+                ScheduleThemeChange();
+            }
+        }
+
+        private float shadowAlpha = 0.1f;
+
+        public float ShadowAlpha
+        {
+            get => shadowAlpha;
+            set
+            {
+                if (shadowAlpha == value)
+                    return;
+
+                shadowAlpha = value;
+                ScheduleThemeChange();
+            }
+        }
+
         public ThemableEffectBox(bool attached = true)
             : base(attached)
         {
@@ -81,9 +111,9 @@ namespace Vignette.Game.Graphics.Shapes
             {
                 Type = EdgeEffectType.Shadow,
                 Offset = new Vector2(0, 2),
-                Colour = theme.GetColour(ThemeSlot.Black).Opacity(0.1f),
+                Colour = theme.GetColour(ThemeSlot.Black).Opacity(shadowAlpha),
                 Hollow = true,
-                Radius = 5,
+                Radius = shadowRadius,
                 Roundness = 5,
             };
         }
