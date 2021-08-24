@@ -27,13 +27,13 @@ namespace Vignette.Game.Tests.Visual
 
         protected class TestThemeSource : Container, IThemeSource
         {
-            public event Action SourceChanged;
+            public event Action ThemeChanged;
 
             public readonly Bindable<Theme> Current = new Bindable<Theme>(Theme.GetLightTheme(false));
 
             public TestThemeSource()
             {
-                Current.BindValueChanged(_ => SourceChanged?.Invoke(), true);
+                Current.BindValueChanged(_ => ThemeChanged?.Invoke(), true);
             }
 
             public Theme GetCurrent() => Current.Value;

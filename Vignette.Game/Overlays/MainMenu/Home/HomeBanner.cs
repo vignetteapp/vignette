@@ -17,9 +17,6 @@ namespace Vignette.Game.Overlays.MainMenu.Home
     {
         private Box background;
 
-        [Resolved]
-        private VignetteGameBase game { get; set; }
-
         public HomeBanner()
         {
             RelativeSizeAxes = Axes.X;
@@ -97,7 +94,7 @@ namespace Vignette.Game.Overlays.MainMenu.Home
 
         private ColourInfo getGradient(bool flipped = false)
         {
-            if (game.IsInsidersBuild)
+            if (VignetteGameBase.IsInsidersBuild)
             {
                 return flipped
                     ? ColourInfo.GradientHorizontal(grad_ins_b, grad_ins_a)

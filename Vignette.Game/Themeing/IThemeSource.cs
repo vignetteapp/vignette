@@ -5,10 +5,13 @@ using System;
 
 namespace Vignette.Game.Themeing
 {
+    /// <summary>
+    /// An interface denoting that this is capable of providing a theme to <see cref="IThemable{T}"/>s.
+    /// </summary>
     public interface IThemeSource
     {
-        event Action SourceChanged;
+        event Action ThemeChanged;
 
-        Theme GetCurrent();
+        Theme Current { get; }
     }
 }

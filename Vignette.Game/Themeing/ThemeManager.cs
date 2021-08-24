@@ -12,27 +12,33 @@ namespace Vignette.Game.Themeing
 {
     public class ThemeManager : IThemeSource
     {
-        public readonly Bindable<Theme> Current;
+        /// <summary>
+        /// Gets the current theme.
+        /// </summary>
+        public Theme Current => CurrentBindable.Value;
 
-        public readonly BindableList<Theme> UseableThemes = new BindableList<Theme>();
+        /// <summary>
+        /// Gets the current theme as a bindable.
+        /// </summary>
+        public readonly Bindable<Theme> CurrentBindable = new Bindable<Theme>(Theme.Light);
+
+        /// <summary>
+        /// Gets the list of all loaded themes as a bindable.
+        /// </summary>
+        public readonly BindableList<Theme> UseableThemes = new BindableList<Theme>(new[] { Theme.Light, Theme.Dark });
+
+        /// <summary>
+        /// Invoked when the theme has been changed.
+        /// </summary>
+        public event Action ThemeChanged;
 
         private readonly MonitoredResourceStore store;
+        private readonly Bindable<string> themeConfig;
+        private readonly Scheduler scheduler;
 
-        private Bindable<string> themeConfig;
-
-        private Scheduler scheduler;
-
-        public event Action SourceChanged;
-
-        public ThemeManager(Scheduler scheduler, UserResources resources, VignetteConfigManager config, bool useInsidersColours = false)
+        public ThemeManager(Scheduler scheduler, UserResources resources, VignetteConfigManager config)
         {
             this.scheduler = scheduler;
-
-            var lightTheme = Theme.GetLightTheme(useInsidersColours);
-            var darkTheme = Theme.GetDarkTheme(useInsidersColours);
-
-            Current = new Bindable<Theme>(lightTheme);
-            UseableThemes.AddRange(new[] { lightTheme, darkTheme });
 
             store = resources.Themes;
             store.FileCreated += onFileCreated;
@@ -45,25 +51,23 @@ namespace Vignette.Game.Themeing
             themeConfig = config.GetBindable<string>(VignetteSetting.Theme);
             themeConfig.BindValueChanged(e =>
             {
-                if (e.NewValue == Current.Value.Name)
+                if (e.NewValue == CurrentBindable.Value.Name)
                     return;
 
-                Current.Value = UseableThemes.FirstOrDefault(t => t.Name == e.NewValue) ?? UseableThemes.FirstOrDefault();
+                CurrentBindable.Value = UseableThemes.FirstOrDefault(t => t.Name == e.NewValue) ?? UseableThemes.FirstOrDefault();
 
-                SourceChanged?.Invoke();
+                ThemeChanged?.Invoke();
             }, true);
 
-            Current.BindValueChanged(e =>
+            CurrentBindable.BindValueChanged(e =>
             {
                 if (themeConfig.Value == e.NewValue.Name)
                     return;
 
                 themeConfig.Value = e.NewValue.Name;
-                SourceChanged?.Invoke();
+                ThemeChanged?.Invoke();
             }, true);
         }
-
-        public Theme GetCurrent() => Current.Value;
 
         private void loadExistingThemes()
         {

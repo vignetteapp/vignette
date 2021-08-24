@@ -43,7 +43,7 @@ namespace Vignette.Game
 
         public bool IsDeployedBuild => AssemblyVersion.Major > 0;
 
-        public bool IsInsidersBuild => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.Contains("insiders");
+        public static bool IsInsidersBuild => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.Contains("insiders");
 
         protected Storage Storage;
 
@@ -51,15 +51,11 @@ namespace Vignette.Game
 
         protected UserResources UserResources;
 
-        private DependencyContainer dependencies;
-
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
             => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-        private Bindable<bool> showFps;
-
-        private Bindable<bool> resizable;
-
+        private DependencyContainer dependencies;
+        private IBindable<bool> resizable;
         private Container content;
 
         protected override Container<Drawable> Content => content;
@@ -74,6 +70,7 @@ namespace Vignette.Game
         {
             Resources.AddStore(new DllResourceStore(VignetteResources.ResourceAssembly));
 
+            // Segoe UI
             AddFont(Resources, @"Fonts/SegoeUI");
             AddFont(Resources, @"Fonts/SegoeUI-Italic");
             AddFont(Resources, @"Fonts/SegoeUI-Bold");
@@ -87,8 +84,10 @@ namespace Vignette.Game
             AddFont(Resources, @"Fonts/SegoeUI-SemiLight");
             AddFont(Resources, @"Fonts/SegoeUI-SemiLightItalic");
 
+            // Spartan
             AddFont(Resources, @"Fonts/Spartan-Bold");
 
+            // Icons
             AddFont(Resources, @"Fonts/FluentSystemIcons-Filled");
             AddFont(Resources, @"Fonts/Vignette");
 
@@ -98,11 +97,11 @@ namespace Vignette.Game
             UserResources = new UserResources(Host, Storage);
             dependencies.CacheAs(UserResources);
 
-            var themeManager = new ThemeManager(Scheduler, UserResources, LocalConfig, IsInsidersBuild);
+            var themeManager = new ThemeManager(Scheduler, UserResources, LocalConfig);
             dependencies.CacheAs(themeManager);
             dependencies.CacheAs<IThemeSource>(themeManager);
 
-            showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
+            var showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
 
             var keybindings = new VignetteKeyBindManager(Storage);
@@ -145,10 +144,10 @@ namespace Vignette.Game
             switch (action)
             {
                 case FrameworkAction.ToggleFullscreen:
-                    return !resizable.Value ? base.OnPressed(action) : false;
+                    return !resizable.Value && OnPressed(action);
 
                 default:
-                    return base.OnPressed(action);
+                    return OnPressed(action);
             };
         }
 

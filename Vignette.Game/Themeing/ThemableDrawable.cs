@@ -96,15 +96,21 @@ namespace Vignette.Game.Themeing
         private void load(IThemeSource source)
         {
             CurrentSource = source;
-            CurrentSource.SourceChanged += ScheduleThemeChange;
+            CurrentSource.ThemeChanged += ScheduleThemeChange;
             ScheduleThemeChange();
         }
 
         protected void ScheduleThemeChange()
-            => Scheduler.AddOnce(() => ThemeChanged(CurrentSource.GetCurrent()));
+            => Scheduler.AddOnce(() => ThemeChanged(CurrentSource.Current));
 
+        /// <summary>
+        /// Create the containing drawable.
+        /// </summary>
         protected abstract T CreateDrawable();
 
+        /// <summary>
+        /// Called when the theme has been changed.
+        /// </summary>
         protected virtual void ThemeChanged(Theme theme)
             => Target.Colour = theme.GetColour(Colour);
     }

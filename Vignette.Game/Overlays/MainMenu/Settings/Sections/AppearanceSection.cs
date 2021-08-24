@@ -22,7 +22,7 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Sections
         [BackgroundDependencyLoader]
         private void load(GameHost host, UserResources userResources, ThemeManager manager)
         {
-            theme = manager.Current.GetBoundCopy();
+            theme = manager.CurrentBindable.GetBoundCopy();
 
             AddRange(new Drawable[]
             {
