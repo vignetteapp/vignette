@@ -6,7 +6,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
-    public class SettingsHexColourBox : SettingsItem<Colour4>
+    public class SettingsHexColourBox : SettingsControl<Colour4>
     {
         protected override Drawable CreateControl() => new FluentHexColourBox { Width = 100 };
     }

@@ -8,7 +8,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
-    public class SettingsDropdown<T> : SettingsItem<T>
+    public class SettingsDropdown<T> : SettingsControl<T>
     {
         public IEnumerable<T> Items
         {

@@ -3,8 +3,11 @@
 
 using System;
 using osu.Framework.Graphics;
-using Vignette.Game.Graphics.Typesets;
+using osu.Framework.Graphics.Sprites;
+using osuTK;
+using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.UserInterface;
+using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
@@ -12,17 +15,36 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
     {
         public Action Action
         {
-            get => Control.Action;
-            set => Control.Action = value;
+            get => button.Action;
+            set => button.Action = value;
         }
 
-        protected new FluentButton Control => (FluentButton)base.Control;
-
-        protected override Drawable CreateControl() => new FluentButton
+        public IconUsage Icon
         {
-            Icon = FluentSystemIcons.WindowNew24,
-            Style = ButtonStyle.Text,
-            Width = 32,
-        };
+            get => icon.Icon;
+            set => icon.Icon = value;
+        }
+
+        private readonly FluentButton button;
+        private readonly ThemableSpriteIcon icon;
+
+        public SettingsButton()
+        {
+            AddInternal(button = new FluentButton
+            {
+                Style = ButtonStyle.Text,
+                Depth = 1,
+                Height = 1,
+                RelativeSizeAxes = Axes.Both,
+            });
+
+            Add(icon = new ThemableSpriteIcon
+            {
+                Size = new Vector2(16),
+                Colour = ThemeSlot.Gray190,
+                Anchor = Anchor.CentreRight,
+                Origin = Anchor.CentreRight,
+            });
+        }
     }
 }

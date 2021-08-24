@@ -6,7 +6,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
-    public class SettingsCheckbox : SettingsItem<bool>
+    public class SettingsCheckbox : SettingsControl<bool>
     {
         protected override Drawable CreateControl() => new FluentCheckbox();
     }

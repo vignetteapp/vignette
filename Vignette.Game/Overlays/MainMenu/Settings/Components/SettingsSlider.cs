@@ -7,7 +7,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
-    public class SettingsSlider<T> : SettingsItem<T>
+    public class SettingsSlider<T> : SettingsControl<T>
         where T : struct, IComparable<T>, IConvertible, IEquatable<T>
     {
         protected override Drawable CreateControl() => new FluentSlider<T> { Width = 200 };

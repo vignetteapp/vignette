@@ -6,6 +6,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
+using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.IO;
 using Vignette.Game.Overlays.MainMenu.Settings.Components;
 using Vignette.Game.Themeing;
@@ -34,11 +35,13 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Sections
                 new SettingsButton
                 {
                     Label = "Open themes folder",
+                    Icon = FluentSystemIcons.WindowNew24,
                     Action = () => userResources.Themes.OpenInNativeExplorer(),
                 },
                 new SettingsButton
                 {
                     Label = "Theme Designer",
+                    Icon = FluentSystemIcons.WindowNew24,
                     Description = "Opens Microsoft's Fluent Theme Designer in a browser. Export the theme as JSON and save it in your themes folder.",
                     Action = () => host.OpenUrlExternally("https://aka.ms/themedesigner"),
                 },

@@ -2,10 +2,8 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.Collections.Generic;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
@@ -16,8 +14,6 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
     public abstract class SettingsItem : Container, IFilterable
     {
-        private ThemableSpriteText label;
-
         public LocalisableString Label
         {
             get => label?.Text ?? string.Empty;
@@ -37,8 +33,6 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
                 label.Text = value;
             }
         }
-
-        private ThemableSpriteText description;
 
         public LocalisableString Description
         {
@@ -71,15 +65,18 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 
         public IEnumerable<string> FilterTerms => Keywords == null ? new[] { Label.ToString() } : new List<string>(Keywords) { Label.ToString() };
 
-        private FillFlowContainer flow;
+        protected override Container<Drawable> Content => content;
 
-        protected Drawable Control { get; }
+        private readonly Container content;
+        private readonly FillFlowContainer flow;
+        private ThemableSpriteText label;
+        private ThemableSpriteText description;
 
         public SettingsItem()
         {
             RelativeSizeAxes = Axes.X;
             AutoSizeAxes = Axes.Y;
-            Children = new Drawable[]
+            InternalChildren = new Drawable[]
             {
                 new Container
                 {
@@ -90,16 +87,17 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
                     {
                         flow = new FillFlowContainer
                         {
+                            Name = "Label",
                             RelativeSizeAxes = Axes.X,
                             Height = 30,
                             Direction = FillDirection.Vertical,
                         },
-                        new Container
+                        content = new Container
                         {
+                            Name = "Content",
                             AutoSizeAxes = Axes.Both,
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
-                            Child = Control = CreateControl(),
                         }
                     },
                 },
@@ -113,18 +111,5 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
                 },
             };
         }
-
-        protected abstract Drawable CreateControl();
-    }
-
-    public abstract class SettingsItem<T> : SettingsItem, IHasCurrentValue<T>
-    {
-        public Bindable<T> Current
-        {
-            get => controlWithCurrent.Current;
-            set => controlWithCurrent.Current = value;
-        }
-
-        private IHasCurrentValue<T> controlWithCurrent => Control as IHasCurrentValue<T>;
     }
 }

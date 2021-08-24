@@ -7,7 +7,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
-    public class SettingsEnumDropdown<T> : SettingsItem<T>
+    public class SettingsEnumDropdown<T> : SettingsControl<T>
         where T : struct, Enum
     {
         protected override Drawable CreateControl() => new FluentEnumDropdown<T> { Width = 200 };

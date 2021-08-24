@@ -4,14 +4,12 @@
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Overlays.MainMenu.Settings.Components;
-using Vignette.Game.Themeing;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Sections
 {
@@ -19,25 +17,15 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Sections
     {
         public override LocalisableString Header => "Debug";
 
-        private ThemableSpriteText versionText;
-
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager gameConfig, FrameworkConfigManager frameworkConfig, FrameworkDebugConfigManager debugConfig, VignetteGameBase game, Storage storage)
         {
             AddRange(new Drawable[]
             {
-                new Container
+                new SettingsLabel
                 {
-                    AutoSizeAxes = Axes.Y,
-                    RelativeSizeAxes = Axes.X,
-                    Margin = new MarginPadding { Bottom = 30 },
-                    Child = versionText = new ThemableSpriteText
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Text = game.Version,
-                        Font = SegoeUI.Bold.With(size: 24),
-                    },
+                    Label = "Version",
+                    Text = game.Version,
                 },
                 new SettingsCheckbox
                 {
@@ -57,16 +45,10 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Sections
                 new SettingsButton
                 {
                     Label = "Open logs folder",
+                    Icon = FluentSystemIcons.WindowNew24,
                     Action = () => storage.OpenPathInNativeExplorer("./logs"),
                 },
             });
-
-            if (!game.IsDeployedBuild && game.IsDebugBuild)
-                versionText.Colour = ThemeSlot.Error;
-            else if (!game.IsDeployedBuild)
-                versionText.Colour = ThemeSlot.Success;
-            else
-                versionText.Colour = ThemeSlot.Gray190;
         }
     }
 }

@@ -8,7 +8,7 @@ using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Overlays.MainMenu.Settings.Components
 {
-    public class SettingsButtonKeybind : SettingsButton
+    public class SettingsButtonKeybind : SettingsControl
     {
         public readonly IKeyBinding TargetAction;
 
@@ -19,6 +19,8 @@ namespace Vignette.Game.Overlays.MainMenu.Settings.Components
             Label = keyBind.Action.GetDescription();
             Control.Text = keyBind.KeyCombination.ReadableString();
         }
+
+        protected new FluentButton Control => (FluentButton)base.Control;
 
         protected override Drawable CreateControl() => new FluentButton
         {
