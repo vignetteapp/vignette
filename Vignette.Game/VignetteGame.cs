@@ -3,7 +3,7 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Screens;
-using Vignette.Game.Screens.Main;
+using Vignette.Game.Screens;
 
 namespace Vignette.Game
 {
@@ -17,7 +17,7 @@ namespace Vignette.Game
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new ScreenStack(new MainScreen()));
+            Add(new ScreenStack(new StageScreen()));
         }
     }
 }
