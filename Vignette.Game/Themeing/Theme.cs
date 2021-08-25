@@ -26,11 +26,9 @@ namespace Vignette.Game.Themeing
         /// <param name="name">The name of this theme.</param>
         /// <param name="stream">The stream to deserialize.</param>
         public Theme(string name, Stream stream)
+            : this(name)
         {
-            Name = name;
-
             using var reader = new StreamReader(stream);
-            addConstants();
             readFromString(reader.ReadToEnd());
         }
 
@@ -59,7 +57,7 @@ namespace Vignette.Game.Themeing
         public Theme SetName(string name)
         {
             if (!string.IsNullOrEmpty(Name))
-                throw new InvalidOperationException("This theme already has a name and it cannot be overriden.");
+                throw new InvalidOperationException("This theme already has a name.");
 
             Name = name;
             return this;
@@ -71,35 +69,48 @@ namespace Vignette.Game.Themeing
         /// </summary>
         /// <param name="slot">The slot to add the colour to.</param>
         /// <param name="hex">The colour represented as a valid hex string.</param>
-        /// <returns></returns>
         public Theme AddColour(ThemeSlot slot, string hex)
             => AddColour(slot, Colour4.FromHex(hex));
 
         /// <summary>
-        /// Adds a colour to the colour mappings. If a slot is already defined, it will be overwritten.
+        /// Adds a colour to the colour mappings. This will not do anything if the slot has already a colour defined..
         /// </summary>
         /// <param name="slot">The slot to add the colour to.</param>
         /// <param name="colour">The colour to set the slot's value to</param>
-        /// <returns></returns>
         public Theme AddColour(ThemeSlot slot, Colour4 colour)
         {
             if (colours == null)
                 colours = new Dictionary<ThemeSlot, Colour4>();
 
-            if (colours.ContainsKey(slot))
-                colours[slot] = colour;
-            else
+            if (!colours.ContainsKey(slot))
                 colours.Add(slot, colour);
 
             return this;
         }
 
+        /// <summary>
+        /// Gets the colour of the specified <see cref="ThemeSlot"/>.
+        /// </summary>
+        /// <param name="slot">The colour slot to retrieve.</param>
         public Colour4 GetColour(ThemeSlot slot)
         {
             if (colours.TryGetValue(slot, out Colour4 value))
                 return value;
 
-            throw new ArgumentException($"{slot} does not exist in '{this}' theme.");
+            return Colour4.White;
+        }
+
+        /// <summary>
+        /// Serializes the current theme as a dictionary.
+        /// </summary>
+        public IDictionary<string, string> Serialize()
+        {
+            var dict = new Dictionary<string, string>();
+
+            foreach ((var slot, var colour) in colours)
+                dict.Add(slot.GetDescription(), colour.ToHex());
+
+            return dict;
         }
 
         private void readFromString(string str)
@@ -119,10 +130,6 @@ namespace Vignette.Game.Themeing
                     }
                 }
             }
-
-            // neutralSecondaryAlt does not exist when created via the Theme Designer
-            // we'll forcibly use a default instead
-            AddColour(ThemeSlot.Gray110, "8a8886");
         }
 
         private void addConstants()
@@ -170,7 +177,7 @@ namespace Vignette.Game.Themeing
             }
         }
 
-        public static Theme Light => getBaseTheme()
+        public static readonly Theme Light = getBaseTheme()
             .SetName("Light")
             .AddColour(ThemeSlot.Black, "000000")
             .AddColour(ThemeSlot.Gray190, "201f1e")
@@ -187,21 +194,21 @@ namespace Vignette.Game.Themeing
             .AddColour(ThemeSlot.Gray10, "faf9f8")
             .AddColour(ThemeSlot.White, "ffffff");
 
-        public static Theme Dark => getBaseTheme()
+        public static readonly Theme Dark = getBaseTheme()
             .SetName("Dark")
-            .AddColour(ThemeSlot.Black, "ffffff")
-            .AddColour(ThemeSlot.Gray190, "faf9f8")
-            .AddColour(ThemeSlot.Gray160, "f3f2f1")
-            .AddColour(ThemeSlot.Gray150, "edebe9")
-            .AddColour(ThemeSlot.Gray130, "e1dfdd")
-            .AddColour(ThemeSlot.Gray110, "d2d0ce")
-            .AddColour(ThemeSlot.Gray90, "c8c6c4")
-            .AddColour(ThemeSlot.Gray60, "a19f9d")
-            .AddColour(ThemeSlot.Gray50, "8a8886")
-            .AddColour(ThemeSlot.Gray40, "605e5c")
-            .AddColour(ThemeSlot.Gray30, "3b3a39")
-            .AddColour(ThemeSlot.Gray20, "323130")
-            .AddColour(ThemeSlot.Gray10, "201f1e")
-            .AddColour(ThemeSlot.White, "000000");
+            .AddColour(ThemeSlot.Black, "f8f8f8")
+            .AddColour(ThemeSlot.Gray190, "f4f4f4")
+            .AddColour(ThemeSlot.Gray160, "ffffff")
+            .AddColour(ThemeSlot.Gray150, "dadada")
+            .AddColour(ThemeSlot.Gray130, "d0d0d0")
+            .AddColour(ThemeSlot.Gray110, "8a8886")
+            .AddColour(ThemeSlot.Gray90, "c8c8c8")
+            .AddColour(ThemeSlot.Gray60, "6d6d6d")
+            .AddColour(ThemeSlot.Gray50, "4f4f4f")
+            .AddColour(ThemeSlot.Gray40, "484848")
+            .AddColour(ThemeSlot.Gray30, "3f3f3f")
+            .AddColour(ThemeSlot.Gray20, "313131")
+            .AddColour(ThemeSlot.Gray10, "282828")
+            .AddColour(ThemeSlot.White, "1f1f1f");
     }
 }
