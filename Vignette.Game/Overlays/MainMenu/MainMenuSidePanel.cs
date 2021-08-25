@@ -2,6 +2,7 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Framework;
 using osu.Framework.Bindables;
@@ -18,14 +19,16 @@ namespace Vignette.Game.Overlays.MainMenu
     {
         public Action OnScene = null;
 
+        public Action<MenuView> OnTabSelect;
+
         public MenuView SelectedTab { get; private set; }
 
-        public Action<MenuView> OnTabSelect;
+        public IEnumerable<MenuView> Items => topNavigation.Items.Concat(botNavigation.Items);
 
         public event Action<NavigationPanelState> StateChanged;
 
-        private readonly MainMenuNavigationView mainNavigation;
-        private readonly MainMenuNavigationView bottomNavigation;
+        private readonly MainMenuNavigationView topNavigation;
+        private readonly MainMenuNavigationView botNavigation;
         private NavigationPanelState state = NavigationPanelState.Expanded;
 
         public NavigationPanelState State
@@ -81,8 +84,9 @@ namespace Vignette.Game.Overlays.MainMenu
                     },
                     new Drawable[]
                     {
-                        mainNavigation = new MainMenuNavigationView
+                        topNavigation = new MainMenuNavigationView
                         {
+                            SelectFirstTabByDefault = false,
                             Items = new MenuView[]
                             {
                                 new HomeView(),
@@ -94,7 +98,7 @@ namespace Vignette.Game.Overlays.MainMenu
                     },
                     new Drawable[]
                     {
-                        bottomNavigation = new MainMenuNavigationView
+                        botNavigation = new MainMenuNavigationView
                         {
                             SelectFirstTabByDefault = false,
                             Items = new MenuView[]
@@ -106,8 +110,16 @@ namespace Vignette.Game.Overlays.MainMenu
                 },
             });
 
-            mainNavigation.Current.ValueChanged += handleTabSelection;
-            bottomNavigation.Current.ValueChanged += handleTabSelection;
+            topNavigation.Current.ValueChanged += handleTabSelection;
+            botNavigation.Current.ValueChanged += handleTabSelection;
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            // Load the first item in the top navigation to make it ready for display as soon as the main menu is opened.
+            LoadComponentAsync(topNavigation.Items[0], loaded => topNavigation.Current.Value = loaded);
         }
 
         /// <summary>
@@ -118,15 +130,15 @@ namespace Vignette.Game.Overlays.MainMenu
         public bool SelectTab<T>()
             where T : MenuView
         {
-            var target = mainNavigation.Items.Concat(bottomNavigation.Items).FirstOrDefault(s => s?.GetType() == typeof(T));
+            var target = Items.FirstOrDefault(s => s?.GetType() == typeof(T));
 
             if (target == null)
                 return false;
 
-            if (bottomNavigation.Items.Contains(target))
-                bottomNavigation.Current.Value = target;
+            if (botNavigation.Items.Contains(target))
+                botNavigation.Current.Value = target;
             else
-                mainNavigation.Current.Value = target;
+                topNavigation.Current.Value = target;
 
             return true;
         }
@@ -136,12 +148,10 @@ namespace Vignette.Game.Overlays.MainMenu
             if (e.NewValue == null)
                 return;
 
-            bool fromBottom = bottomNavigation.Items.Contains(e.NewValue);
-
-            if (fromBottom)
-                mainNavigation.Current.Value = null;
+            if (botNavigation.Items.Contains(e.NewValue))
+                topNavigation.Current.Value = null;
             else
-                bottomNavigation.Current.Value = null;
+                botNavigation.Current.Value = null;
 
             SelectedTab = e.NewValue;
             OnTabSelect?.Invoke(SelectedTab);

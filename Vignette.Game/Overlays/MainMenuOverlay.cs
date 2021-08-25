@@ -22,7 +22,7 @@ namespace Vignette.Game.Overlays
         private readonly ExitButton exitButton;
         private IBindable<WindowMode> windowMode;
 
-        protected override bool StartHidden => false;
+        protected override bool StartHidden => true;
 
         public MainMenuOverlay()
         {
@@ -37,6 +37,7 @@ namespace Vignette.Game.Overlays
                 },
                 content = new GridContainer
                 {
+                    Scale = new Vector2(1.1f),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
@@ -149,9 +150,7 @@ namespace Vignette.Game.Overlays
 
         protected override void PopIn()
         {
-            content
-                .ScaleTo(1.1f)
-                .ScaleTo(1.0f, 250, Easing.OutBack);
+            content.ScaleTo(1.0f, 250, Easing.OutBack);
             this.FadeInFromZero(250, Easing.OutQuint);
         }
 

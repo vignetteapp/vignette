@@ -12,7 +12,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
 {
     public abstract class UserInterfaceTestScene : ThemeProvidedTestScene
     {
-        private FillFlowContainer content;
+        private readonly FillFlowContainer content;
 
         protected override Container<Drawable> Content => content;
 
@@ -41,13 +41,13 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                     Margin = new MarginPadding(20),
                     Items = new[]
                     {
-                        Theme.GetLightTheme(false),
-                        Theme.GetDarkTheme(false),
+                        Theme.Light,
+                        Theme.Dark,
                     }
                 }
             });
 
-            Selector.Current = Provider.Current;
+            Selector.Current = Provider.CurrentBindable;
         }
     }
 }

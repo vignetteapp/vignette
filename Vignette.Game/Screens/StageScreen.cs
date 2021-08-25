@@ -20,28 +20,20 @@ namespace Vignette.Game.Screens
 {
     public class StageScreen : Screen, IHasContextMenu, IKeyBindingHandler<GlobalAction>
     {
-        private readonly MainMenuOverlay mainMenu;
+        private MainMenuOverlay mainMenu;
         private Box background;
         private Bindable<Colour4> colour;
-
-        public StageScreen()
-        {
-            InternalChild = mainMenu = new MainMenuOverlay();
-            mainMenu.Show();
-        }
 
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager config)
         {
             colour = config.GetBindable<Colour4>(VignetteSetting.BackgroundColour);
 
-            AddInternal(background = new Box
-            {
-                Depth = 1,
-                RelativeSizeAxes = Axes.Both,
-            });
+            AddInternal(background = new Box { RelativeSizeAxes = Axes.Both });
 
             colour.BindValueChanged(e => background.Colour = e.NewValue, true);
+
+            LoadComponentAsync(mainMenu = new MainMenuOverlay(), _ => AddInternal(mainMenu));
         }
 
         public bool OnPressed(GlobalAction action)
@@ -62,6 +54,12 @@ namespace Vignette.Game.Screens
 
         public void OnReleased(GlobalAction action)
         {
+        }
+
+        public override void OnEntering(IScreen last)
+        {
+            base.OnEntering(last);
+            this.FadeOut().Delay(500).FadeInFromZero(500, Easing.OutQuint);
         }
 
         public MenuItem[] ContextMenuItems => new MenuItem[]

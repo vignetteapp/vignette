@@ -17,7 +17,7 @@ namespace Vignette.Game
         [BackgroundDependencyLoader]
         private void load()
         {
-            Add(new ScreenStack(new StageScreen()));
+            Add(new ScreenStack(new SplashScreen()));
         }
     }
 }
