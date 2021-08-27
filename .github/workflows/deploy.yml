@@ -45,8 +45,8 @@ jobs:
 
       - name: Build
         run: |
-          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release/${{ matrix.os.runtime }} -r ${{ matrix.os.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
-          7z a -tzip Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip release/${{ matrix.os.runtime }}/*
+          dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release -r ${{ matrix.os.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
+          7z a -tzip Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip release/*
 
       - name: Stage Artifact for AppCenter
         uses: actions/upload-artifact@v2
