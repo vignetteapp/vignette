@@ -68,8 +68,18 @@ jobs:
          with:
             name: ${{ needs.variables.outputs.version }}-${{ matrix.runtime }}
             path: ${{ github.workspace }}
-
+            
        - name: Upload Build
+         uses: ncipollo/release-action@master
+         if: ${{ github.event.action == 'released' }}
+         with:
+           artifacts: "Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip"
+           allowUpdates: true
+           tag: ${{ github.event.release.tag_name }}
+           
+
+       - name: Upload Build (Insider)
+         if: ${{ github.event.action == 'prereleased' }}
          uses: wzieba/AppCenter-Github-Action@v1.3.2
          with:
            appName: vignette/Vignette-AB1
@@ -96,7 +106,9 @@ jobs:
       - name: Notify Public
         uses: Ilshidur/action-discord@master
         with:
-          args: Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available! Visit https://tinyurl.com/vignette-stable to get your build.
+          args: |
+           Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available! 
+           https://github.com/vignetteapp/vignette/releases/tag/${{ github.event.release.tag_name }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}
         if: ${{ github.event.action == 'released' }}
