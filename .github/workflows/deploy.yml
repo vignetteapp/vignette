@@ -70,7 +70,7 @@ jobs:
             path: ${{ github.workspace }}
             
        - name: Upload Build
-         uses: ncipollo/release-action@master
+         uses: ncipollo/release-action@v1
          if: ${{ github.event.action == 'released' }}
          with:
            artifacts: "Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip"
