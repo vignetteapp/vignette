@@ -14,7 +14,7 @@ using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -24,31 +24,12 @@ namespace Vignette.Game.Graphics.UserInterface
     /// </summary>
     public abstract class FluentTextInput : CompositeDrawable, IHasCurrentValue<string>
     {
-        private readonly ThemableEffectBox background;
-
-        private readonly ThemableEffectBox border;
+        private readonly ThemableBox background;
+        private readonly ThemableBox highlight;
 
         protected TextInputContainer Input { get; private set; }
 
         public override bool HandlePositionalInput => true;
-
-        private TextBoxStyle style;
-
-        /// <summary>
-        /// Gets or sets how this text input should be displayed. See <see cref="TextBoxStyle"/> for options.
-        /// </summary>
-        public TextBoxStyle Style
-        {
-            get => style;
-            set
-            {
-                if (style == value)
-                    return;
-
-                style = value;
-                Scheduler.AddOnce(updateStyle);
-            }
-        }
 
         /// <summary>
         /// Gets or sets whether the user is allowed to modify the contents of this text input.
@@ -112,9 +93,9 @@ namespace Vignette.Game.Graphics.UserInterface
 
         public FluentTextInput()
         {
-            Height = 32;
+            Height = 28;
             Masking = true;
-            CornerRadius = 2.5f;
+            CornerRadius = 5;
 
             Input = CreateTextBox().With(d =>
             {
@@ -125,73 +106,39 @@ namespace Vignette.Game.Graphics.UserInterface
 
             InternalChildren = new Drawable[]
             {
-                background = new ThemableEffectBox
+                background = new ThemableBox
                 {
                     Depth = 1,
                     RelativeSizeAxes = Axes.Both,
                 },
-                border = new ThemableEffectBox
+                highlight = new ThemableBox
                 {
+                    Alpha = 0,
                     Depth = -1,
+                    Height = 3,
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Colour = ThemeSlot.AccentPrimary,
+                    RelativeSizeAxes = Axes.X,
                 }
             };
 
             Input.StateChange += OnTextInputStateChange;
             Input.FocusGained += OnTextInputFocus;
             Input.FocusLost += OnTextInputFocusLost;
-
-            updateStyle();
         }
 
-        protected virtual TextInputContainer CreateTextBox()
-            => new TextInputContainer();
+        protected virtual TextInputContainer CreateTextBox() => new TextInputContainer();
 
         protected virtual void OnTextInputStateChange(bool updateTextFlow, bool hasInvalidInput)
         {
             if (!Current.Disabled)
             {
-                background.Colour = ThemeSlot.White;
-                Input.Placeholder.Colour = ThemeSlot.Gray130;
-
-                if (Style == TextBoxStyle.Bordered)
-                {
-                    if (!hasInvalidInput)
-                    {
-                        if (IsHovered && !inputHasFocus)
-                            border.BorderColour = ThemeSlot.Gray160;
-                        else if (inputHasFocus)
-                            border.BorderColour = ThemeSlot.AccentPrimary;
-                        else
-                            border.BorderColour = ThemeSlot.Gray110;
-                    }
-                    else
-                    {
-                        border.BorderColour = ThemeSlot.Error;
-                    }
-
-                    border.BorderThickness = inputHasFocus ? 3.0f : 1.5f;
-                }
-
-                if (Style == TextBoxStyle.Underlined)
-                {
-                    if (!hasInvalidInput)
-                    {
-                        if (IsHovered && !inputHasFocus)
-                            border.Colour = ThemeSlot.Gray160;
-                        else if (inputHasFocus)
-                            border.Colour = ThemeSlot.AccentPrimary;
-                        else
-                            border.Colour = ThemeSlot.Gray110;
-                    }
-                    else
-                    {
-                        border.Colour = ThemeSlot.Error;
-                    }
-                }
+                background.Colour = ThemeSlot.Gray20;
+                Input.Placeholder.Colour = ThemeSlot.Gray30;
             }
             else
             {
-                border.BorderThickness = 0;
                 background.Colour = ThemeSlot.Gray30;
                 Input.Placeholder.Colour = ThemeSlot.Gray90;
             }
@@ -199,48 +146,20 @@ namespace Vignette.Game.Graphics.UserInterface
             if (updateTextFlow)
             {
                 foreach (var c in Input.TextFlow.Children.OfType<ThemableSpriteText>())
-                    c.Colour = Current.Disabled ? ThemeSlot.Gray90 : ThemeSlot.Gray190;
+                    c.Colour = Current.Disabled ? ThemeSlot.Gray90 : ThemeSlot.Black;
             }
         }
 
-        private bool inputHasFocus;
-
         protected virtual void OnTextInputFocus()
-            => inputHasFocus = true;
+        {
+            if (!ReadOnly)
+                highlight.Alpha = 1;
+        }
 
         protected virtual void OnTextInputFocusLost()
-            => inputHasFocus = false;
-
-        private void updateStyle()
         {
-            border.Show();
-
-            switch (Style)
-            {
-                case TextBoxStyle.Bordered:
-                    background.CornerRadius = 2.5f;
-                    border.Height = 1;
-                    border.Colour = ThemeSlot.Transparent;
-                    border.CornerRadius = 2.5f;
-                    border.RelativeSizeAxes = Axes.Both;
-                    break;
-
-                case TextBoxStyle.Underlined:
-                    background.CornerRadius = 0;
-                    border.CornerRadius = 0;
-                    border.RelativeSizeAxes = Axes.X;
-                    border.Anchor = Anchor.BottomCentre;
-                    border.Origin = Anchor.BottomCentre;
-                    border.Height = 1.5f;
-                    border.BorderColour = ThemeSlot.Transparent;
-                    break;
-
-                case TextBoxStyle.Borderless:
-                    border.Hide();
-                    break;
-            }
-
-            OnTextInputStateChange(true, false);
+            if (!ReadOnly)
+                highlight.Alpha = 0;
         }
 
         /// <summary>
@@ -248,7 +167,7 @@ namespace Vignette.Game.Graphics.UserInterface
         /// </summary>
         protected class TextInputContainer : TextBox
         {
-            public new ThemableSpriteText Placeholder;
+            public new CheapThemableSpriteText Placeholder => (CheapThemableSpriteText)base.Placeholder;
 
             public new FillFlowContainer TextFlow => base.TextFlow;
 
@@ -262,27 +181,20 @@ namespace Vignette.Game.Graphics.UserInterface
 
             public TextInputContainer()
             {
-                TextFlow.Height = 18;
+                TextFlow.Height = 14;
                 TextFlow.RelativeSizeAxes = Axes.None;
 
                 Current.BindDisabledChanged(_ => updateState(true), true);
             }
 
-            protected override Caret CreateCaret()
-                => new FluentCaret { CaretWidth = 1 };
+            protected override Caret CreateCaret() => new FluentCaret { CaretWidth = 1 };
 
-            protected override SpriteText CreatePlaceholder()
+            protected override SpriteText CreatePlaceholder() => new CheapThemableSpriteText
             {
-                Placeholder = new ThemableSpriteText(false);
-                Schedule(() => Add(Placeholder));
-
-                return Placeholder.Create().With(d =>
-                {
-                    d.Font = SegoeUI.Regular;
-                    d.Anchor = Anchor.CentreLeft;
-                    d.Origin = Anchor.CentreLeft;
-                });
-            }
+                Font = SegoeUI.Regular,
+                Anchor = Anchor.CentreLeft,
+                Origin = Anchor.CentreLeft,
+            };
 
             protected override Drawable GetDrawableCharacter(char c) => new ThemableSpriteText
             {
@@ -411,14 +323,5 @@ namespace Vignette.Game.Graphics.UserInterface
                 }
             }
         }
-    }
-
-    public enum TextBoxStyle
-    {
-        Bordered,
-
-        Underlined,
-
-        Borderless,
     }
 }

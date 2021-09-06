@@ -1,351 +1,282 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osuTK;
+using Vignette.Game.Extensions;
 using Vignette.Game.Graphics.Containers;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class FluentDropdown<T> : Dropdown<T>
+    public abstract class FluentDropdown : FluentButtonBase
     {
-        private FluentDropdownHeader header;
+        public FluentDropdownMenu Menu { get; private set; }
 
-        private FluentDropdownMenu menu;
+        protected new Bindable<bool> Enabled => base.Enabled;
 
-        public DropdownStyle Style
+        protected new Action Action
         {
-            get => header.Style;
-            set => header.Style = value;
+            get => base.Action;
+            set => base.Action = value;
         }
 
         public FluentDropdown()
         {
-            menu.StateChanged += s => header.MenuOpened = s == MenuState.Open;
+            Menu = CreateDropdownMenu();
         }
 
-        protected override DropdownHeader CreateHeader()
-            => header = new FluentDropdownHeader();
-        protected override DropdownMenu CreateMenu()
-            => menu = new FluentDropdownMenu();
+        protected abstract FluentDropdownMenu CreateDropdownMenu();
+    }
 
-        protected class FluentDropdownHeader : DropdownHeader
+    public class FluentDropdown<T> : FluentDropdown, IHasCurrentValue<T>
+    {
+        public Bindable<T> Current
         {
-            private ThemableEffectBox background;
+            get => bindableWithCurrent.Current;
+            set => bindableWithCurrent.Current = value;
+        }
 
-            private ThemableEffectBox border;
-
-            private ThemableSpriteIcon chevron;
-
-            private DropdownStyle style;
-
-            public DropdownStyle Style
+        public IBindableList<T> ItemSource
+        {
+            get => itemSource;
+            set
             {
-                get => style;
-                set
-                {
-                    if (style == value)
-                        return;
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
 
-                    style = value;
-                    Scheduler.AddOnce(updateStyle);
-                }
-            }
+                if (Items.Any())
+                    throw new InvalidOperationException($"Cannot manually set {nameof(ItemSource)} when {nameof(Items)} is set.");
 
-            private bool menuOpened;
+                if (boundItemSource != null)
+                    itemSource.UnbindFrom(boundItemSource);
 
-            public bool MenuOpened
-            {
-                get => menuOpened;
-                set
-                {
-                    if (menuOpened == value)
-                        return;
-
-                    menuOpened = value;
-                    Scheduler.AddOnce(updateState);
-                }
-            }
-
-            private ThemableSpriteText text;
-
-            protected override LocalisableString Label
-            {
-                get => text.Text;
-                set => text.Text = value;
-            }
-
-            public FluentDropdownHeader()
-            {
-                AutoSizeAxes = Axes.None;
-                Height = 32;
-
-                DisabledColour = Colour4.White;
-                Background.Colour = Colour4.White;
-                BackgroundColour = Colour4.White;
-                BackgroundColourHover = Colour4.White;
-                Background.Clear();
-
-                Background.Children = new Drawable[]
-                {
-                    background = new ThemableEffectBox
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    border = new ThemableEffectBox(),
-                };
-
-                Foreground.Padding = new MarginPadding { Horizontal = 8 };
-
-                AddRange(new Drawable[]
-                {
-                    text = new ThemableSpriteText
-                    {
-                        Font = SegoeUI.Regular.With(size: 16),
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                    },
-                    chevron = new ThemableSpriteIcon
-                    {
-                        Size = new Vector2(12),
-                        Icon = FluentSystemIcons.ChevronDown16,
-                        Anchor = Anchor.CentreRight,
-                        Origin = Anchor.CentreRight,
-                        Margin = new MarginPadding { Vertical = 5 },
-                    },
-                });
-
-                Enabled.BindValueChanged(_ => updateStyle(), true);
-            }
-
-            private void updateState()
-            {
-                if (Enabled.Value)
-                {
-                    background.Colour = ThemeSlot.White;
-                    chevron.Colour = ThemeSlot.Gray190;
-                    text.Colour = ThemeSlot.Gray190;
-
-                    if (Style == DropdownStyle.Bordered)
-                    {
-                        if (IsHovered && !menuOpened)
-                            border.BorderColour = ThemeSlot.Gray160;
-                        else if (menuOpened)
-                            border.BorderColour = ThemeSlot.AccentPrimary;
-                        else
-                            border.BorderColour = ThemeSlot.Gray110;
-
-                        border.BorderThickness = menuOpened ? 3.0f : 1.5f;
-                    }
-
-                    if (Style == DropdownStyle.Underlined)
-                    {
-                        if (IsHovered && !menuOpened)
-                            border.Colour = ThemeSlot.Gray160;
-                        else if (menuOpened)
-                            border.Colour = ThemeSlot.AccentPrimary;
-                        else
-                            border.Colour = ThemeSlot.Gray110;
-                    }
-                }
-                else
-                {
-                    border.BorderThickness = 0;
-                    background.Colour = ThemeSlot.Gray30;
-                    chevron.Colour = ThemeSlot.Gray90;
-                    text.Colour = ThemeSlot.Gray90;
-                }
-            }
-
-            private void updateStyle()
-            {
-                switch (Style)
-                {
-                    case DropdownStyle.Bordered:
-                        background.CornerRadius = 2.5f;
-                        border.Height = 1;
-                        border.Colour = ThemeSlot.Transparent;
-                        border.CornerRadius = 2.5f;
-                        border.RelativeSizeAxes = Axes.Both;
-                        break;
-
-                    case DropdownStyle.Underlined:
-                        background.CornerRadius = 0;
-                        border.CornerRadius = 0;
-                        border.RelativeSizeAxes = Axes.X;
-                        border.Anchor = Anchor.BottomCentre;
-                        border.Origin = Anchor.BottomCentre;
-                        border.Height = 1.5f;
-                        border.BorderColour = ThemeSlot.Transparent;
-                        break;
-                }
-
-                updateState();
-            }
-
-            protected override bool OnHover(HoverEvent e)
-            {
-                updateState();
-                return base.OnHover(e);
-            }
-
-            protected override void OnHoverLost(HoverLostEvent e)
-            {
-                updateState();
-                base.OnHoverLost(e);
-            }
-
-            protected override void OnFocus(FocusEvent e)
-            {
-                updateState();
-                base.OnFocus(e);
-            }
-
-            protected override void OnFocusLost(FocusLostEvent e)
-            {
-                updateState();
-                base.OnFocusLost(e);
+                itemSource.BindTo(boundItemSource = value);
             }
         }
 
-        protected class FluentDropdownMenu : DropdownMenu
+        public IEnumerable<T> Items
         {
-            public FluentDropdownMenu()
+            get => itemMap.Keys;
+            set
             {
-                ScrollbarVisible = false;
-                BackgroundColour = Colour4.Transparent;
-                ItemsContainer.Padding = new MarginPadding(1);
-                AddInternal(new ThemableEffectBox
+                if (boundItemSource != null)
+                    throw new InvalidOperationException($"Cannot manually set {nameof(Items)} when an {nameof(ItemSource)} is bound.");
+
+                setItems(value);
+            }
+        }
+
+        private readonly BindableWithCurrent<T> bindableWithCurrent = new BindableWithCurrent<T>();
+        private readonly Dictionary<T, FluentMenuItem> itemMap = new Dictionary<T, FluentMenuItem>();
+        private readonly IBindableList<T> itemSource = new BindableList<T>();
+        private IBindableList<T> boundItemSource;
+
+        private readonly ThemableSpriteText label;
+        private readonly ThemableSpriteIcon icon;
+        private readonly ThemableBox background;
+
+        public FluentDropdown()
+        {
+            Height = 32;
+
+            Masking = true;
+            CornerRadius = 5.0f;
+
+            InternalChildren = new Drawable[]
+            {
+                background = new ThemableBox
                 {
-                    Depth = 1,
-                    Colour = ThemeSlot.White,
-                    BorderColour = ThemeSlot.Gray30,
-                    CornerRadius = 1.5f,
-                    BorderThickness = 1.5f,
                     RelativeSizeAxes = Axes.Both,
-                });
-            }
-
-            protected override void AnimateOpen() => this.FadeIn(200, Easing.OutQuint);
-
-            protected override void AnimateClose() => this.FadeOut(200, Easing.OutQuint);
-
-            protected override void UpdateSize(Vector2 newSize)
-            {
-                if (Direction == Direction.Vertical)
+                },
+                new Container
                 {
-                    Width = newSize.X;
-                    this.ResizeHeightTo(newSize.Y, 200, Easing.OutQuint);
-                }
-                else
-                {
-                    Height = newSize.Y;
-                    this.ResizeWidthTo(newSize.X, 200, Easing.OutQuint);
-                }
-            }
+                    RelativeSizeAxes = Axes.Both,
+                    Padding = new MarginPadding { Left = 10, Right = 15 },
+                    Children = new Drawable[]
+                    {
+                        label = new ThemableSpriteText
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Colour = ThemeSlot.Gray190,
+                        },
+                        icon = new ThemableSpriteIcon
+                        {
+                            Size = new Vector2(9),
+                            Icon = SegoeFluent.ChevronDown,
+                            Anchor = Anchor.CentreRight,
+                            Origin = Anchor.CentreRight,
+                            Colour = ThemeSlot.Gray110,
+                        }
+                    }
+                },
+            };
 
-            protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item)
-                => new DrawableFluentDropdownMenuItem(item);
+            Action = handleClick;
+            Current.BindDisabledChanged(d => Enabled.Value = !d, true);
+            Current.BindValueChanged(_ => handleCurrentChange(), true);
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction)
-                => new FluentScrollContainer(direction);
+            BackgroundResting = ThemeSlot.Gray20;
+            BackgroundHovered = ThemeSlot.Gray10;
+            BackgroundPressed = ThemeSlot.White;
+            BackgroundDisabled = ThemeSlot.Gray60;
+            LabelResting = ThemeSlot.Black;
+            LabelDisabled = ThemeSlot.Black;
 
-            protected override Menu CreateSubMenu()
-                => new FluentMenu(Direction.Vertical);
+            ItemSource.CollectionChanged += (_, __) => setItems(ItemSource);
         }
 
-        protected class DrawableFluentDropdownMenuItem : DropdownMenu.DrawableDropdownMenuItem
+        protected override FluentDropdownMenu CreateDropdownMenu() => new FluentDropdownMenu(this);
+
+        protected override void UpdateBackground(ThemeSlot slot) => background.Colour = slot;
+
+        protected override void UpdateLabel(ThemeSlot slot) => label.Colour = icon.Colour = slot;
+
+        protected virtual LocalisableString GenerateItemText(T item)
         {
-            private ThemableBox background;
-
-            public DrawableFluentDropdownMenuItem(MenuItem item)
-                : base(item)
+            switch (item)
             {
-                Masking = true;
-                BackgroundColour = Colour4.White;
-                BackgroundColourHover = Colour4.White;
-                BackgroundColourSelected = Colour4.White;
-            }
+                case MenuItem m:
+                    return m.Text.Value;
 
-            protected override void LoadComplete()
+                case IHasText t:
+                    return t.Text;
+
+                case Enum e:
+                    return e.GetLocalisableDescription();
+
+                default:
+                    return item?.ToString() ?? "null";
+            }
+        }
+
+        public void AddItem(T item) => AddItem(GenerateItemText(item), item);
+
+        public void AddItem(LocalisableString text, T item)
+        {
+            if (boundItemSource != null)
+                throw new InvalidOperationException($"Cannot manually add items when an {nameof(ItemSource)} is bound.");
+
+            addItem(text, item);
+        }
+
+        public bool RemoveItem(T item)
+        {
+            if (boundItemSource != null)
+                throw new InvalidOperationException($"Cannot manually remove items when an {nameof(ItemSource)} is bound.");
+
+            return removeItem(item);
+        }
+
+        public void ClearItems()
+        {
+            if (boundItemSource != null)
+                throw new InvalidOperationException($"Cannot manually clear items when an {nameof(ItemSource)} is bound.");
+
+            clearItems();
+        }
+
+        private void setItems(IEnumerable<T> items)
+        {
+            clearItems();
+
+            if (items == null)
+                return;
+
+            items.ForEach(i => addItem(GenerateItemText(i), i));
+
+            Menu.Items = itemMap.Values.ToArray();
+
+            if (Current.Disabled)
+                return;
+
+            if (Current.Value == null || !itemMap.ContainsKey(Current.Value))
+                Current.Value = Items.FirstOrDefault();
+            else
+                Current.TriggerChange();
+        }
+
+        private void addItem(LocalisableString text, T item)
+        {
+            if (itemMap.ContainsKey(item))
+                throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
+
+            var menuItem = new FluentMenuItem(text, () =>
             {
-                base.LoadComplete();
-                background.Colour = IsSelected ? ThemeSlot.Gray30 : ThemeSlot.Transparent;
-            }
+                if (Current.Disabled)
+                    return;
 
-            protected override Drawable CreateBackground()
-                => background = new ThemableBox { RelativeSizeAxes = Axes.Both };
+                Current.Value = item;
+            });
 
-            protected override Drawable CreateContent()
-                => new DropdownMenuContent();
+            itemMap.Add(item, menuItem);
+            Menu.Add(menuItem);
+        }
 
-            protected override void UpdateBackgroundColour()
-            {
-                if (isPressed || IsSelected)
-                    background.Colour = ThemeSlot.Gray30;
-                else if (IsHovered)
-                    background.Colour = ThemeSlot.Gray20;
-                else
-                    background.Colour = ThemeSlot.Transparent;
-            }
+        private bool removeItem(T item)
+        {
+            if (item == null)
+                return false;
 
-            protected override void UpdateForegroundColour()
-            {
-            }
+            if (!itemMap.TryGetValue(item, out var menuItem))
+                return false;
 
-            private bool isPressed;
+            itemMap.Remove(item);
+            Menu.Remove(menuItem);
 
-            protected override bool OnMouseDown(MouseDownEvent e)
-            {
-                isPressed = true;
-                UpdateBackgroundColour();
-                return base.OnMouseDown(e);
-            }
+            return true;
+        }
 
-            protected override void OnMouseUp(MouseUpEvent e)
-            {
-                isPressed = false;
-                UpdateBackgroundColour();
-                base.OnMouseUp(e);
-            }
+        private void clearItems()
+        {
+            itemMap.Clear();
+            Menu.Clear();
+        }
 
-            private class DropdownMenuContent : Container<ThemableSpriteText>, IHasText
-            {
-                public LocalisableString Text
-                {
-                    get => Child.Text;
-                    set => Child.Text = value;
-                }
+        private void handleCurrentChange()
+        {
+            if (Current.Disabled || Current.Value == null || !itemMap.TryGetValue(Current.Value, out var menuItem))
+                return;
 
-                public DropdownMenuContent()
-                {
-                    Height = 32;
-                    AutoSizeAxes = Axes.X;
-                    Child = new ThemableSpriteText
-                    {
-                        Colour = ThemeSlot.Gray190,
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Margin = new MarginPadding { Left = 8 },
-                    };
-                }
-            }
+            label.Text = GenerateItemText(Current.Value);
+            Menu.SelectItem(menuItem);
+        }
+
+        private void handleClick()
+        {
+            if (!Current.Disabled)
+                this.Expand();
         }
     }
 
-    public enum DropdownStyle
+    public static class FluentDropdownV2Extensions
     {
-        Bordered,
+        public static void Expand(this FluentDropdown dropdown) => setTargetOnNearestDropdown(dropdown, dropdown);
 
-        Underlined,
+        public static void Collapse(this FluentDropdown dropdown) => setTargetOnNearestDropdown(dropdown, null);
+
+        private static void setTargetOnNearestDropdown(Drawable origin, FluentDropdown dropdown)
+        {
+            var container = origin as FluentDropdownMenuContainer ?? origin.FindNearestParent<FluentDropdownMenuContainer>();
+
+            if (container == null)
+                return;
+
+            container.SetTarget(dropdown);
+        }
     }
 }

@@ -1,14 +1,14 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using Newtonsoft.Json;
-using osu.Framework.Bindables;
-using osu.Framework.Input.Bindings;
-using osu.Framework.Platform;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.Configuration.Converters;
 
 namespace Vignette.Game.Input
 {
@@ -20,59 +20,27 @@ namespace Vignette.Game.Input
         public Action KeyBindsChanged;
 
         [JsonProperty]
-        private readonly BindableDictionary<string, string> global = new BindableDictionary<string, string>();
-
-        [JsonIgnore]
-        public IEnumerable<IKeyBinding> Global
-        {
-            get
-            {
-                foreach ((string key, string value) in global)
-                {
-                    if (!Enum.TryParse<GlobalAction>(key, out var action))
-                        continue;
-
-                    var keyStrings = value.Split('+', StringSplitOptions.RemoveEmptyEntries);
-                    var keys = new List<InputKey>();
-
-                    foreach (var keyString in keyStrings)
-                    {
-                        if (Enum.TryParse<InputKey>(keyString, out var inputKey))
-                            keys.Add(inputKey);
-                    }
-
-                    if (keys.Count > 0)
-                        yield return new KeyBinding(keys.ToArray(), action);
-                }
-            }
-            set
-            {
-                foreach (var keybind in value)
-                {
-                    string sKey = keybind.GetAction<GlobalAction>().ToString();
-                    string sValue = string.Join('+', keybind.KeyCombination.Keys.Select(k => k.ToString()));
-                    global[sKey] = sValue;
-                }
-
-                PerformSave();
-            }
-        }
+        [JsonConverter(typeof(EnumKeyBindingConverter<GlobalAction>))]
+        public List<IKeyBinding> Global { get; private set; } = GlobalActionContainer.GlobalKeyBindings.ToList();
 
         public VignetteKeyBindManager(Storage storage)
             : base(storage)
         {
         }
 
-        public void SetKeyBind<T>(T action, params InputKey[] keys)
-            where T : struct
+        public void SetKeyBind(GlobalAction action, params InputKey[] keys)
         {
             if (keys.Length == 0)
                 return;
 
-            if (action is GlobalAction)
-                global[action.ToString()] = string.Join('+', keys);
+            var keybind = Global.FirstOrDefault(k => k.GetAction<GlobalAction>() == action);
 
-            PerformSave();
+            if (keybind == null)
+                return;
+
+            keybind.KeyCombination = keys;
+
+            Save();
         }
 
         protected override bool PerformSave()

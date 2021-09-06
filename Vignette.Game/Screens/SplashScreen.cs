@@ -9,8 +9,10 @@ using Vignette.Game.Graphics.Typesets;
 
 namespace Vignette.Game.Screens
 {
-    public class SplashScreen : Screen
+    public class SplashScreen : VignetteScreen
     {
+        protected override bool CanOpenSettingsOverlay => false;
+
         private readonly SpriteIcon icon;
 
         public SplashScreen()

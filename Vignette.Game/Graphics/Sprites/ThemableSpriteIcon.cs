@@ -3,7 +3,7 @@
 
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.Sprites
 {

@@ -10,7 +10,7 @@ using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -63,7 +63,7 @@ namespace Vignette.Game.Graphics.UserInterface
                                 new ThemableSpriteIcon
                                 {
                                     Size = new Vector2(12),
-                                    Icon = FluentSystemIcons.NumberSymbol24,
+                                    Icon = SegoeFluent.NumberSymbol,
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     Colour = ThemeSlot.Gray130,
@@ -80,8 +80,7 @@ namespace Vignette.Game.Graphics.UserInterface
             Input.OnCommit += updateValue;
         }
 
-        protected override TextInputContainer CreateTextBox()
-            => new HexBox();
+        protected override TextInputContainer CreateTextBox() => new HexBox();
 
         private void updateValue(TextBox sender, bool newText)
         {
@@ -89,7 +88,7 @@ namespace Vignette.Game.Graphics.UserInterface
             {
                 current.Value = !string.IsNullOrEmpty(Text) ? Colour4.FromHex(Text) : Colour4.White;
             }
-            catch
+            catch (ArgumentException)
             {
                 current.Value = Colour4.White;
             }
@@ -102,8 +101,7 @@ namespace Vignette.Game.Graphics.UserInterface
                 LengthLimit = 6;
             }
 
-            protected override bool CanAddCharacter(char character)
-                => Uri.IsHexDigit(character);
+            protected override bool CanAddCharacter(char character) => Uri.IsHexDigit(character);
 
             protected override void OnTextCommitted(bool textChanged)
             {

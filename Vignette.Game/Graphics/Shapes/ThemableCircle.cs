@@ -3,7 +3,7 @@
 
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.Shapes
 {
@@ -42,8 +42,8 @@ namespace Vignette.Game.Graphics.Shapes
 
         protected override void ThemeChanged(Theme theme)
         {
-            Target.Child.Colour = theme.GetColour(Colour);
-            Target.BorderColour = theme.GetColour(BorderColour);
+            Target.Child.Colour = theme.Get(Colour);
+            Target.BorderColour = theme.Get(BorderColour);
         }
     }
 }

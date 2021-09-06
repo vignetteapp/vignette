@@ -11,84 +11,105 @@ using osu.Framework.Localisation;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
     public class FluentMenuItem : MenuItem
     {
-        public IconUsage Icon { get; private set; }
+        public IconUsage? Icon { get; private set; }
 
-        public FluentMenuItem(LocalisableString text, IconUsage icon = default)
+        public FluentMenuItem(LocalisableString text, IconUsage? icon = null)
             : base(text)
         {
             Icon = icon;
         }
 
-        public FluentMenuItem(LocalisableString text, Action action, IconUsage icon = default)
+        public FluentMenuItem(LocalisableString text, Action action, IconUsage? icon = null)
             : base(text, action)
         {
             Icon = icon;
         }
     }
 
-    public class DrawableFluentMenuItem : FluentMenu.DrawableMenuItem
+    public class DrawableFluentMenuItem : Menu.DrawableMenuItem
     {
-        private MenuItemContent content;
+        public new FluentMenuItem Item => (FluentMenuItem)base.Item;
 
-        private ThemableBox background;
+        public bool ShowIcon
+        {
+            get => Content.ShowIcon;
+            set => Content.ShowIcon = value;
+        }
+
+        protected bool IsPressed { get; private set; }
+
+        protected ThemableEffectBox BackgroundBox { get; private set; }
+
+        protected new Container Background => (Container)base.Background;
+
+        protected new MenuItemContent Content => (MenuItemContent)base.Content;
 
         public DrawableFluentMenuItem(FluentMenuItem item)
             : base(item)
         {
             Masking = true;
-            content.Icon = item.Icon;
             BackgroundColour = Colour4.White;
             BackgroundColourHover = Colour4.White;
         }
 
-        protected override Drawable CreateBackground()
-            => background = new ThemableBox { RelativeSizeAxes = Axes.Both };
+        protected override Drawable CreateBackground() => new Container
+        {
+            RelativeSizeAxes = Axes.Both,
+            Anchor = Anchor.Centre,
+            Origin = Anchor.Centre,
+            Size = new Vector2(0.95f),
+            Child = BackgroundBox = new ThemableEffectBox
+            {
+                RelativeSizeAxes = Axes.Both,
+                CornerRadius = 5.0f,
+            },
+        };
 
-        protected override Drawable CreateContent()
-            => content = new MenuItemContent();
+        protected override Drawable CreateContent() => new MenuItemContent
+        {
+            Icon = Item.Icon,
+        };
 
         protected override void UpdateBackgroundColour()
         {
-            if (isPressed)
-                background.Colour = ThemeSlot.Gray30;
+            if (IsPressed)
+                BackgroundBox.Colour = ThemeSlot.Gray30;
             else if (IsHovered)
-                background.Colour = ThemeSlot.Gray20;
+                BackgroundBox.Colour = ThemeSlot.Gray20;
             else
-                background.Colour = ThemeSlot.Transparent;
+                BackgroundBox.Colour = ThemeSlot.Transparent;
         }
 
         protected override void UpdateForegroundColour()
         {
         }
 
-        private bool isPressed;
-
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            isPressed = true;
+            IsPressed = true;
             UpdateBackgroundColour();
             return base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseUpEvent e)
         {
-            isPressed = false;
+            IsPressed = false;
             UpdateBackgroundColour();
             base.OnMouseUp(e);
         }
 
-        protected class MenuItemContent : FillFlowContainer, IHasText, IHasIcon
+        protected class MenuItemContent : GridContainer, IHasText
         {
-
             private readonly ThemableSpriteIcon icon;
-
             private readonly ThemableSpriteText text;
+            private IconUsage? iconUsage;
+            private bool showIcon;
 
             public LocalisableString Text
             {
@@ -96,34 +117,71 @@ namespace Vignette.Game.Graphics.UserInterface
                 set => text.Text = value;
             }
 
-            public IconUsage Icon
+            public IconUsage? Icon
             {
-                get => icon.Icon;
-                set => icon.Icon = value;
+                get => iconUsage;
+                set
+                {
+                    if (value.Equals(iconUsage))
+                        return;
+
+                    if (value.HasValue)
+                        icon.Icon = value.Value;
+
+                    iconUsage = value;
+                }
+            }
+
+            public bool ShowIcon
+            {
+                get => showIcon;
+                set
+                {
+                    if (showIcon == value)
+                        return;
+
+                    showIcon = value;
+
+                    icon.Alpha = showIcon ? 1 : 0;
+                    text.Margin = showIcon ? new MarginPadding { Right = 18 } : new MarginPadding { Left = 12, Right = 18 };
+
+                    ColumnDimensions = new[]
+                    {
+                        new Dimension(GridSizeMode.Absolute, showIcon ? 36 : 0),
+                        new Dimension(GridSizeMode.AutoSize),
+                    };
+                }
             }
 
             public MenuItemContent()
             {
                 Height = 32;
+                Padding = new MarginPadding { Horizontal = 5 };
                 AutoSizeAxes = Axes.X;
-                Direction = FillDirection.Horizontal;
-                Children = new Drawable[]
+                ColumnDimensions = new[]
                 {
-                    icon = new ThemableSpriteIcon
+                    new Dimension(GridSizeMode.Absolute, 0),
+                    new Dimension(GridSizeMode.AutoSize),
+                };
+                Content = new Drawable[][]
+                {
+                    new Drawable[]
                     {
-                        Size = new Vector2(16),
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Colour = ThemeSlot.Gray190,
-                        Margin = new MarginPadding(8),
-                    },
-                    text = new ThemableSpriteText
-                    {
-                        Anchor = Anchor.CentreLeft,
-                        Origin = Anchor.CentreLeft,
-                        Colour = ThemeSlot.Gray190,
-                        Margin = new MarginPadding { Right = 16 },
-                    },
+                        icon = new ThemableSpriteIcon
+                        {
+                            Size = new Vector2(12),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = ThemeSlot.Gray190,
+                        },
+                        text = new ThemableSpriteText
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Colour = ThemeSlot.Gray190,
+                            Margin = new MarginPadding { Left = 12, Right = 18 },
+                        },
+                    }
                 };
             }
         }

@@ -7,69 +7,77 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
+using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneNavigationView : UserInterfaceTestScene
+    public class TestSceneNavigationView : ThemeProvidedTestScene
     {
         private IReadOnlyList<TestItem> items => new[]
         {
-            new TestItem("User", FluentSystemIcons.Person24),
-            new TestItem("Gift", FluentSystemIcons.Gift24),
-            new TestItem("Ban", FluentSystemIcons.Gavel24),
+            new TestItem("User", SegoeFluent.Person),
+            new TestItem("Gift", SegoeFluent.Gift),
+            new TestItem("Ban", SegoeFluent.Gavel),
         };
 
         public TestSceneNavigationView()
         {
-            Child = new GridContainer
+            Children = new Drawable[]
             {
-                RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = new[]
+                new ThemableBox
                 {
-                    new Dimension(GridSizeMode.Relative, 0.5f),
-                    new Dimension(GridSizeMode.Relative, 0.5f),
+                    RelativeSizeAxes = Axes.Both,
                 },
-                RowDimensions = new[]
+                new GridContainer
                 {
-                    new Dimension(GridSizeMode.Relative, 0.5f),
-                    new Dimension(GridSizeMode.Relative, 0.5f),
-                },
-                Content = new Drawable[][]
-                {
-                    new Drawable[]
+                    RelativeSizeAxes = Axes.Both,
+                    ColumnDimensions = new[]
                     {
-                        new TestNavigationViewVertical
-                        {
-                            Width = 200,
-                            Items = items,
-                            RelativeSizeAxes = Axes.Y,
-                        }
+                        new Dimension(GridSizeMode.Relative, 0.5f),
+                        new Dimension(GridSizeMode.Relative, 0.5f),
                     },
-                    new Drawable[]
+                    RowDimensions = new[]
                     {
-                        new TestNavigationViewHorizontal
+                        new Dimension(GridSizeMode.Relative, 0.5f),
+                        new Dimension(GridSizeMode.Relative, 0.5f),
+                    },
+                    Content = new Drawable[][]
+                    {
+                        new Drawable[]
                         {
-                            Items = items,
-                            RelativeSizeAxes = Axes.X,
+                            new TestNavigationViewVertical
+                            {
+                                Width = 200,
+                                Items = items,
+                                RelativeSizeAxes = Axes.Y,
+                            }
                         },
-                        new TestNavigationViewHorizontalWithoutIcon
+                        new Drawable[]
                         {
-                            Items = items,
-                            RelativeSizeAxes = Axes.X,
+                            new TestNavigationViewHorizontal
+                            {
+                                Items = items,
+                                RelativeSizeAxes = Axes.X,
+                            },
+                            new TestNavigationViewHorizontalWithoutIcon
+                            {
+                                Items = items,
+                                RelativeSizeAxes = Axes.X,
+                            },
                         },
                     },
-                },
+                }
             };
         }
 
-        private class TestNavigationViewVertical : NavigationViewVertical<TestItem>
+        private class TestNavigationViewVertical : NavigationVerticalTabControl<TestItem>
         {
             protected override TabItem<TestItem> CreateTabItem(TestItem value)
                 => new TestNavigationViewVerticalTabItem(value);
 
-            protected class TestNavigationViewVerticalTabItem : NavigationViewVerticalTabItem
+            protected class TestNavigationViewVerticalTabItem : NavigationVerticalTabItem
             {
                 protected override LocalisableString? Text => Value.Name;
 
@@ -82,12 +90,12 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             }
         }
 
-        private class TestNavigationViewHorizontal : NavigationViewHorizontal<TestItem>
+        private class TestNavigationViewHorizontal : NavigationHorizontalTabControl<TestItem>
         {
             protected override TabItem<TestItem> CreateTabItem(TestItem value)
                 => new TestNavigationViewHorizontalTabItem(value);
 
-            protected class TestNavigationViewHorizontalTabItem : NavigationViewHorizontalTabItem
+            protected class TestNavigationViewHorizontalTabItem : NavigationHorizontalTabItem
             {
                 protected override LocalisableString? Text => Value.Name;
 
@@ -100,12 +108,12 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             }
         }
 
-        private class TestNavigationViewHorizontalWithoutIcon : NavigationViewHorizontal<TestItem>
+        private class TestNavigationViewHorizontalWithoutIcon : NavigationHorizontalTabControl<TestItem>
         {
             protected override TabItem<TestItem> CreateTabItem(TestItem value)
                 => new TestNavigationViewHorizontalTabItemWithoutIcon(value);
 
-            protected class TestNavigationViewHorizontalTabItemWithoutIcon : NavigationViewHorizontalTabItem
+            protected class TestNavigationViewHorizontalTabItemWithoutIcon : NavigationHorizontalTabItem
             {
                 protected override LocalisableString? Text => Value.Name;
 

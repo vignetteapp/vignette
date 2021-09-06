@@ -1,42 +1,44 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using System;
-using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using Vignette.Game.Themeing;
+using osu.Framework.Graphics.UserInterface;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Tests.Visual
 {
     public abstract class ThemeProvidedTestScene : VignetteTestScene
     {
-        [Cached(typeof(IThemeSource))]
-        protected readonly TestThemeSource Provider;
+        protected readonly ThemeProvidingContainer Provider;
 
         protected override Container<Drawable> Content => Provider;
 
+        protected readonly BasicDropdown<Theme> Selector;
+
         public ThemeProvidedTestScene()
         {
-            base.Content.Add(Provider = new TestThemeSource
+            base.Content.AddRange(new Drawable[]
             {
-                RelativeSizeAxes = Axes.Both
+                Provider = new ThemeProvidingContainer
+                {
+                    RelativeSizeAxes = Axes.Both
+                },
+                Selector = new BasicDropdown<Theme>
+                {
+                    Width = 200,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Margin = new MarginPadding(20),
+                    Items = new[]
+                    {
+                        Theme.Light,
+                        Theme.Dark,
+                    }
+                },
             });
-        }
 
-        protected class TestThemeSource : Container, IThemeSource
-        {
-            public event Action ThemeChanged;
-
-            public Theme Current => CurrentBindable.Value;
-
-            public readonly Bindable<Theme> CurrentBindable = new Bindable<Theme>(Theme.Light);
-
-            public TestThemeSource()
-            {
-                CurrentBindable.BindValueChanged(_ => ThemeChanged?.Invoke(), true);
-            }
+            Selector.Current = Provider.Current;
         }
     }
 }

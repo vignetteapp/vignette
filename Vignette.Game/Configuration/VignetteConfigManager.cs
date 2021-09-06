@@ -8,6 +8,7 @@ using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using Vignette.Game.Bindables;
+using Vignette.Game.Screens.Stage;
 
 namespace Vignette.Game.Configuration
 {
@@ -27,6 +28,11 @@ namespace Vignette.Game.Configuration
             SetDefault(VignetteSetting.ShowFpsOverlay, false);
             SetDefault(VignetteSetting.CameraDevice, string.Empty);
             SetDefault(VignetteSetting.BackgroundColour, Colour4.Green);
+            SetDefault(VignetteSetting.BackgroundPath, string.Empty);
+            SetDefault(VignetteSetting.BackgroundType, BackgroundType.Colour);
+            SetDefault(VignetteSetting.KeyboardEnabled, true);
+            SetDefault(VignetteSetting.TrackingEnabled, true);
+            SetDefault(VignetteSetting.SoundMuted, false);
             SetDefault(VignetteSetting.Theme, "Light");
         }
 
@@ -55,7 +61,20 @@ namespace Vignette.Game.Configuration
         WindowSize,
         ShowFpsOverlay,
         CameraDevice,
+        CameraSaturation,
+        CameraContrast,
+        CameraGain,
+        CameraHue,
+        CameraFocus,
+        CameraExposure,
+        CameraAutoFocus,
+        CameraAutoExposure,
         BackgroundColour,
+        BackgroundType,
+        BackgroundPath,
+        KeyboardEnabled,
+        TrackingEnabled,
+        SoundMuted,
         Theme,
     }
 }

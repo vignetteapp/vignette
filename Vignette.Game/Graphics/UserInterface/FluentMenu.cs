@@ -2,13 +2,15 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System;
+using System.Linq;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using Vignette.Game.Graphics.Containers;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -20,15 +22,25 @@ namespace Vignette.Game.Graphics.UserInterface
             ScrollbarVisible = false;
             BackgroundColour = Colour4.Transparent;
             ItemsContainer.Padding = new MarginPadding(1);
+
             AddInternal(new ThemableEffectBox
             {
                 Depth = 1,
                 Colour = ThemeSlot.White,
+                Shadow = true,
                 BorderColour = ThemeSlot.Gray30,
-                CornerRadius = 1.5f,
-                BorderThickness = 1.5f,
+                CornerRadius = 5.0f,
                 RelativeSizeAxes = Axes.Both,
             });
+        }
+
+        public override void Add(MenuItem item)
+        {
+            base.Add(item);
+
+            var drawableMenuItems = ItemsContainer.Children.OfType<DrawableFluentMenuItem>();
+            bool hasIcon = drawableMenuItems.Any(d => d.Item.Icon != null);
+            drawableMenuItems.ForEach(d => d.ShowIcon = hasIcon);
         }
 
         protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item)

@@ -7,9 +7,10 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -20,17 +21,15 @@ namespace Vignette.Game.Graphics.UserInterface
         where T : struct, IComparable<T>, IConvertible, IEquatable<T>
     {
         private readonly ThemableBox unfilled;
-
         private readonly ThemableBox filled;
-
         private readonly ThemableCircle nub;
 
-        public string TooltipText => $"{Current.Value:0.00}";
+        public LocalisableString TooltipText => $"{Current.Value:0.00}";
 
         public FluentSlider()
         {
             Height = 28;
-            Padding = new MarginPadding { Horizontal = 8 };
+            //Padding = new MarginPadding { Horizontal = 8 };
             Children = new Drawable[]
             {
                 new Container

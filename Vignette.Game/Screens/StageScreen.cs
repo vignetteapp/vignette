@@ -7,20 +7,14 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Input.Bindings;
 using osu.Framework.Screens;
+using System;
 using Vignette.Game.Configuration;
-using Vignette.Game.Graphics.UserInterface;
-using Vignette.Game.Input;
-using Vignette.Game.Overlays;
-using Vignette.Game.Overlays.MainMenu;
-using Vignette.Game.Overlays.MainMenu.Settings;
 
 namespace Vignette.Game.Screens
 {
-    public class StageScreen : Screen, IHasContextMenu, IKeyBindingHandler<GlobalAction>
+    public class StageScreen : VignetteScreen, IHasContextMenu
     {
-        private MainMenuOverlay mainMenu;
         private Box background;
         private Bindable<Colour4> colour;
 
@@ -29,31 +23,12 @@ namespace Vignette.Game.Screens
         {
             colour = config.GetBindable<Colour4>(VignetteSetting.BackgroundColour);
 
-            AddInternal(background = new Box { RelativeSizeAxes = Axes.Both });
+            AddRangeInternal(new Drawable[]
+            {
+                background = new Box { RelativeSizeAxes = Axes.Both },
+            });
 
             colour.BindValueChanged(e => background.Colour = e.NewValue, true);
-
-            LoadComponentAsync(mainMenu = new MainMenuOverlay(), _ => AddInternal(mainMenu));
-        }
-
-        public bool OnPressed(GlobalAction action)
-        {
-            switch (action)
-            {
-                case GlobalAction.ToggleMainMenu:
-                    mainMenu?.ToggleVisibility();
-                    return true;
-
-                case GlobalAction.OpenSettings:
-                    mainMenu?.SelectTab<GameSettings>();
-                    return true;
-            }
-
-            return false;
-        }
-
-        public void OnReleased(GlobalAction action)
-        {
         }
 
         public override void OnEntering(IScreen last)
@@ -62,9 +37,6 @@ namespace Vignette.Game.Screens
             this.FadeOut().Delay(500).FadeInFromZero(500, Easing.OutQuint);
         }
 
-        public MenuItem[] ContextMenuItems => new MenuItem[]
-        {
-            new FluentMenuItem("Home", () => mainMenu.SelectTab<HomeView>()),
-        };
+        public MenuItem[] ContextMenuItems => Array.Empty<MenuItem>();
     }
 }

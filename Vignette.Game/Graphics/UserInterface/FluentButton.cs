@@ -10,7 +10,7 @@ using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -22,7 +22,7 @@ namespace Vignette.Game.Graphics.UserInterface
         /// <summary>
         /// Gets or sets the tooltip text shown when hovered over.
         /// </summary>
-        public virtual string TooltipText { get; set; }
+        public virtual LocalisableString TooltipText { get; set; }
 
         private ButtonStyle style = ButtonStyle.Secondary;
 
@@ -50,6 +50,9 @@ namespace Vignette.Game.Graphics.UserInterface
             get => text?.Text ?? default;
             set
             {
+                if (Label == null)
+                    createLabelFlow();
+
                 if (text == null)
                 {
                     Label.Insert(1, text = new ThemableSpriteText
@@ -87,6 +90,9 @@ namespace Vignette.Game.Graphics.UserInterface
             get => icon?.Icon ?? default;
             set
             {
+                if (Label == null)
+                    createLabelFlow();
+
                 if (icon == null)
                 {
                     Label.Insert(0, icon = new ThemableSpriteIcon
@@ -116,34 +122,20 @@ namespace Vignette.Game.Graphics.UserInterface
             }
         }
 
-        protected readonly FillFlowContainer Label;
+        protected FillFlowContainer Label;
 
-        private readonly ThemableEffectBox background;
-
+        private readonly ThemableBox background;
         private ThemableSpriteText text;
-
         private ThemableSpriteIcon icon;
 
         public FluentButton()
         {
             Height = 32;
-            InternalChildren = new Drawable[]
+            Masking = true;
+            CornerRadius = 5.0f;
+            InternalChild = background = new ThemableBox
             {
-                background = new ThemableEffectBox
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    BorderColour = ThemeSlot.Gray110,
-                },
-                Label = new FillFlowContainer
-                {
-                    RelativeSizeAxes = Axes.Y,
-                    AutoSizeAxes = Axes.X,
-                    Direction = FillDirection.Horizontal,
-                    Spacing = new Vector2(8, 0),
-                    Margin = new MarginPadding { Horizontal = 8 },
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
+                RelativeSizeAxes = Axes.Both,
             };
         }
 
@@ -165,6 +157,20 @@ namespace Vignette.Game.Graphics.UserInterface
                 icon.Colour = slot;
         }
 
+        private void createLabelFlow()
+        {
+            Add(Label = new FillFlowContainer
+            {
+                RelativeSizeAxes = Axes.Y,
+                AutoSizeAxes = Axes.X,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(8, 0),
+                Margin = new MarginPadding { Horizontal = 8 },
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+            });
+        }
+
         private void updateStyle()
         {
             switch (Style)
@@ -179,31 +185,20 @@ namespace Vignette.Game.Graphics.UserInterface
                 case ButtonStyle.Secondary:
                     LabelResting = ThemeSlot.Gray190;
                     BackgroundResting = ThemeSlot.White;
-                    BackgroundHovered = ThemeSlot.Gray20;
-                    BackgroundPressed = ThemeSlot.Gray30;
+                    BackgroundHovered = ThemeSlot.Gray30;
+                    BackgroundPressed = ThemeSlot.Gray40;
                     break;
 
                 case ButtonStyle.Text:
                     LabelResting = ThemeSlot.Gray190;
                     BackgroundResting = ThemeSlot.Transparent;
-                    BackgroundHovered = ThemeSlot.Gray20;
-                    BackgroundPressed = ThemeSlot.Gray30;
+                    BackgroundHovered = ThemeSlot.Gray30;
+                    BackgroundPressed = ThemeSlot.Gray40;
                     break;
             }
 
             LabelDisabled = ThemeSlot.Gray90;
-
-            BackgroundDisabled = Style != ButtonStyle.Text
-                ? ThemeSlot.Gray20
-                : ThemeSlot.Transparent;
-
-            background.CornerRadius = Style != ButtonStyle.Text
-                ? 2.5f
-                : 0.0f;
-
-            background.BorderThickness = Style != ButtonStyle.Secondary
-                ? 0.0f
-                : 1.5f;
+            BackgroundDisabled = Style != ButtonStyle.Text ? ThemeSlot.Gray20 : ThemeSlot.Transparent;
 
             UpdateState();
         }

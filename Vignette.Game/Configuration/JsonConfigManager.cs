@@ -20,6 +20,12 @@ namespace Vignette.Game.Configuration
         /// </summary>
         protected abstract string Filename { get; }
 
+        /// <summary>
+        /// The absolute path to the backing file for this config.
+        /// </summary>
+        [JsonIgnore]
+        public string FilePath => storage.GetFullPath(Filename);
+
         private readonly Storage storage;
 
         public JsonConfigManager(Storage storage)
@@ -43,16 +49,9 @@ namespace Vignette.Game.Configuration
             if (string.IsNullOrEmpty(Filename))
                 return false;
 
-            try
-            {
-                using (var stream = storage.GetStream(Filename, FileAccess.Write, FileMode.Create))
-                using (var writer = new StreamWriter(stream))
-                    writer.Write(JsonConvert.SerializeObject(this, CreateSerializerSettings()));
-            }
-            catch
-            {
-                return false;
-            }
+            using (var stream = storage.GetStream(Filename, FileAccess.Write, FileMode.Create))
+            using (var writer = new StreamWriter(stream))
+                writer.Write(JsonConvert.SerializeObject(this, CreateSerializerSettings()));
 
             return true;
         }
@@ -62,6 +61,7 @@ namespace Vignette.Game.Configuration
             Formatting = Formatting.Indented,
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         };
     }
 }
