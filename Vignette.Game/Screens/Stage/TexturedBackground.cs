@@ -11,7 +11,7 @@ namespace Vignette.Game.Screens.Stage
 {
     public class TexturedBackground : FileAssociatedBackground
     {
-        protected override IEnumerable<string> Extensions => new[] { "png", "jpg", "jpeg" };
+        public override IEnumerable<string> Extensions => new[] { ".png", ".jpg", ".jpeg" };
 
         private readonly Sprite sprite;
 

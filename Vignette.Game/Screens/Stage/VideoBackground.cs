@@ -10,7 +10,7 @@ namespace Vignette.Game.Screens.Stage
 {
     public class VideoBackground : FileAssociatedBackground
     {
-        protected override IEnumerable<string> Extensions => new[] { "mp4" };
+        public override IEnumerable<string> Extensions => new[] { ".mp4" };
 
         protected override void OnFileChanged(Stream stream)
         {
