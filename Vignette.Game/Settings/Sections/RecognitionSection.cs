@@ -72,7 +72,7 @@ namespace Vignette.Game.Settings.Sections
             }
         }
 
-        private class AdvancedCameraSettingsPanel : SettingsPanel
+        private class AdvancedCameraSettingsPanel : SettingsSubPanel
         {
         }
     }

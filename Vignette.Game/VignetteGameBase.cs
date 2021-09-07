@@ -48,8 +48,9 @@ namespace Vignette.Game
         }
 
         protected Storage Storage;
-
         protected VignetteConfigManager LocalConfig;
+        protected SessionConfigManager SessionConfig;
+
         private VignetteKeyBindManager keybindConfig;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
@@ -95,6 +96,7 @@ namespace Vignette.Game
 
             dependencies.CacheAs(this);
             dependencies.CacheAs(LocalConfig);
+            dependencies.CacheAs(SessionConfig = new SessionConfigManager());
 
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);

@@ -12,9 +12,9 @@ using Vignette.Game.Settings.Components;
 
 namespace Vignette.Game.Settings.Sections
 {
-    public class InputSection : SettingsSection
+    public class KeyboardSection : SettingsSection
     {
-        public override LocalisableString Label => "Input";
+        public override LocalisableString Label => "Keyboard";
 
         public override IconUsage Icon => SegoeFluent.Keyboard;
 
@@ -25,7 +25,6 @@ namespace Vignette.Game.Settings.Sections
             {
                 new SettingsSubSection
                 {
-                    Label = "Keyboard",
                     Children = new Drawable[]
                     {
                         new SettingsSwitch
@@ -45,7 +44,7 @@ namespace Vignette.Game.Settings.Sections
             };
         }
 
-        private class KeybindConfigurationPanel : SettingsPanel
+        private class KeybindConfigurationPanel : SettingsSubPanel
         {
         }
     }

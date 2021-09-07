@@ -25,7 +25,7 @@ namespace Vignette.Game.Settings
             {
                 if (IconDrawable == null)
                 {
-                    labelContainer.Add(IconDrawable = CreateIcon());
+                    LabelContainer.Add(IconDrawable = CreateIcon());
                     labelFlow.Margin = new MarginPadding { Left = 38 };
                 }
 
@@ -68,6 +68,8 @@ namespace Vignette.Game.Settings
 
         protected readonly Container Foreground;
 
+        protected readonly Container LabelContainer;
+
         protected Drawable IconDrawable { get; private set; }
 
         protected Drawable LabelDrawable { get; private set; }
@@ -86,7 +88,6 @@ namespace Vignette.Game.Settings
         public virtual IEnumerable<string> FilterTerms => Keywords == null ? new[] { Label.ToString() } : new List<string>(Keywords) { Label.ToString() }.Where(s => !string.IsNullOrEmpty(s));
 
         private readonly FillFlowContainer labelFlow;
-        private readonly Container labelContainer;
 
         public SettingsItem()
         {
@@ -99,7 +100,7 @@ namespace Vignette.Game.Settings
             InternalChildren = new Drawable[]
             {
                 CreateBackground(),
-                labelContainer = new Container
+                LabelContainer = new Container
                 {
                     RelativeSizeAxes = Axes.X,
                     Padding = new MarginPadding { Horizontal = 10 },

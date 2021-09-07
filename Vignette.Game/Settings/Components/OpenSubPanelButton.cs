@@ -12,7 +12,7 @@ using System;
 namespace Vignette.Game.Settings.Components
 {
     public class OpenSubPanelButton<T> : SettingsInteractableItem
-        where T : SettingsPanel
+        where T : SettingsSubPanel
     {
         private object[] args;
 
@@ -34,7 +34,7 @@ namespace Vignette.Game.Settings.Components
                 Margin = new MarginPadding { Right = 6 },
             });
 
-            Action = () => overlay.OpenSubPanel(Activator.CreateInstance(typeof(T), args) as T);
+            Action = () => overlay.ShowSubPanel(Activator.CreateInstance(typeof(T), args) as T);
         }
     }
 }

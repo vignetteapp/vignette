@@ -7,6 +7,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using Vignette.Game.Settings;
 using Vignette.Game.Settings.Components;
+using Vignette.Game.Settings.Panels;
 using Vignette.Game.Settings.Sections;
 
 namespace Vignette.Game.Tests.Visual
@@ -25,7 +26,7 @@ namespace Vignette.Game.Tests.Visual
         [Test]
         public void TestJumpToSection()
         {
-            AddStep("go to camera section", () => overlay.SelectTab<RecognitionSection>());
+            AddStep("go to camera section", () => overlay.ScrollTo<RecognitionSection>());
             AddAssert("overlay is visible", () => overlay.State.Value == Visibility.Visible);
             AddAssert("is camera section", () => overlay.CurrentSection.GetType().IsAssignableFrom(typeof(RecognitionSection)));
             AddStep("hide", () => overlay.Hide());
@@ -38,7 +39,7 @@ namespace Vignette.Game.Tests.Visual
             AddStep("hide body", () => overlay.HideBody());
             AddStep("hide", () => overlay.Hide());
             AddStep("show", () => overlay.Show());
-            AddAssert("buttons enabled", () => overlay.Buttons == true);
+            AddAssert("buttons enabled", () => overlay.NavigationButtonsEnabled == true);
         }
 
         [Test]
@@ -46,46 +47,26 @@ namespace Vignette.Game.Tests.Visual
         {
             AddStep("show", () => overlay.Show());
             AddStep("hide body", () => overlay.HideBody());
-            AddAssert("buttons disabled", () => overlay.Buttons == false);
+            AddAssert("buttons disabled", () => overlay.NavigationButtonsEnabled == false);
             AddStep("hide", () => overlay.Hide());
         }
 
         [Test]
         public void TestSubPanelState()
         {
-            AddStep("open submenu", () => overlay.OpenSubPanel(new TestSubMenu()));
+            AddStep("open submenu", () => overlay.ShowSubPanel(settingsSubPanel()));
             AddAssert("overlay is visible", () => overlay.State.Value == Visibility.Visible);
-            AddAssert("buttons disabled", () => overlay.Buttons == false);
-            AddStep("close submenu", () => overlay.CloseSubPanel());
-            AddAssert("buttons enabled", () => overlay.Buttons == true);
+            AddAssert("buttons disabled", () => overlay.NavigationButtonsEnabled == false);
+            AddStep("close submenu", () => overlay.Back());
+            AddAssert("buttons enabled", () => overlay.NavigationButtonsEnabled == true);
 
-            AddStep("open submenu", () => overlay.OpenSubPanel(new TestSubMenu()));
+            AddStep("open submenu", () => overlay.ShowSubPanel(settingsSubPanel()));
             AddStep("hide body", () => overlay.HideBody());
-            AddStep("close submenu", () => overlay.CloseSubPanel());
-            AddAssert("buttons disabled", () => overlay.Buttons == false);
+            AddStep("close submenu", () => overlay.Back());
+            AddAssert("buttons disabled", () => overlay.NavigationButtonsEnabled == false);
             AddStep("hide", () => overlay.Hide());
         }
 
-        private class TestSubMenu : SettingsPanel
-        {
-            public TestSubMenu()
-            {
-                Children = new Drawable[]
-                {
-                    new SettingsSwitch
-                    {
-                        Label = "Test Switch"
-                    },
-                    new SettingsSwitch
-                    {
-                        Label = "Test Switch"
-                    },
-                    new SettingsSwitch
-                    {
-                        Label = "Test Switch"
-                    },
-                };
-            }
-        }
+        private SettingsSubPanel settingsSubPanel() => new ConfirmationPanel("Test Message", overlay.Back);
     }
 }

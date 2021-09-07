@@ -1,11 +1,110 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Input.Events;
+using osuTK;
+using Vignette.Game.Configuration;
 
 namespace Vignette.Game.Screens.Stage
 {
     public class StageBackground : CompositeDrawable
     {
+        private CompositeDrawable background;
+        private Bindable<BackgroundType> type;
+        private Bindable<Vector2> position;
+        private Bindable<float> rotation;
+        private Bindable<float> scale;
+        private Bindable<bool> adjustable;
+        private bool shouldEase;
+
+        [BackgroundDependencyLoader]
+        private void load(VignetteConfigManager config, SessionConfigManager session)
+        {
+            RelativeSizeAxes = Axes.Both;
+
+            position = config.GetBindable<Vector2>(VignetteSetting.BackgroundPosition);
+            position.ValueChanged += _ => handleVisualChange();
+
+            rotation = config.GetBindable<float>(VignetteSetting.BackgroundRotation);
+            rotation.ValueChanged += _ => handleVisualChange();
+
+            scale = config.GetBindable<float>(VignetteSetting.BackgroundScale);
+            scale.ValueChanged += _ => handleVisualChange();
+
+            type = config.GetBindable<BackgroundType>(VignetteSetting.BackgroundType);
+            type.BindValueChanged(_ => handleTypeChange(), true);
+
+            adjustable = session.GetBindable<bool>(SessionSetting.EditingBackground);
+        }
+
+        private void handleVisualChange()
+        {
+            background.MoveTo(position.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            background.RotateTo(rotation.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            background.ScaleTo(scale.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            shouldEase = true;
+        }
+
+        private void handleTypeChange()
+        {
+            shouldEase = false;
+
+            var last = background;
+            last?.FadeOutFromOne(300, Easing.OutQuint).Expire();
+
+            switch (type.Value)
+            {
+                case BackgroundType.Colour:
+                    background = new SolidBackground();
+                    break;
+
+                case BackgroundType.Image:
+                    background = new TexturedBackground();
+                    break;
+
+                case BackgroundType.Video:
+                    background = new VideoBackground();
+                    break;
+            }
+
+            AddInternal(background.With(d =>
+            {
+                d.Depth = (last?.Depth ?? 0) + 1;
+                d.Anchor = Anchor.Centre;
+                d.Origin = Anchor.Centre;
+                d.RelativeSizeAxes = Axes.Both;
+            }));
+
+            handleVisualChange();
+        }
+
+        protected override bool OnDragStart(DragStartEvent e)
+        {
+            if (adjustable.Value)
+                return true;
+
+            return base.OnDragStart(e);
+        }
+
+        protected override void OnDrag(DragEvent e)
+        {
+            base.OnDrag(e);
+            position.Value += e.Delta;
+        }
+
+        protected override bool OnScroll(ScrollEvent e)
+        {
+            if (adjustable.Value)
+            {
+                scale.Value += e.ScrollDelta.Y * 0.1f;
+                return true;
+            }
+
+            return base.OnScroll(e);
+        }
     }
 }

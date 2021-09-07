@@ -9,9 +9,9 @@ using osu.Framework.Platform;
 using Vignette.Game.Configuration;
 using Vignette.Game.Settings.Components;
 
-namespace Vignette.Game.Settings.Sections
+namespace Vignette.Game.Settings.Panels
 {
-    public class DebugSettingsPanel : SettingsPanel
+    public class DebugSettingsPanel : SettingsSubPanel
     {
         public DebugSettingsPanel()
         {

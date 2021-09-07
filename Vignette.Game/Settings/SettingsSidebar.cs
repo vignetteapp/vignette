@@ -1,7 +1,6 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,21 +15,11 @@ namespace Vignette.Game.Settings
     public class SettingsSidebar : Container<SettingsSidebarButton>
     {
         public const float WIDTH = 50;
-
-        public Action OnBack
-        {
-            set => backButton.Action = value;
-        }
-
-        public Action OnExit
-        {
-            set => exitButton.Action = value;
-        }
+        public readonly FluentButton BackButton;
+        public readonly FluentButton ExitButton;
 
         protected override Container<SettingsSidebarButton> Content => buttonFlow;
 
-        private readonly FluentButton backButton;
-        private readonly FluentButton exitButton;
         private readonly FillFlowContainer<SettingsSidebarButton> buttonFlow;
 
         public SettingsSidebar()
@@ -49,7 +38,7 @@ namespace Vignette.Game.Settings
                     Padding = new MarginPadding(5),
                     Children = new Drawable[]
                     {
-                        backButton = new FluentButton
+                        BackButton = new FluentButton
                         {
                             Size = new Vector2(40),
                             Icon = SegoeFluent.ArrowLeft,
@@ -64,7 +53,7 @@ namespace Vignette.Game.Settings
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
                         },
-                        exitButton = new FluentButton
+                        ExitButton = new FluentButton
                         {
                             Size = new Vector2(40),
                             Icon = SegoeFluent.Dismiss,
@@ -84,7 +73,7 @@ namespace Vignette.Game.Settings
             if (game == null)
                 return;
 
-            game.ScreenStack.ScreenPushed += (_, screen) => exitButton.FadeTo(screen is StageScreen ? 1 : 0);
+            game.ScreenStack.ScreenPushed += (_, screen) => ExitButton.FadeTo(screen is StageScreen ? 1 : 0);
         }
     }
 }

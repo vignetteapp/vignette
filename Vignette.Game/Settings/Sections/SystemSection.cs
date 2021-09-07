@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -16,6 +17,7 @@ using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Settings.Components;
 using Vignette.Game.Graphics.Themeing;
+using Vignette.Game.Settings.Panels;
 
 namespace Vignette.Game.Settings.Sections
 {
@@ -83,15 +85,32 @@ namespace Vignette.Game.Settings.Sections
                             Label = "Allow window to be resizable",
                             Current = gameConfig.GetBindable<bool>(VignetteSetting.WindowResizable),
                         },
-                        windowModeSetting = new SettingsDropdown<WindowMode>
+                        new StatefulSettingsSubSection<bool>
                         {
-                            Label = "Window mode",
-                            Current = frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode),
-                            ItemSource = windowModes,
-                        },
-                        resolutionSetting = new ResolutionDropdown
-                        {
-                            Label = "Resolution",
+                            Current = resizableSetting.Current,
+                            Map = new Dictionary<bool, Drawable>
+                            {
+                                {
+                                    false,
+                                    new SettingsSubSection
+                                    {
+                                        Children = new Drawable[]
+                                        {
+                                            windowModeSetting = new SettingsDropdown<WindowMode>
+                                            {
+                                                Label = "Window mode",
+                                                Current = frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode),
+                                                ItemSource = windowModes,
+                                            },
+                                            resolutionSetting = new ResolutionDropdown
+                                            {
+                                                Label = "Resolution",
+                                            },
+                                        }
+                                    }
+                                },
+                                { true, null },
+                            }
                         },
                     },
                 },
@@ -141,11 +160,6 @@ namespace Vignette.Game.Settings.Sections
                     ? gameConfig.GetBindable<Size>(VignetteSetting.WindowSize)
                     : frameworkConfig.GetBindable<Size>(FrameworkSetting.SizeFullscreen);
             }, true);
-
-            resizableSetting.Current.BindValueChanged(e =>
-            {
-                windowModeSetting.Alpha = resolutionSetting.Alpha = !e.NewValue ? 1 : 0;
-            }, true);
         }
 
         protected override void LoadComplete()
@@ -157,7 +171,6 @@ namespace Vignette.Game.Settings.Sections
                 {
                     resolutions.AddRange(
                         display.NewValue.DisplayModes
-                            .Where(m => m.Size.Width >= 800 && m.Size.Height >= 600)
                             .OrderByDescending(m => Math.Max(m.Size.Height, m.Size.Width))
                             .Select(m => m.Size)
                             .Distinct()
@@ -169,13 +182,11 @@ namespace Vignette.Game.Settings.Sections
                 {
                     resolutionSetting.Items = resolutions
                         .Append(new Size(1366, 768))
-                        .OrderByDescending(m => Math.Max(m.Height, m.Width))
-                        .Skip(1);
+                        .OrderByDescending(m => Math.Max(m.Height, m.Width));
                 }
                 else
                 {
-                    // Don't include the first item as it is basically borderless.
-                    resolutionSetting.Items = resolutions.Skip(1);
+                    resolutionSetting.Items = resolutions;
                 }
             }), true);
         }

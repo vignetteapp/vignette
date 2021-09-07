@@ -12,15 +12,20 @@ namespace Vignette.Game.Screens
 {
     public class VignetteScreen : Screen, IKeyBindingHandler<GlobalAction>
     {
-        protected virtual bool CanOpenSettingsOverlay => true;
+        protected virtual bool AllowToggleSettings => true;
+
+        protected virtual bool ShowSettingsOneEnter => false;
 
         [Resolved]
         private SettingsOverlay settings { get; set; }
 
         public override void OnEntering(IScreen last)
         {
-            if (settings.State.Value == Visibility.Visible && !CanOpenSettingsOverlay)
-                settings.State.Value = Visibility.Hidden;
+            if (settings.State.Value == Visibility.Visible && !AllowToggleSettings)
+                settings.Hide();
+
+            if (AllowToggleSettings && ShowSettingsOneEnter)
+                settings.Show();
 
             base.OnEntering(last);
         }
@@ -30,7 +35,7 @@ namespace Vignette.Game.Screens
             switch (action)
             {
                 case GlobalAction.ToggleSettings:
-                    if (CanOpenSettingsOverlay)
+                    if (AllowToggleSettings)
                         settings.ToggleVisibility();
                     return true;
 

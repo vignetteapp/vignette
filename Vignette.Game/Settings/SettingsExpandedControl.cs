@@ -2,11 +2,12 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.UserInterface;
 
 namespace Vignette.Game.Settings
 {
     public abstract class SettingsExpandedControl<TDrawable, TValue> : SettingsControl<TDrawable, TValue>
-        where TDrawable : Drawable
+        where TDrawable : Drawable, IHasCurrentValue<TValue>
     {
         public SettingsExpandedControl()
         {

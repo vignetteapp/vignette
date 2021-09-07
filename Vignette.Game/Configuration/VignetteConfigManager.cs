@@ -7,6 +7,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
+using osuTK;
 using Vignette.Game.Bindables;
 using Vignette.Game.Screens.Stage;
 
@@ -27,6 +28,9 @@ namespace Vignette.Game.Configuration
             SetDefault(VignetteSetting.WindowSize, new Size(1366, 768));
             SetDefault(VignetteSetting.ShowFpsOverlay, false);
             SetDefault(VignetteSetting.CameraDevice, string.Empty);
+            SetDefault(VignetteSetting.BackgroundPosition, Vector2.Zero);
+            SetDefault(VignetteSetting.BackgroundRotation, 0.0f, 0.0f, 180.0f, 1.0f);
+            SetDefault(VignetteSetting.BackgroundScale, 1.0f, 0.1f, 10.0f, 0.1f);
             SetDefault(VignetteSetting.BackgroundColour, Colour4.Green);
             SetDefault(VignetteSetting.BackgroundPath, string.Empty);
             SetDefault(VignetteSetting.BackgroundType, BackgroundType.Colour);
@@ -46,6 +50,10 @@ namespace Vignette.Game.Configuration
 
                 case VignetteSetting.WindowSize:
                     base.AddBindable(lookup, new BindableSize(new Size(1366, 768)));
+                    break;
+
+                case VignetteSetting.BackgroundPosition:
+                    base.AddBindable(lookup, new BindableVector2());
                     break;
 
                 default:
@@ -69,7 +77,10 @@ namespace Vignette.Game.Configuration
         CameraExposure,
         CameraAutoFocus,
         CameraAutoExposure,
+        BackgroundPosition,
+        BackgroundRotation,
         BackgroundColour,
+        BackgroundScale,
         BackgroundType,
         BackgroundPath,
         KeyboardEnabled,

@@ -130,7 +130,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         public FluentButton()
         {
-            Height = 32;
+            Height = 28;
             Masking = true;
             CornerRadius = 5.0f;
             InternalChild = background = new ThemableBox
@@ -192,12 +192,12 @@ namespace Vignette.Game.Graphics.UserInterface
                 case ButtonStyle.Text:
                     LabelResting = ThemeSlot.Gray190;
                     BackgroundResting = ThemeSlot.Transparent;
-                    BackgroundHovered = ThemeSlot.Gray30;
-                    BackgroundPressed = ThemeSlot.Gray40;
+                    BackgroundHovered = ThemeSlot.Gray40;
+                    BackgroundPressed = ThemeSlot.Gray50;
                     break;
             }
 
-            LabelDisabled = ThemeSlot.Gray90;
+            LabelDisabled = ThemeSlot.Gray60;
             BackgroundDisabled = Style != ButtonStyle.Text ? ThemeSlot.Gray20 : ThemeSlot.Transparent;
 
             UpdateState();

@@ -8,17 +8,15 @@ using osu.Framework.Graphics.UserInterface;
 namespace Vignette.Game.Settings
 {
     public abstract class SettingsControl<TDrawable, TValue> : SettingsItem, IHasCurrentValue<TValue>
-        where TDrawable : Drawable
+        where TDrawable : Drawable, IHasCurrentValue<TValue>
     {
         public Bindable<TValue> Current
         {
-            get => controlWithCurrent.Current;
-            set => controlWithCurrent.Current = value;
+            get => Control.Current;
+            set => Control.Current = value;
         }
 
         protected TDrawable Control { get; set; }
-
-        private IHasCurrentValue<TValue> controlWithCurrent => Control as IHasCurrentValue<TValue>;
 
         public SettingsControl()
         {

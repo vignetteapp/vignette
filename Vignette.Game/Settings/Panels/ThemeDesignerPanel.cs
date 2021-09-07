@@ -17,9 +17,9 @@ using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Settings.Components;
 
-namespace Vignette.Game.Settings.Sections
+namespace Vignette.Game.Settings.Panels
 {
-    public class ThemeDesignerPanel : SettingsPanel
+    public class ThemeDesignerPanel : SettingsSubPanel
     {
         [Cached]
         private readonly Bindable<Theme> theme;

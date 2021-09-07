@@ -11,7 +11,7 @@ namespace Vignette.Game.Screens
 {
     public class SplashScreen : VignetteScreen
     {
-        protected override bool CanOpenSettingsOverlay => false;
+        protected override bool AllowToggleSettings => false;
 
         private readonly SpriteIcon icon;
 

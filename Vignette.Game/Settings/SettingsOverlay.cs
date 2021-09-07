@@ -1,6 +1,7 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
@@ -15,19 +16,19 @@ namespace Vignette.Game.Settings
     public class SettingsOverlay : OverlayContainer
     {
         /// <summary>
-        /// The currently open <see cref="SettingsPanel"/> other than the main panel.
-        /// </summary>
-        public SettingsPanel SubPanel { get; private set; }
-
-        /// <summary>
         /// Gets whether the body is currently visible.
         /// </summary>
-        public bool MainPanelActive { get; private set; }
+        public bool BodyVisible { get; private set; }
 
         /// <summary>
-        /// Gets whether the buttons are enabled.
+        /// Whether to keep the body hidden.
         /// </summary>
-        public bool Buttons
+        public bool KeepBodyHidden { get; set; }
+
+        /// <summary>
+        /// Gets whether the navigation buttons are enabled.
+        /// </summary>
+        public bool NavigationButtonsEnabled
         {
             get => sidebar?.Children[0]?.Enabled.Value ?? false;
             private set
@@ -41,9 +42,23 @@ namespace Vignette.Game.Settings
         }
 
         /// <summary>
-        /// Gets whether a sub panel is being shown.
+        /// Whether the back button can be interacted with. See <see cref="Back"/> to programatically trigger this action even
+        /// if the back button itself is disabled.
         /// </summary>
-        public bool SubPanelActive => SubPanel != null;
+        public bool BackButtonEnabled
+        {
+            get => sidebar.BackButton.Enabled.Value;
+            set => sidebar.BackButton.Enabled.Value = value;
+        }
+
+        /// <summary>
+        /// Whether the exit button can be interacted with.
+        /// </summary>
+        public bool ExitButtonEnabled
+        {
+            get => sidebar.ExitButton.Enabled.Value;
+            set => sidebar.ExitButton.Enabled.Value = value;
+        }
 
         /// <summary>
         /// Gets what <see cref="SettingsSection"/> is currently selected.
@@ -52,14 +67,15 @@ namespace Vignette.Game.Settings
 
         private Container body;
         private SettingsHeader header;
-        private SettingsPanel content;
         private SettingsSidebar sidebar;
+        private SettingsMainPanel mainPanel;
         private Container subMenuContainer;
+        private readonly Stack<Action> backActionStack = new Stack<Action>();
 
         [Resolved(canBeNull: true)]
         private VignetteGame game { get; set; }
 
-        private IEnumerable<SettingsSection> sections => content.Children.OfType<SettingsSection>();
+        private IEnumerable<SettingsSection> sections => mainPanel.Children.OfType<SettingsSection>();
 
         [BackgroundDependencyLoader]
         private void load()
@@ -96,16 +112,17 @@ namespace Vignette.Game.Settings
                                 },
                                 new Drawable[]
                                 {
-                                    content = new SettingsPanel
+                                    mainPanel = new SettingsMainPanel
                                     {
                                         Depth = 1,
                                         Children = new Drawable[]
                                         {
                                             new HomeSection(),
                                             new SystemSection(),
-                                            new SceneSection(),
+                                            new AvatarSection(),
+                                            new BackdropSection(),
                                             new RecognitionSection(),
-                                            new InputSection(),
+                                            new KeyboardSection(),
                                             new FooterSection(),
                                         },
                                     },
@@ -114,28 +131,27 @@ namespace Vignette.Game.Settings
                         },
                         subMenuContainer = new Container
                         {
-                            X = -400,
                             RelativeSizeAxes = Axes.Both,
                         },
                     },
                 },
                 sidebar = new SettingsSidebar
                 {
-                    OnBack = handleBackAction,
-                    OnExit = handleExitAction,
+                    BackButton = { Action = Back },
+                    ExitButton = { Action = handleExitAction },
                     Children = sections.Select(s => new SettingsSidebarButton(s) { SelectionRequested = handleSectionSelection }).SkipLast(1).ToList(),
                 },
             };
 
-            header.SearchBox.Current.ValueChanged += e => content.SearchTerm = e.NewValue;
+            header.SearchBox.Current.ValueChanged += e => mainPanel.SearchTerm = e.NewValue;
             setActiveButton(sections.FirstOrDefault());
         }
 
         /// <summary>
-        /// Selects a section from the side panel. It forces <see cref="SettingsOverlay"/> to be shown if it isn't.
+        /// Scrolls to a specific section. It forces <see cref="SettingsOverlay"/> to be shown if it isn't.
         /// </summary>
-        /// <typeparam name="T">The <see cref="SettingsSection"/> as a type to select.</typeparam>
-        public void SelectTab<T>()
+        /// <typeparam name="T">The type of <see cref="SettingsSection"/> to scroll to.</typeparam>
+        public void ScrollTo<T>()
             where T : SettingsSection
         {
             if (State.Value == Visibility.Hidden)
@@ -150,20 +166,20 @@ namespace Vignette.Game.Settings
         }
 
         /// <summary>
-        /// Shows the overlay's body.
+        /// Shows the overlay's body. To show the overlay itself, see <see cref="VisibilityContainer.Show"/>.
         /// </summary>
+        /// <remarks>May not take effect if <see cref="KeepBodyHidden"/> is true or <see cref="State"/> is <see cref="Visibility.Hidden"/>.</remarks>
         public void ShowBody() => showBody(true);
 
         /// <summary>
-        /// Hides the overlay's body leaving the sidebar only visible.
+        /// Hides the overlay's body leaving the sidebar only visible. To hide the overlay itself, see <see cref="VisibilityContainer.Hide"/>.
         /// </summary>
         public void HideBody() => hideBody(true);
 
         /// <summary>
-        /// Opens a sub panel in the side panel.
+        /// Opens a sub panel and forcibly opens the overlay if it is hidden.
         /// </summary>
-        /// <typeparam name="T">The type of submenu to open.</typeparam>
-        public void OpenSubPanel(SettingsPanel panel)
+        public void ShowSubPanel(SettingsSubPanel panel)
         {
             if (panel == null)
                 return;
@@ -171,49 +187,59 @@ namespace Vignette.Game.Settings
             if (State.Value == Visibility.Hidden)
                 Show();
 
-            Buttons = false;
+            NavigationButtonsEnabled = false;
 
-            subMenuContainer.Add(SubPanel = panel);
-            subMenuContainer.MoveToX(0, 300, Easing.OutCirc);
-        }
+            subMenuContainer.Add(panel);
+            panel.Show();
 
-        /// <summary>
-        /// Closes the currently open sub panel.
-        /// </summary>
-        public void CloseSubPanel()
-        {
-            if (SubPanel == null)
-                return;
-
-            if (MainPanelActive)
-                Buttons = true;
-
-            subMenuContainer.MoveToX(-400, 300, Easing.InCirc).Then().Schedule(() =>
+            RegisterBackAction(() =>
             {
-                subMenuContainer.Clear();
-                SubPanel = null;
+                if (BodyVisible)
+                    NavigationButtonsEnabled = true;
+
+                panel.Hide();
+                panel.Expire();
             });
         }
 
+        /// <summary>
+        /// Performs a back action. To hide the overlay itself, see <see cref="VisibilityContainer.Hide"/>.
+        /// </summary>
+        public void Back()
+        {
+            if (backActionStack.TryPop(out var action))
+            {
+                action.Invoke();
+                return;
+            }
+
+            Hide();
+        }
+
+        /// <summary>
+        /// Registers an action to be performed when the back button is pressed.
+        /// </summary>
+        public void RegisterBackAction(Action action) => backActionStack.Push(action);
+
         private void showBody(bool enableButtons = false)
         {
-            if (State.Value == Visibility.Hidden)
+            if (State.Value == Visibility.Hidden || KeepBodyHidden)
                 return;
 
-            if (enableButtons && SubPanel == null)
-                Buttons = true;
+            if (enableButtons)
+                NavigationButtonsEnabled = true;
 
             body.MoveToX(0, 300, Easing.OutCirc);
-            MainPanelActive = true;
+            BodyVisible = true;
         }
 
         private void hideBody(bool disableButtons = false)
         {
             if (disableButtons)
-                Buttons = false;
+                NavigationButtonsEnabled = false;
 
             body.MoveToX(-400, 300, Easing.InCirc);
-            MainPanelActive = false;
+            BodyVisible = false;
         }
 
         private void setActiveButton(SettingsSection section)
@@ -225,18 +251,7 @@ namespace Vignette.Game.Settings
         private void handleSectionSelection(SettingsSection section)
         {
             setActiveButton(section);
-            content.ScrollContainer.ScrollTo(section);
-        }
-
-        private void handleBackAction()
-        {
-            if (SubPanel != null)
-            {
-                CloseSubPanel();
-                return;
-            }
-
-            State.Value = Visibility.Hidden;
+            mainPanel.ScrollContainer.ScrollTo(section);
         }
 
         private void handleExitAction()
@@ -248,13 +263,13 @@ namespace Vignette.Game.Settings
         {
             base.UpdateAfterChildren();
 
-            if (content.ScrollContainer.UserScrolling)
+            if (mainPanel.ScrollContainer.UserScrolling)
             {
-                float currentScroll = content.ScrollContainer.Current;
+                float currentScroll = mainPanel.ScrollContainer.Current;
 
-                var section = content.Children.Where(c => c.IsPresent)
+                var section = mainPanel.Children.Where(c => c.IsPresent)
                                 .OfType<SettingsSection>()
-                                .TakeWhile(section => content.ScrollContainer.GetChildPosInContent(section) - currentScroll - 10 <= 0)
+                                .TakeWhile(section => mainPanel.ScrollContainer.GetChildPosInContent(section) - currentScroll - 10 <= 0)
                                 .LastOrDefault() ?? sections.FirstOrDefault();
 
                 setActiveButton(section);
@@ -272,7 +287,6 @@ namespace Vignette.Game.Settings
 
         protected override void PopOut()
         {
-            CloseSubPanel();
             FadeEdgeEffectTo(0, 300);
             this.MoveToX(-SettingsSidebar.WIDTH, 300, Easing.InCirc);
             hideBody();
