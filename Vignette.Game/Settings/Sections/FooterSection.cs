@@ -29,9 +29,9 @@ namespace Vignette.Game.Settings.Sections
                         Icon = VignetteFont.Logo,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Colour = ThemeSlot.Gray40,
+                        Colour = ThemeSlot.Gray60,
                     },
-                    new ThemableTextFlowContainer(s => s.Colour = ThemeSlot.Gray40)
+                    new ThemableTextFlowContainer(s => s.Colour = ThemeSlot.Gray60)
                     {
                         Text = "Copyright 2020 - 2021\nVignette Project",
                         Anchor = Anchor.Centre,
