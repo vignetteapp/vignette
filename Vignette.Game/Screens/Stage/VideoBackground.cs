@@ -12,14 +12,11 @@ namespace Vignette.Game.Screens.Stage
     {
         public override IEnumerable<string> Extensions => new[] { ".mp4" };
 
-        protected override void OnFileChanged(Stream stream)
+        protected override Drawable CreateBackground(Stream stream) => new Video(stream)
         {
-            InternalChild = new Video(stream)
-            {
-                Loop = true,
-                FillMode = FillMode.Fit,
-                RelativeSizeAxes = Axes.Both,
-            };
-        }
+            Loop = true,
+            FillMode = FillMode.Fit,
+            RelativeSizeAxes = Axes.Both,
+        };
     }
 }

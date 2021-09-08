@@ -13,17 +13,11 @@ namespace Vignette.Game.Screens.Stage
     {
         public override IEnumerable<string> Extensions => new[] { ".png", ".jpg", ".jpeg" };
 
-        private readonly Sprite sprite;
-
-        public TexturedBackground()
+        protected override Drawable CreateBackground(Stream stream) => new Sprite
         {
-            InternalChild = sprite = new Sprite
-            {
-                RelativeSizeAxes = Axes.Both,
-                FillMode = FillMode.Fill,
-            };
-        }
-
-        protected override void OnFileChanged(Stream stream) => sprite.Texture = Texture.FromStream(stream);
+            RelativeSizeAxes = Axes.Both,
+            FillMode = FillMode.Fill,
+            Texture = Texture.FromStream(stream),
+        };
     }
 }

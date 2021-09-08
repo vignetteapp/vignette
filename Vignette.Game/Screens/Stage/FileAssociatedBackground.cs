@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using Vignette.Game.Configuration;
 using Vignette.Game.IO;
@@ -30,7 +31,7 @@ namespace Vignette.Game.Screens.Stage
             game.RegisterFileHandler(this);
         }
 
-        protected abstract void OnFileChanged(Stream stream);
+        protected abstract Drawable CreateBackground(Stream stream);
 
         private void handlePathChange()
         {
@@ -39,7 +40,7 @@ namespace Vignette.Game.Screens.Stage
             if (Extensions.Contains(Path.GetExtension(path.Value)) && File.Exists(path.Value))
             {
                 stream = File.OpenRead(path.Value);
-                OnFileChanged(stream);
+                InternalChild = CreateBackground(stream);
             }
         }
 
