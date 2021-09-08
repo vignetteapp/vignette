@@ -56,7 +56,7 @@ namespace Vignette.Game.Settings
                             Icon = VignetteFont.Logo,
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
-                            Colour = ThemeSlot.Black,
+                            Colour = ThemeSlot.AccentPrimary,
                         },
                         SearchBox = new FluentSearchBox
                         {
