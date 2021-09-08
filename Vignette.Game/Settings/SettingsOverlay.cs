@@ -69,7 +69,7 @@ namespace Vignette.Game.Settings
         private SettingsHeader header;
         private SettingsSidebar sidebar;
         private SettingsMainPanel mainPanel;
-        private Container subMenuContainer;
+        private Container<SettingsSubPanel> subPanelContainer;
         private readonly Stack<Action> backActionStack = new Stack<Action>();
 
         [Resolved(canBeNull: true)]
@@ -129,7 +129,7 @@ namespace Vignette.Game.Settings
                                 },
                             }
                         },
-                        subMenuContainer = new Container
+                        subPanelContainer = new Container<SettingsSubPanel>
                         {
                             RelativeSizeAxes = Axes.Both,
                         },
@@ -187,19 +187,10 @@ namespace Vignette.Game.Settings
             if (State.Value == Visibility.Hidden)
                 Show();
 
-            NavigationButtonsEnabled = false;
-
-            subMenuContainer.Add(panel);
+            subPanelContainer.Add(panel);
             panel.Show();
 
-            RegisterBackAction(() =>
-            {
-                if (BodyVisible)
-                    NavigationButtonsEnabled = true;
-
-                panel.Hide();
-                panel.Expire();
-            });
+            RegisterBackAction(() => closeSubPanel(panel));
         }
 
         /// <summary>
@@ -248,8 +239,17 @@ namespace Vignette.Game.Settings
                 button.Active.Value = button.Section == section;
         }
 
+        private void closeSubPanel(SettingsSubPanel panel)
+        {
+            panel.Hide();
+            panel.Expire();
+        }
+
         private void handleSectionSelection(SettingsSection section)
         {
+            foreach (var panel in subPanelContainer)
+                closeSubPanel(panel);
+
             setActiveButton(section);
             mainPanel.ScrollContainer.ScrollTo(section);
         }
