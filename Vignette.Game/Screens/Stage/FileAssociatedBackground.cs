@@ -55,11 +55,12 @@ namespace Vignette.Game.Screens.Stage
             game.UnregisterFileHandler(this);
 
             if (stream != null)
-                performCleanup();
+                Schedule(() => performCleanup());
         }
 
         private void performCleanup()
         {
+            ClearInternal();
             stream?.Dispose();
             stream = null;
         }
