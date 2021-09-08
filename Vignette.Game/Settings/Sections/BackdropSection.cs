@@ -1,6 +1,7 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -41,7 +42,7 @@ namespace Vignette.Game.Settings.Sections
             position = config.GetBindable<Vector2>(VignetteSetting.BackgroundPosition);
             backgroundAdjust = session.GetBindable<bool>(SessionSetting.EditingBackground);
 
-            pathSetting = new SettingsFileBrowser
+            pathSetting = new BackdropFileBrowser
             {
                 Label = "File",
                 Current = config.GetBindable<string>(VignetteSetting.BackgroundPath),
@@ -162,6 +163,35 @@ namespace Vignette.Game.Settings.Sections
 
                 position = config.GetBindable<Vector2>(VignetteSetting.BackgroundPosition);
                 position.BindValueChanged(e => text.Text = $"{e.NewValue.X:0},{e.NewValue.Y:0}", true);
+            }
+        }
+
+        private class BackdropFileBrowser : SettingsFileBrowser
+        {
+            protected override string[] Extensions
+            {
+                get
+                {
+                    switch (type.Value)
+                    {
+                        case BackgroundType.Image:
+                            return new[] { ".png", ".jpeg", ".jpg" };
+
+                        case BackgroundType.Video:
+                            return new[] { ".mp4" };
+
+                        default:
+                            return Array.Empty<string>();
+                    }
+                }
+            }
+
+            private Bindable<BackgroundType> type;
+
+            [BackgroundDependencyLoader]
+            private void load(VignetteConfigManager config)
+            {
+                type = config.GetBindable<BackgroundType>(VignetteSetting.BackgroundType);
             }
         }
     }
