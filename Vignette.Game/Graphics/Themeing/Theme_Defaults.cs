@@ -17,34 +17,34 @@ namespace Vignette.Game.Graphics.Themeing
             .Set(ThemeSlot.AccentLighterAlt, "f7fdf9");
 
         private static readonly Theme accent_pub = new Theme()
-            .Set(ThemeSlot.AccentDarker, "6b3172")
-            .Set(ThemeSlot.AccentDark, "91439b")
-            .Set(ThemeSlot.AccentDarkAlt, "ab4fb8")
-            .Set(ThemeSlot.AccentPrimary, "BE58CB")
-            .Set(ThemeSlot.AccentSecondary, "c669d2")
-            .Set(ThemeSlot.AccentTertiary, "d794e0")
-            .Set(ThemeSlot.AccentLight, "ebc7f0")
-            .Set(ThemeSlot.AccentLighter, "f4e0f7")
-            .Set(ThemeSlot.AccentLighterAlt, "fcf7fd");
+            .Set(ThemeSlot.AccentDarker, "790f36")
+            .Set(ThemeSlot.AccentDark, "a51449")
+            .Set(ThemeSlot.AccentDarkAlt, "c31756")
+            .Set(ThemeSlot.AccentPrimary, "d81b60")
+            .Set(ThemeSlot.AccentSecondary, "dd3271")
+            .Set(ThemeSlot.AccentTertiary, "e86e9a")
+            .Set(ThemeSlot.AccentLight, "f4b3cb")
+            .Set(ThemeSlot.AccentLighter, "f9d6e3")
+            .Set(ThemeSlot.AccentLighterAlt, "fdf5f8");
 
         /// <summary>
         /// The default Light Theme.
         /// </summary>
         public static readonly Theme Light = new Theme("Light")
-            .Set(ThemeSlot.Black, "000000")
-            .Set(ThemeSlot.Gray190, "201f1e")
-            .Set(ThemeSlot.Gray160, "323130")
-            .Set(ThemeSlot.Gray150, "3b3a39")
-            .Set(ThemeSlot.Gray130, "605e5c")
+            .Set(ThemeSlot.Black, "0b0b0b")
+            .Set(ThemeSlot.Gray190, "151515")
+            .Set(ThemeSlot.Gray160, "000000")
+            .Set(ThemeSlot.Gray150, "2f2f2f")
+            .Set(ThemeSlot.Gray130, "373737")
             .Set(ThemeSlot.Gray110, "8a8886")
-            .Set(ThemeSlot.Gray90, "a19f9d")
-            .Set(ThemeSlot.Gray60, "c8c6c4")
-            .Set(ThemeSlot.Gray50, "d2d0ce")
-            .Set(ThemeSlot.Gray40, "e1dfdd")
-            .Set(ThemeSlot.Gray30, "edebe9")
-            .Set(ThemeSlot.Gray20, "f3f2f1")
-            .Set(ThemeSlot.Gray10, "faf9f8")
-            .Set(ThemeSlot.White, "ffffff")
+            .Set(ThemeSlot.Gray90, "595959")
+            .Set(ThemeSlot.Gray60, "c2c2c2")
+            .Set(ThemeSlot.Gray50, "cacaca")
+            .Set(ThemeSlot.Gray40, "d3d3d3")
+            .Set(ThemeSlot.Gray30, "e3e3e3")
+            .Set(ThemeSlot.Gray20, "ededed")
+            .Set(ThemeSlot.Gray10, "f1f1f1")
+            .Set(ThemeSlot.White, "f7f7f7")
             .Merge(VignetteGameBase.IsInsidersBuild ? accent_ins : accent_pub);
 
         /// <summary>
