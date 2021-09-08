@@ -28,14 +28,14 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             });
         }
 
-        private class TestBreadcrumbControl : BreadcrumbControl<string>
+        private class TestBreadcrumbControl : FluentBreadcrumbControl<string>
         {
             public TestBreadcrumbControl()
             {
                 Height = 36;
                 Current.ValueChanged += _ =>
                 {
-                    foreach (var t in TabContainer.Children.OfType<BreadcrumbItem>().Where(t => t.State == Visibility.Hidden).ToArray())
+                    foreach (var t in TabContainer.Children.OfType<FluentBreadcrumbItem>().Where(t => t.State == Visibility.Hidden).ToArray())
                         RemoveItem(t.Value);
                 };
             }

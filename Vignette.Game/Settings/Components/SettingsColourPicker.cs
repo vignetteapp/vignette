@@ -25,7 +25,7 @@ namespace Vignette.Game.Settings.Components
             set => current.Current = value;
         }
 
-        private Box previewBox;
+        private readonly Box previewBox;
         private readonly BindableWithCurrent<Colour4> current = new BindableWithCurrent<Colour4>(Colour4.White);
 
         public ColourPickerButton()

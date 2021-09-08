@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public class ScreenBreadcrumbControl : BreadcrumbControl<IScreen>
+    public class ScreenBreadcrumbControl : FluentBreadcrumbControl<IScreen>
     {
         public ScreenBreadcrumbControl(ScreenStack stack)
         {

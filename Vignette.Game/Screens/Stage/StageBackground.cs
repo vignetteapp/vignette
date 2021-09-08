@@ -54,7 +54,7 @@ namespace Vignette.Game.Screens.Stage
             shouldEase = false;
 
             var last = background;
-            last?.FadeOutFromOne(300, Easing.OutQuint).Expire();
+            last?.Expire();
 
             switch (type.Value)
             {
@@ -73,11 +73,12 @@ namespace Vignette.Game.Screens.Stage
 
             AddInternal(background.With(d =>
             {
-                d.Depth = (last?.Depth ?? 0) + 1;
                 d.Anchor = Anchor.Centre;
                 d.Origin = Anchor.Centre;
                 d.RelativeSizeAxes = Axes.Both;
             }));
+
+            background.FadeInFromZero(300, Easing.OutQuint);
 
             handleVisualChange();
         }

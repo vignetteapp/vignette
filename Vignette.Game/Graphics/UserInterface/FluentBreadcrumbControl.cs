@@ -14,16 +14,16 @@ using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
-    public abstract class BreadcrumbControl<T> : TabControl<T>
+    public abstract class FluentBreadcrumbControl<T> : TabControl<T>
     {
-        public BreadcrumbControl()
+        public FluentBreadcrumbControl()
         {
             SwitchTabOnRemove = false;
             TabContainer.Spacing = new Vector2(6, 0);
 
             Current.ValueChanged += e =>
             {
-                foreach (var t in TabContainer.Children.OfType<BreadcrumbItem>())
+                foreach (var t in TabContainer.Children.OfType<FluentBreadcrumbItem>())
                 {
                     var tIndex = TabContainer.IndexOf(t);
                     var tabIndex = TabContainer.IndexOf(TabMap[e.NewValue]);
@@ -36,9 +36,9 @@ namespace Vignette.Game.Graphics.UserInterface
 
         protected override Dropdown<T> CreateDropdown() => null;
 
-        protected override TabItem<T> CreateTabItem(T value) => new BreadcrumbItem(value);
+        protected override TabItem<T> CreateTabItem(T value) => new FluentBreadcrumbItem(value);
 
-        protected class BreadcrumbItem : TabItem<T>, IStateful<Visibility>
+        protected class FluentBreadcrumbItem : TabItem<T>, IStateful<Visibility>
         {
             private Visibility state;
 
@@ -73,7 +73,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
             public override bool HandlePositionalInput => State == Visibility.Visible;
 
-            public BreadcrumbItem(T value)
+            public FluentBreadcrumbItem(T value)
                 : base(value)
             {
                 RelativeSizeAxes = Axes.Y;
