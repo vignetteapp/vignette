@@ -14,7 +14,7 @@ namespace Vignette.Game.Settings.Components
     public class OpenSubPanelButton<T> : SettingsInteractableItem
         where T : SettingsSubPanel
     {
-        private object[] args;
+        private readonly object[] args;
 
         public OpenSubPanelButton(params object[] args)
         {
@@ -34,7 +34,7 @@ namespace Vignette.Game.Settings.Components
                 Margin = new MarginPadding { Right = 6 },
             });
 
-            Action = () => overlay.ShowSubPanel(Activator.CreateInstance(typeof(T), args) as T);
+            Action = () => overlay?.ShowSubPanel(Activator.CreateInstance(typeof(T), args) as T);
         }
     }
 }
