@@ -4,7 +4,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -16,7 +16,7 @@ namespace Vignette.Game.Graphics.UserInterface
         }
     }
 
-    public class DrawableFluentMenuDivider : FluentMenu.DrawableMenuItem
+    public class DrawableFluentMenuDivider : Menu.DrawableMenuItem
     {
         public DrawableFluentMenuDivider(MenuItem item)
             : base(item)
@@ -27,13 +27,12 @@ namespace Vignette.Game.Graphics.UserInterface
 
         protected override Drawable CreateBackground() => new ThemableBox
         {
-            Height = 1.5f,
-            Colour = ThemeSlot.Gray30,
+            Height = 1,
+            Colour = ThemeSlot.Gray10,
             RelativeSizeAxes = Axes.X,
         };
 
-        protected override Drawable CreateContent()
-            => Drawable.Empty();
+        protected override Drawable CreateContent() => Empty();
 
         protected override void UpdateBackgroundColour()
         {

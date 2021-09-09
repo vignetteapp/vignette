@@ -17,9 +17,7 @@ namespace Vignette.Game.Graphics.UserInterface
         where T : struct, IComparable<T>, IConvertible, IEquatable<T>
     {
         private readonly FluentButton incrementButton;
-
         private readonly FluentButton decrementButton;
-
         private readonly BindableNumberWithCurrent<T> current = new BindableNumberWithCurrent<T>();
 
         public new Bindable<T> Current
@@ -63,7 +61,7 @@ namespace Vignette.Game.Graphics.UserInterface
                             {
                                 incrementButton = new FluentButton
                                 {
-                                    Icon = FluentSystemIcons.ChevronUp16,
+                                    Icon = SegoeFluent.ChevronUp,
                                     IconSize = 8,
                                     Style = ButtonStyle.Text,
                                     RelativeSizeAxes = Axes.X,
@@ -72,7 +70,7 @@ namespace Vignette.Game.Graphics.UserInterface
                                 },
                                 decrementButton = new FluentButton
                                 {
-                                    Icon = FluentSystemIcons.ChevronDown16,
+                                    Icon = SegoeFluent.ChevronDown,
                                     IconSize = 8,
                                     Style = ButtonStyle.Text,
                                     RelativeSizeAxes = Axes.X,

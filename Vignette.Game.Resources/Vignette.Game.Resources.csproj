@@ -5,9 +5,40 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Fonts\**\*"/>
-    <EmbeddedResource Include="Themes\**\*"/>
-    <EmbeddedResource Include="Shaders\**\*"/>
-    <EmbeddedResource Include="Textures\**\*"/>
+    <EmbeddedResource Include="Fonts\**\*" />
+    <EmbeddedResource Include="Themes\**\*" />
+    <EmbeddedResource Include="Shaders\**\*" />
+    <EmbeddedResource Include="Textures\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular.fnt" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_00.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_01.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_02.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_03.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_04.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_05.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_06.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_07.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_08.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_09.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_10.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_11.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_12.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_13.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_14.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_15.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_16.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_17.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_18.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_19.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_20.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_21.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_22.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_23.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_24.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_25.png" />
+    <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_26.png" />
   </ItemGroup>
 </Project>

@@ -40,5 +40,7 @@ namespace Vignette.Game.Bindables
 
             Value = value;
         }
+
+        protected override Bindable<Vector2> CreateInstance() => new BindableVector2();
     }
 }

@@ -25,5 +25,7 @@ namespace Vignette.Game.Bindables
 
             Value = Colour4.FromHex(str);
         }
+
+        protected override Bindable<Colour4> CreateInstance() => new BindableColour4();
     }
 }

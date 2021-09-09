@@ -5,7 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.Containers
 {
@@ -33,7 +33,7 @@ namespace Vignette.Game.Graphics.Containers
             public FluentScrollbar(Direction direction)
                 : base(direction)
             {
-                Child = new ThemableEffectBox
+                Child = new ThemableContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     CornerRadius = 2.5f,

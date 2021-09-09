@@ -4,33 +4,27 @@
 using System;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
     /// <summary>
     /// A slider bar where its value can be adjusted by dragging the nub.
     /// </summary>
-    public class FluentSlider<T> : SliderBar<T>, IHasTooltip
+    public class FluentSlider<T> : SliderBar<T>
         where T : struct, IComparable<T>, IConvertible, IEquatable<T>
     {
         private readonly ThemableBox unfilled;
-
         private readonly ThemableBox filled;
-
         private readonly ThemableCircle nub;
-
-        public string TooltipText => $"{Current.Value:0.00}";
 
         public FluentSlider()
         {
             Height = 28;
-            Padding = new MarginPadding { Horizontal = 8 };
             Children = new Drawable[]
             {
                 new Container
@@ -61,7 +55,7 @@ namespace Vignette.Game.Graphics.UserInterface
                     {
                         Size = new Vector2(16),
                         BorderThickness = 2.5f,
-                        Colour = ThemeSlot.White,
+                        Colour = ThemeSlot.Gray30,
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         RelativePositionAxes = Axes.X,

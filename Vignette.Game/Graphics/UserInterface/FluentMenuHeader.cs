@@ -8,7 +8,7 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -20,18 +20,16 @@ namespace Vignette.Game.Graphics.UserInterface
         }
     }
 
-    public class DrawableFluentMenuHeader : FluentMenu.DrawableMenuItem
+    public class DrawableFluentMenuHeader : Menu.DrawableMenuItem
     {
         public DrawableFluentMenuHeader(MenuItem item)
             : base(item)
         {
         }
 
-        protected override Drawable CreateBackground()
-            => Drawable.Empty();
+        protected override Drawable CreateBackground() => Empty();
 
-        protected override Drawable CreateContent()
-            => new HeaderMenuItem();
+        protected override Drawable CreateContent() => new HeaderMenuItem();
 
         protected override void UpdateBackgroundColour()
         {
@@ -51,7 +49,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
             public HeaderMenuItem()
             {
-                Height = 32;
+                Height = 24;
                 AutoSizeAxes = Axes.X;
                 Child = new ThemableSpriteText
                 {

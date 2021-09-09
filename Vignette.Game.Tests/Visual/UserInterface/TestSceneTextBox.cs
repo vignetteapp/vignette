@@ -13,27 +13,13 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             Add(new FluentTextBox
             {
                 Width = 200,
-                PlaceholderText = @"Bordered",
-            });
-
-            Add(new FluentTextBox
-            {
-                Width = 200,
-                Style = TextBoxStyle.Underlined,
-                PlaceholderText = @"Underlined",
-            });
-
-            Add(new FluentTextBox
-            {
-                Width = 200,
-                Style = TextBoxStyle.Borderless,
-                PlaceholderText = @"Borderless",
+                PlaceholderText = "Simple",
             });
 
             Add(new TestLetterOnlyTextBox
             {
                 Width = 200,
-                PlaceholderText = @"Letters Only",
+                PlaceholderText = "Letters Only",
             });
 
             Add(new FluentTextBox
@@ -46,7 +32,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             Add(new FluentTextBox
             {
                 Width = 200,
-                PlaceholderText = @"Placeholder",
+                PlaceholderText = "Disabled",
                 Current = new Bindable<string>
                 {
                     Disabled = true,
@@ -56,12 +42,6 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             Add(new FluentSearchBox
             {
                 Width = 200,
-            });
-
-            Add(new FluentSearchBox
-            {
-                Width = 200,
-                Style = TextBoxStyle.Underlined,
             });
         }
 

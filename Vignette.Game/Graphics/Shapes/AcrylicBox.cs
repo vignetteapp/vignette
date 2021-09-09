@@ -6,19 +6,15 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using Vignette.Game.Graphics.Sprites;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.Shapes
 {
     public class AcrylicBox : CompositeDrawable
     {
-        private BufferedContainer blur;
-
-        private Box luminosityBox;
-
+        private readonly BufferedContainer blur;
+        private readonly Box luminosityBox;
         private readonly ThemableBox tint;
-
-        private readonly SpriteNoise noise;
 
         public new ThemeSlot Colour
         {
@@ -70,6 +66,12 @@ namespace Vignette.Game.Graphics.Shapes
             }
         }
 
+        public Vector2 BlurSigma
+        {
+            get => blur.BlurSigma;
+            set => blur.BlurSigma = value;
+        }
+
         public AcrylicBox()
         {
             InternalChildren = new Drawable[]
@@ -78,7 +80,6 @@ namespace Vignette.Game.Graphics.Shapes
                 {
                     Name = "Guassian Blur",
                     RelativeSizeAxes = Axes.Both,
-                    BlurSigma = new Vector2(100),
                 },
                 tint = new ThemableBox
                 {
@@ -90,7 +91,7 @@ namespace Vignette.Game.Graphics.Shapes
                     Name = "Luminance",
                     RelativeSizeAxes = Axes.Both,
                 },
-                noise = new SpriteNoise
+                new SpriteNoise
                 {
                     Name = "Noise",
                     RelativeSizeAxes = Axes.Both,

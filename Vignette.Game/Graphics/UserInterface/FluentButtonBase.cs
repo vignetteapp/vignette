@@ -3,14 +3,13 @@
 
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
     public abstract class FluentButtonBase : Button
     {
         private bool isHovered;
-
         private bool isPressed;
 
         protected ThemeSlot BackgroundResting { get; set; }

@@ -12,8 +12,6 @@ namespace Vignette.Desktop
 {
     public class VignetteGameDesktop : VignetteGame
     {
-        private IBindable<bool> resizable;
-
         public override void SetHost(GameHost host)
         {
             base.SetHost(host);
@@ -22,13 +20,11 @@ namespace Vignette.Desktop
                 return;
 
             window.ConfineMouseMode.Value = ConfineMouseMode.Never;
+            window.DragDrop += f => FileDropped(new[] { f });
             window.Title = Name;
 
             string icon = IsInsidersBuild ? "vignette-insiders.ico" : "vignette.ico";
             window.SetIconFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), icon));
-
-            resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
-            resizable.BindValueChanged(e => window.Resizable = e.NewValue, true);
         }
     }
 }

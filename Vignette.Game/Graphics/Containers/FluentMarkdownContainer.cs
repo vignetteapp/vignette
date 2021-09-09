@@ -12,7 +12,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.Containers
 {
@@ -46,7 +46,7 @@ namespace Vignette.Game.Graphics.Containers
             }
         }
 
-        protected class ThemableMarkdownLinkText : CompositeDrawable, IHasTooltip
+        protected class ThemableMarkdownLinkText : CompositeDrawable
         {
             public string TooltipText => link;
 

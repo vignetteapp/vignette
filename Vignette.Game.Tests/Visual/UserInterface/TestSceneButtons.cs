@@ -42,7 +42,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                 button.Text = "Button";
 
             if (hasIcon)
-                button.Icon = FluentSystemIcons.Circle24;
+                button.Icon = SegoeFluent.Circle;
 
             return button;
         }

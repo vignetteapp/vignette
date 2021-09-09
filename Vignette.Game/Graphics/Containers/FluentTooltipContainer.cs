@@ -7,7 +7,7 @@ using osu.Framework.Graphics.Cursor;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Sprites;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.Containers
 {
@@ -42,13 +42,12 @@ namespace Vignette.Game.Graphics.Containers
                 };
             }
 
-            public bool SetContent(object content)
+            public void SetContent(object content)
             {
                 if (!(content is string contentString))
-                    return false;
+                    return;
 
                 text.Text = contentString;
-                return true;
             }
 
             public void Move(Vector2 pos)

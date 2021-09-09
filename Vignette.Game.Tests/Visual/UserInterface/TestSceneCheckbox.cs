@@ -42,6 +42,39 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                     Disabled = true
                 }
             });
+
+            Add(new FluentSwitch
+            {
+                Text = @"Hello World",
+            });
+
+            Add(new FluentSwitch
+            {
+                Text = @"Hello World",
+                Current = new BindableBool
+                {
+                    Value = true
+                }
+            });
+
+            Add(new FluentSwitch
+            {
+                Text = @"Hello World",
+                Current = new BindableBool
+                {
+                    Disabled = true
+                }
+            });
+
+            Add(new FluentSwitch
+            {
+                Text = @"Hello World",
+                Current = new BindableBool
+                {
+                    Value = true,
+                    Disabled = true
+                }
+            });
         }
     }
 }

@@ -2,9 +2,10 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using osu.Framework.Graphics.Cursor;
+using osu.Framework.Localisation;
 using osuTK;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
@@ -21,7 +22,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
 
         private class TestBoxWithTooltip : ThemableBox, IHasTooltip
         {
-            public string TooltipText => @"Hello World";
+            public LocalisableString TooltipText => @"Hello World";
         }
     }
 }

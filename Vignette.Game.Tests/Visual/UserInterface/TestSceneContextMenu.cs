@@ -7,7 +7,7 @@ using osuTK;
 using Vignette.Game.Graphics.Shapes;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Tests.Visual.UserInterface
 {
@@ -23,12 +23,12 @@ namespace Vignette.Game.Tests.Visual.UserInterface
             public MenuItem[] ContextMenuItems => new MenuItem[]
             {
                 new FluentMenuItem("Hello World"),
-                new FluentMenuItem("Add To Favorites", FluentSystemIcons.Heart16),
-                new FluentMenuItem("Move to Recycle Bin", FluentSystemIcons.Delete16),
-                new FluentMenuItem("Send Feedback", FluentSystemIcons.ChatBubblesQuestion20),
+                new FluentMenuItem("Add To Favorites", SegoeFluent.Heart),
+                new FluentMenuItem("Move to Recycle Bin", SegoeFluent.Delete),
+                new FluentMenuItem("Send Feedback", SegoeFluent.ChatBubblesQuestion),
                 new FluentMenuDivider(),
                 new FluentMenuHeader("Ridiculous"),
-                new FluentMenuItem("Be Sent to Another World", FluentSystemIcons.Globe16),
+                new FluentMenuItem("Be Sent to Another World", SegoeFluent.Globe),
                 new FluentMenuDivider(),
                 new FluentMenuItem("File Actions")
                 {
@@ -36,7 +36,7 @@ namespace Vignette.Game.Tests.Visual.UserInterface
                     {
                         new FluentMenuHeader("Actions"),
                         new FluentMenuItem("Add To Recents"),
-                        new FluentMenuItem("Show File in Explorer", FluentSystemIcons.WindowNew24),
+                        new FluentMenuItem("Show File in Explorer", SegoeFluent.WindowNew),
                     }
                 }
             };

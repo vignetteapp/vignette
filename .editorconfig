@@ -22,13 +22,13 @@ dotnet_diagnostic.IDE0073.severity = error
 
 # Language Style Rules
 csharp_style_var_for_built_in_types = false
-csharp_style_expression_bodied_methods = when_on_single_line:warning
-csharp_style_expression_bodied_operators = when_on_single_line:warning
+csharp_style_expression_bodied_methods =false:silent
+csharp_style_expression_bodied_operators =false:silent
 csharp_style_expression_bodied_properties = when_on_single_line:warning
-csharp_style_expression_bodied_indexers = when_on_single_line:warning
-csharp_style_expression_bodied_properties = when_on_single_line:warning
-csharp_style_expression_bodied_lambdas = when_on_single_line:warning
-csharp_style_expression_bodied_local_functions = when_on_single_line:warning
+csharp_style_expression_bodied_indexers =true:silent
+csharp_style_expression_bodied_properties =false:silent
+csharp_style_expression_bodied_lambdas =true:silent
+csharp_style_expression_bodied_local_functions =true:silent
 csharp_style_prefer_switch_expression = false:warning
 csharp_style_prefer_pattern_matching = false:warning
 csharp_style_implicit_object_creation_when_type_is_apparent = false:warning
@@ -155,3 +155,4 @@ csharp_preserve_single_line_blocks = true
 csharp_using_directive_placement = outside_namespace
 
 dotnet_diagnostic.IDE0055.severity = warning
+csharp_style_expression_bodied_accessors=true:silent

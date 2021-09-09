@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osuTK;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Typesets;
-using Vignette.Game.Themeing;
+using Vignette.Game.Graphics.Themeing;
 
 namespace Vignette.Game.Graphics.UserInterface
 {
@@ -15,57 +15,35 @@ namespace Vignette.Game.Graphics.UserInterface
     /// </summary>
     public class FluentSearchBox : FluentTextInput
     {
-        private FluentButton clearButton;
-
-        private ThemableSpriteIcon searchIcon;
+        private readonly ThemableSpriteIcon searchIcon;
 
         public FluentSearchBox()
         {
             PlaceholderText = @"Search";
 
-            AddInternal(new GridContainer
+            AddInternal(new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                ColumnDimensions = new[]
+                Direction = FillDirection.Horizontal,
+                Children = new Drawable[]
                 {
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(GridSizeMode.Distributed),
-                    new Dimension(GridSizeMode.AutoSize),
-                },
-                Content = new Drawable[][]
-                {
-                    new Drawable[]
+                    new Container
                     {
-                        new Container
+                        AutoSizeAxes = Axes.X,
+                        RelativeSizeAxes = Axes.Y,
+                        AutoSizeEasing = Easing.OutQuint,
+                        AutoSizeDuration = 200,
+                        Child = searchIcon = new ThemableSpriteIcon
                         {
-                            AutoSizeAxes = Axes.X,
-                            RelativeSizeAxes = Axes.Y,
-                            AutoSizeEasing = Easing.OutQuint,
-                            AutoSizeDuration = 200,
-                            Child = searchIcon = new ThemableSpriteIcon
-                            {
-                                Margin = new MarginPadding(8),
-                                Icon = FluentSystemIcons.Search16,
-                                Size = new Vector2(16),
-                            },
-                        },
-                        Input,
-                        new Container
-                        {
-                            AutoSizeAxes = Axes.X,
-                            RelativeSizeAxes = Axes.Y,
-                            AutoSizeEasing = Easing.OutQuint,
-                            AutoSizeDuration = 200,
-                            Child = clearButton = new FluentButton
-                            {
-                                Icon = FluentSystemIcons.Dismiss16,
-                                Width = 32,
-                                Style = ButtonStyle.Text,
-                                Action = () => Current.Value = string.Empty,
-                            },
+                            Icon = SegoeFluent.Search,
+                            Size = new Vector2(14),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Margin = new MarginPadding { Horizontal = 8 },
                         },
                     },
-                },
+                    Input
+                }
             });
 
             Current.ValueChanged += _ => updateState();
@@ -88,8 +66,7 @@ namespace Vignette.Game.Graphics.UserInterface
 
         private void updateState()
         {
-            clearButton.Alpha = !string.IsNullOrEmpty(Current.Value) ? 1 : 0;
-            searchIcon.Colour = !Current.Disabled ? ThemeSlot.AccentPrimary : ThemeSlot.Gray90;
+            searchIcon.Colour = !Current.Disabled ? ThemeSlot.Black : ThemeSlot.Gray90;
         }
     }
 }

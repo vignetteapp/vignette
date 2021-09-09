@@ -15,6 +15,7 @@ namespace Vignette.Game.Input
         private readonly Drawable handler;
         private readonly VignetteKeyBindManager keybindManager;
         private InputManager parentInputManager;
+
         protected override IEnumerable<Drawable> KeyBindingInputQueue
         {
             get
@@ -24,11 +25,7 @@ namespace Vignette.Game.Input
             }
         }
 
-        public override IEnumerable<IKeyBinding> DefaultKeyBindings => new[]
-        {
-            new KeyBinding(InputKey.Escape, GlobalAction.ToggleMainMenu),
-            new KeyBinding(new[] { InputKey.Control, InputKey.Comma }, GlobalAction.OpenSettings),
-        };
+        public override IEnumerable<IKeyBinding> DefaultKeyBindings => GlobalKeyBindings;
 
         public GlobalActionContainer(VignetteGameBase game, VignetteKeyBindManager keybindManager = null)
             : base(matchingMode: KeyCombinationMatchingMode.Modifiers)
@@ -38,8 +35,8 @@ namespace Vignette.Game.Input
 
             if (keybindManager != null)
             {
-                // TODO: Populate missing default keybinds
                 this.keybindManager = keybindManager;
+                this.keybindManager.KeyBindsChanged += ReloadMappings;
             }
         }
 
@@ -53,14 +50,20 @@ namespace Vignette.Game.Input
         {
             KeyBindings = keybindManager?.Global ?? DefaultKeyBindings;
         }
+
+        public static IEnumerable<IKeyBinding> GlobalKeyBindings => new[]
+        {
+            new KeyBinding(InputKey.Escape, GlobalAction.ToggleSettings),
+            new KeyBinding(InputKey.F12, GlobalAction.TakeScreenshot),
+        };
     }
 
     public enum GlobalAction
     {
-        [Description("Show/Hide the Main Menu")]
-        ToggleMainMenu,
+        [Description("Toggle Settings")]
+        ToggleSettings,
 
-        [Description("Open Settings")]
-        OpenSettings,
+        [Description("Take Screenshot")]
+        TakeScreenshot,
     }
 }
