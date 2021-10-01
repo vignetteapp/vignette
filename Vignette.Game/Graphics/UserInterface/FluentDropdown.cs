@@ -215,12 +215,12 @@ namespace Vignette.Game.Graphics.UserInterface
         {
             if (itemMap.ContainsKey(item))
             {
-                /* throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}."); */
-                Logger.Log(
-                    $"\x1b[33mWarning: item {item} already exists in this {nameof(FluentDropdown<T>)}. Not adding it again.\x1b[0m",
-                    LoggingTarget.Runtime, LogLevel.Important
-                );
-                return;
+                throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
+                /* Logger.Log( */
+                /*     $"\x1b[33mWarning: item {item} already exists in this {nameof(FluentDropdown<T>)}. Not adding it again.\x1b[0m", */
+                /*     LoggingTarget.Runtime, LogLevel.Important */
+                /* ); */
+                /* return; */
             }
 
             var menuItem = new FluentMenuItem(text, () =>
