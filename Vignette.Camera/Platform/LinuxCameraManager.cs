@@ -26,8 +26,7 @@ namespace Vignette.Camera.Platform
 
                 if (File.Exists(friendlyNamePath))
                 {
-                    using var reader = new StreamReader(File.OpenRead(friendlyNamePath));
-                    friendlyName = reader.ReadToEnd();
+                    friendlyName = $"({i}) {File.ReadAllText(friendlyNamePath).TrimEnd('\n')}";
                 }
                 else
                 {
