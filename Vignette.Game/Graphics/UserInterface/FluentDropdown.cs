@@ -12,6 +12,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
+using osu.Framework.Logging;
 using osuTK;
 using Vignette.Game.Extensions;
 using Vignette.Game.Graphics.Containers;
@@ -215,7 +216,10 @@ namespace Vignette.Game.Graphics.UserInterface
             if (itemMap.ContainsKey(item))
             {
                 /* throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}."); */
-                System.Console.WriteLine($"\x1b[33mWarning: item {item} already exists in this {nameof(FluentDropdown<T>)}. Not adding it again.\x1b[0m");
+                Logger.Log(
+                    $"\x1b[33mWarning: item {item} already exists in this {nameof(FluentDropdown<T>)}. Not adding it again.\x1b[0m",
+                    LoggingTarget.Runtime, LogLevel.Important
+                );
                 return;
             }
 
