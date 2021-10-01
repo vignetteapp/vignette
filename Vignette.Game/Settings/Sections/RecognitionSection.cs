@@ -51,6 +51,10 @@ namespace Vignette.Game.Settings.Sections
                 },
             };
 
+            System.Console.WriteLine("\n\x1b[34m==== Camera device names ====");
+            foreach (var cdn in camera.CameraDeviceNames)
+                System.Console.WriteLine(cdn);
+            System.Console.WriteLine("==== Camera device names ====\x1b[0m");
             devices.AddRange(camera.CameraDeviceNames);
             camera.OnNewDevice += onNewCameraDevice;
             camera.OnLostDevice += onLostCameraDevice;
