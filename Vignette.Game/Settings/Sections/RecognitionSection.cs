@@ -1,12 +1,18 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osuTK;
+using Vignette.Camera;
+using Vignette.Camera.Graphics;
+using Vignette.Camera.Platform;
+using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Settings.Components;
 
@@ -18,7 +24,13 @@ namespace Vignette.Game.Settings.Sections
 
         public override LocalisableString Label => "Recognition";
 
-        public RecognitionSection()
+        [Resolved]
+        private CameraManager camera { get; set; }
+
+        private readonly BindableList<string> devices = new BindableList<string>();
+
+        [BackgroundDependencyLoader]
+        private void load(VignetteConfigManager config)
         {
             Children = new Drawable[]
             {
@@ -32,31 +44,39 @@ namespace Vignette.Game.Settings.Sections
                         {
                             Icon = SegoeFluent.Camera,
                             Label = "Device",
-                            Items = new[] { "Default" },
-                        },
-                        new OpenSubPanelButton<AdvancedCameraSettingsPanel>
-                        {
-                            Label = "Adjust image settings",
+                            ItemSource = devices,
+                            Current = config.GetBindable<string>(VignetteSetting.CameraDevice),
                         },
                     }
                 },
-                new SettingsSubSection
-                {
-                    Label = "Tracking",
-                    Children = new Drawable[]
-                    {
-                        new SettingsSwitch
-                        {
-                            Label = "Enable Tracking",
-                        }
-                    },
-                },
             };
+
+            devices.AddRange(camera.CameraDeviceNames);
+            camera.OnNewDevice += onNewCameraDevice;
+            camera.OnLostDevice += onLostCameraDevice;
+        }
+
+        private void onNewCameraDevice(string name)
+        {
+            if (!devices.Contains(name))
+                devices.Add(name);
+        }
+
+        private void onLostCameraDevice(string name)
+        {
+            if (devices.Contains(name))
+                devices.Remove(name);
         }
 
         private class CameraPreview : Container
         {
-            public CameraPreview()
+            [Resolved]
+            private IBindable<CameraDevice> device { get; set; }
+
+            private DrawableCameraDevice preview;
+
+            [BackgroundDependencyLoader]
+            private void load()
             {
                 Size = new Vector2(250, 140);
                 Masking = true;
@@ -69,6 +89,21 @@ namespace Vignette.Game.Settings.Sections
                         Colour = Colour4.Black,
                     }
                 };
+
+                device.BindValueChanged(_ => onNewCameraDevice(), true);
+            }
+
+            private void onNewCameraDevice()
+            {
+                preview?.Expire();
+
+                if (device.Value == null)
+                    return;
+
+                Add(preview = new DrawableCameraDevice(device.Value, false)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                });
             }
         }
 

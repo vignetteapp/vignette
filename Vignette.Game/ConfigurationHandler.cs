@@ -8,6 +8,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
+using Vignette.Camera.Platform;
 using Vignette.Game.Configuration;
 
 namespace Vignette.Game
@@ -25,8 +26,10 @@ namespace Vignette.Game
         private Bindable<bool> isMuted;
         private readonly BindableDouble muteAdjustment = new BindableDouble();
 
+        private Bindable<string> cameraDevice;
+
         [BackgroundDependencyLoader]
-        private void load(VignetteConfigManager gameConfig, FrameworkConfigManager frameworkConfig, AudioManager audio, GameHost host)
+        private void load(VignetteConfigManager gameConfig, FrameworkConfigManager frameworkConfig, AudioManager audio, CameraManager camera, GameHost host)
         {
             // We cannot disable the bindable obtained from framework config as it is internally modified.
             windowSize = frameworkConfig.GetBindable<Size>(FrameworkSetting.WindowedSize);
@@ -66,6 +69,9 @@ namespace Vignette.Game
                 else
                     audio.RemoveAdjustment(AdjustableProperty.Volume, muteAdjustment);
             }, true);
+
+            cameraDevice = gameConfig.GetBindable<string>(VignetteSetting.CameraDevice);
+            camera.Current.BindTo(cameraDevice);
         }
     }
 }

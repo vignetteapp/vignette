@@ -122,7 +122,6 @@ namespace Vignette.Game.Settings
                                             new AvatarSection(),
                                             new BackdropSection(),
                                             new RecognitionSection(),
-                                            new KeyboardSection(),
                                             new FooterSection(),
                                         },
                                     },

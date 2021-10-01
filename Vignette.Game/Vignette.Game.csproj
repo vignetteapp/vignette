@@ -5,9 +5,11 @@
     <Version>0.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2021.830.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2021.907.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Vignette.Camera\Vignette.Camera.csproj" />
     <ProjectReference Include="..\Vignette.Game.Resources\Vignette.Game.Resources.csproj" />
+    <ProjectReference Include="..\Vignette.Live2D\Vignette.Live2D.csproj" />
   </ItemGroup>
 </Project>

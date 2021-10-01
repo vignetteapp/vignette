@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Vignette.Game\Vignette.Game.csproj" />
   </ItemGroup>
 
@@ -24,7 +29,7 @@
         <ApplicationIcon>vignette-insiders.ico</ApplicationIcon>
       </PropertyGroup>
       <ItemGroup>
-        <EmbeddedResource Include="vignette-insiders.ico"/>
+        <EmbeddedResource Include="vignette-insiders.ico" />
       </ItemGroup>
     </When>
   </Choose>

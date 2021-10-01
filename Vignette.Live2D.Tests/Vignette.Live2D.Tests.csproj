@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+     <StartupObject>Vignette.Live2D.Tests.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.0.107" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2021.907.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vignette.Live2D\Vignette.Live2D.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Visual\CubismModelTestScene.cs" />
+  </ItemGroup>
+
+</Project>

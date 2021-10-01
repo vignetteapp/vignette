@@ -1,0 +1,157 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{csproj,targets,props}]
+indent_size = 2
+
+[*.cs]
+indent_size = 4
+file_header_template = Copyright 2020 - 2021 Vignette Project\nLicensed under MIT. See LICENSE for details.\nThis software implements Live2D. Copyright (c) Live2D Inc. All Rights Reserved.\nLicense for Live2D can be found here: http://live2d.com/eula/live2d-open-software-license-agreement_en.html
+
+# Require File Header
+dotnet_diagnostic.IDE0073.severity = error
+
+# Language Style Rules
+csharp_style_var_for_built_in_types = false
+csharp_style_expression_bodied_methods = when_on_single_line:warning
+csharp_style_expression_bodied_operators = when_on_single_line:warning
+csharp_style_expression_bodied_properties = when_on_single_line:warning
+csharp_style_expression_bodied_indexers = when_on_single_line:warning
+csharp_style_expression_bodied_properties = when_on_single_line:warning
+csharp_style_expression_bodied_lambdas = when_on_single_line:warning
+csharp_style_expression_bodied_local_functions = when_on_single_line:warning
+csharp_style_prefer_switch_expression = false:warning
+csharp_style_prefer_pattern_matching = false:warning
+csharp_style_implicit_object_creation_when_type_is_apparent = false:warning
+csharp_prefer_braces = when_multiline:warning
+
+# Naming Rules
+
+# General Naming
+#   - private struct ExampleStruct
+dotnet_naming_symbols.general_symbols.applicable_kinds = class,struct,enum,delegate
+dotnet_naming_symbols.general_symbols.applicable_accessibilities = *
+
+dotnet_naming_style.general_style.capitalization = pascal_case
+
+dotnet_naming_rule.general.symbols = general_symbols
+dotnet_naming_rule.general.style = general_style
+dotnet_naming_rule.general.severity = warning
+
+# Public Members
+#   - public bool ExampleMember
+dotnet_naming_symbols.public_symbols.applicable_kinds = property,method,field,event
+dotnet_naming_symbols.public_symbols.applicable_accessibilities = public,internal,protected,protected_internal
+
+dotnet_naming_style.public_style.capitalization = pascal_case
+
+dotnet_naming_rule.public.symbols = public_symbols
+dotnet_naming_rule.public.style = public_style
+dotnet_naming_rule.public.severity = warning
+
+# Private Members
+#   - private readonly int exampleMember
+dotnet_naming_symbols.private_symbols.applicable_kinds = property,method,field,event
+dotnet_naming_symbols.private_symbols.applicable_accessibilities = private,private_protected,local
+
+dotnet_naming_style.private_style.capitalization = camel_case
+
+dotnet_naming_rule.private.symbols = private_symbols
+dotnet_naming_rule.private.style = private_style
+dotnet_naming_rule.private.severity = warning
+
+# Interfaces
+#   - public interface IExampleInterface
+dotnet_naming_symbols.interface_symbol.applicable_kinds = interface
+dotnet_naming_symbols.interface_symbol.applicable_accessibilities = public,internal,protected,protected_internal
+
+dotnet_naming_style.interface_style.capitalization = pascal_case
+dotnet_naming_style.interface_style.required_prefix = I
+
+dotnet_naming_rule.interface.symbols = interface_symbol
+dotnet_naming_rule.interface.style = interface_style
+dotnet_naming_rule.interface.severity = warning
+
+# Public Constant/Static Members
+#   - public const EXAMPLE_MEMBER
+dotnet_naming_symbols.public_const_symbols.applicable_kinds = class,struct,enum,property,method,field,event,delegate
+dotnet_naming_symbols.public_const_symbols.applicable_accessibilities = public,internal,protected,protected_internal
+dotnet_naming_symbols.public_const_symbols.required_modifiers = const,static
+
+dotnet_naming_style.public_const_style.capitalization = all_upper
+dotnet_naming_style.public_const_style.word_separator = _
+
+dotnet_naming_rule.public_const.symbols = public_const_symbols
+dotnet_naming_rule.public_const.style = public_const_style
+dotnet_naming_rule.public_const.severity = warning
+
+# Private Constant/Static Members
+#   - private static example_member
+dotnet_naming_symbols.public_const_symbols.applicable_kinds = class,struct,enum,property,method,field,event,delegate
+dotnet_naming_symbols.public_const_symbols.applicable_accessibilities = private,private_protected,local
+dotnet_naming_symbols.public_const_symbols.required_modifiers = const,static
+
+dotnet_naming_style.public_const_style.capitalization = all_lower
+dotnet_naming_style.public_const_style.word_separator = _
+
+dotnet_naming_rule.public_const.symbols = public_const_symbols
+dotnet_naming_rule.public_const.style = public_const_style
+dotnet_naming_rule.public_const.severity = warning
+
+dotnet_diagnostic.IDE1006.severity = warning
+
+# Formatting Rules
+dotnet_sort_system_directives_first = true:warning
+
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents_when_block = true
+
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_after_comma = true
+csharp_space_before_comma = false
+csharp_space_after_dot = false
+csharp_space_before_dot = false
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_around_declaration_statements = false
+csharp_space_before_open_square_brackets = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_square_brackets = false
+
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+
+csharp_using_directive_placement = outside_namespace
+
+dotnet_diagnostic.IDE0055.severity = warning

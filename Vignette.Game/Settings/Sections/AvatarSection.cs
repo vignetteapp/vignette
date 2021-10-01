@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osuTK;
+using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Graphics.Typesets;
@@ -22,39 +23,46 @@ namespace Vignette.Game.Settings.Sections
 
         public override IconUsage Icon => SegoeFluent.Person;
 
-        public AvatarSection() => Children = new Drawable[]
+        private Bindable<bool> adjust;
+        private Bindable<Vector2> position;
+        private SettingsSlider<float> scaleSetting;
+        private SettingsSlider<float> rotationSetting;
+
+        [Resolved]
+        private SettingsOverlay overlay { get; set; }
+
+        [BackgroundDependencyLoader]
+        private void load(VignetteConfigManager config, SessionConfigManager session)
+        {
+            adjust = session.GetBindable<bool>(SessionSetting.EditingAvatar);
+            position = config.GetBindable<Vector2>(VignetteSetting.AvatarOffset);
+
+            Children = new Drawable[]
             {
                 new SettingsSubSection
                 {
                     Child = new SettingsFileBrowser
                     {
                         Label = "Location",
+                        Current = config.GetBindable<string>(VignetteSetting.AvatarPath),
                     },
                 },
                 new SettingsSubSection
                 {
                     Children = new Drawable[]
                     {
-                        new PositionItem(),
-                        new SettingsSlider<float>
+                        new OffsetItem(),
+                        scaleSetting = new SettingsSlider<float>
                         {
                             Icon = SegoeFluent.SlideSize,
                             Label = "Scale",
-                            Current = new BindableFloat
-                            {
-                                MinValue = 0,
-                                MaxValue = 1,
-                            }
+                            Current = config.GetBindable<float>(VignetteSetting.AvatarScale),
                         },
-                        new SettingsSlider<float>
+                        rotationSetting = new SettingsSlider<float>
                         {
                             Icon = SegoeFluent.ArrowRotateClockwise,
                             Label = "Rotation",
-                            Current = new BindableFloat
-                            {
-                                MinValue = 0,
-                                MaxValue = 1,
-                            }
+                            Current = config.GetBindable<float>(VignetteSetting.AvatarRotation),
                         },
                     },
                 },
@@ -73,7 +81,7 @@ namespace Vignette.Game.Settings.Sections
                             Style = ButtonStyle.Primary,
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
-                            Action = () => { },
+                            Action = handleAdjustAction,
                         },
                         new FluentButton
                         {
@@ -82,28 +90,48 @@ namespace Vignette.Game.Settings.Sections
                             Style = ButtonStyle.Text,
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
-                            Action = () => { },
+                            Action = handleResetAction,
                         },
                     },
                 },
             };
+        }
 
-        private class PositionItem : SettingsItem
+        private void handleAdjustAction()
         {
-            [BackgroundDependencyLoader]
-            private void load()
-            {
-                Icon = SegoeFluent.ArrowMove;
-                Label = "Position";
+            adjust.Value = true;
+            overlay.RegisterBackAction(() => adjust.Value = false);
+        }
 
-                LabelContainer.Add(new ThemableSpriteText
+        private void handleResetAction()
+        {
+            rotationSetting.Current.SetDefault();
+            scaleSetting.Current.SetDefault();
+            position.SetDefault();
+        }
+
+        private class OffsetItem : SettingsItem
+        {
+            private IBindable<Vector2> offset;
+            private ThemableSpriteText text;
+
+            [BackgroundDependencyLoader]
+            private void load(VignetteConfigManager config)
+            {
+                offset = config.GetBindable<Vector2>(VignetteSetting.AvatarOffset);
+
+                Icon = SegoeFluent.ArrowMove;
+                Label = "Offset";
+
+                LabelContainer.Add(text = new ThemableSpriteText
                 {
-                    Text = "0,0",
                     Font = SegoeUI.SemiBold.With(size: 16),
                     Colour = ThemeSlot.Black,
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
                 });
+
+                offset.BindValueChanged(e => text.Text = e.NewValue.ToString(), true);
             }
         }
     }

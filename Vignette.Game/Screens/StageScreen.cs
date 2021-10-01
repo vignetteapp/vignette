@@ -21,6 +21,7 @@ namespace Vignette.Game.Screens
         protected override bool ShowSettingsOneEnter => true;
 
         private EditingStrip strip;
+        private Bindable<bool> avatarAdjust;
         private Bindable<bool> backgroundAdjust;
 
         [Resolved(canBeNull: true)]
@@ -32,16 +33,22 @@ namespace Vignette.Game.Screens
             AddRangeInternal(new Drawable[]
             {
                 new StageBackground(),
+                new Avatar(),
                 strip = new EditingStrip(),
             });
 
             backgroundAdjust = session.GetBindable<bool>(SessionSetting.EditingBackground);
-            backgroundAdjust.BindValueChanged(_ => handleEditingState(), true);
+            backgroundAdjust.ValueChanged += _ => handleEditingState();
+
+            avatarAdjust = session.GetBindable<bool>(SessionSetting.EditingAvatar);
+            avatarAdjust.ValueChanged += _ => handleEditingState();
+
+            handleEditingState();
         }
 
         private void handleEditingState()
         {
-            if (backgroundAdjust.Value)
+            if (backgroundAdjust.Value || avatarAdjust.Value)
             {
                 settings.KeepBodyHidden = true;
                 settings?.HideBody();

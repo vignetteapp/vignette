@@ -12,6 +12,7 @@ namespace Vignette.Game.Configuration
         public void Reset()
         {
             ensureDefault(SetDefault(SessionSetting.EditingBackground, false));
+            ensureDefault(SetDefault(SessionSetting.EditingAvatar, false));
         }
 
         private static void ensureDefault<T>(Bindable<T> bindable) => bindable.SetDefault();
@@ -19,6 +20,7 @@ namespace Vignette.Game.Configuration
 
     public enum SessionSetting
     {
-        EditingBackground
+        EditingBackground,
+        EditingAvatar,
     }
 }

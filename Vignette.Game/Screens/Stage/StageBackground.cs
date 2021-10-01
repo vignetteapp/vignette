@@ -53,8 +53,7 @@ namespace Vignette.Game.Screens.Stage
         {
             shouldEase = false;
 
-            var last = background;
-            last?.Expire();
+            background?.Expire();
 
             switch (type.Value)
             {

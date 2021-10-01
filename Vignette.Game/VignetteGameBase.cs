@@ -22,6 +22,9 @@ using Vignette.Game.Input;
 using Vignette.Game.IO;
 using Vignette.Game.Resources;
 using Vignette.Game.Graphics.Themeing;
+using Vignette.Camera.Platform;
+using Vignette.Camera;
+using Vignette.Live2D.Resources;
 
 namespace Vignette.Game
 {
@@ -48,6 +51,7 @@ namespace Vignette.Game
         }
 
         protected Storage Storage;
+        protected CameraManager CameraManager;
         protected VignetteConfigManager LocalConfig;
         protected SessionConfigManager SessionConfig;
 
@@ -59,6 +63,7 @@ namespace Vignette.Game
         private DependencyContainer dependencies;
         private IBindable<bool> resizable;
         private IBindable<bool> showFps;
+        private Bindable<CameraDevice> cameraDevice;
         private Container content;
 
         protected override Container<Drawable> Content => content;
@@ -72,6 +77,7 @@ namespace Vignette.Game
         private void load()
         {
             Resources.AddStore(new DllResourceStore(VignetteResources.ResourceAssembly));
+            Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), "Resources"));
 
             // Segoe UI
             AddFont(Resources, @"Fonts/SegoeUI/SegoeUI");
@@ -98,8 +104,23 @@ namespace Vignette.Game
             dependencies.CacheAs(LocalConfig);
             dependencies.CacheAs(SessionConfig = new SessionConfigManager());
 
+            dependencies.CacheAs(CameraManager = CameraManager.CreateSuitableManager(Scheduler));
+            dependencies.CacheAs<IBindable<CameraDevice>>(cameraDevice = new Bindable<CameraDevice>());
+
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
+
+            CameraManager.Current.BindValueChanged(e =>
+            {
+                if (string.IsNullOrEmpty(e.NewValue))
+                    return;
+
+                cameraDevice.Value?.Dispose();
+
+                int id = CameraManager.CameraDeviceNames.ToList().IndexOf(e.NewValue);
+                cameraDevice.Value = new CameraDevice(id, EncodingFormat.JPEG);
+                cameraDevice.Value.Start();
+            }, true);
 
             resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
 
@@ -159,6 +180,7 @@ namespace Vignette.Game
         {
             LocalConfig?.Dispose();
             keybindConfig?.Dispose();
+            CameraManager?.Dispose();
             base.Dispose(isDisposing);
         }
 
