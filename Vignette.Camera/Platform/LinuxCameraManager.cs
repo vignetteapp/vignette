@@ -17,7 +17,7 @@ namespace Vignette.Camera.Platform
 
         protected override IEnumerable<CameraInfo> EnumerateAllDevices()
         {
-            for (int i = 0; i < Directory.EnumerateDirectories(@"/dev/").Count(); i++)
+            for (int i = 0; i < Directory.EnumerateDirectories("/dev/").Count(); i++)
             {
                 string path = $"/dev/video{i}";
 
