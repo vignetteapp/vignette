@@ -126,10 +126,10 @@ namespace Vignette.Game.Settings.Sections
                             Current = themeManager.Current,
                             ItemSource = themeManager.UseableThemes,
                         },
-                        new OpenSubPanelButton<ThemeDesignerPanel>(themeManager)
+                        /*new OpenSubPanelButton<ThemeDesignerPanel>(themeManager)
                         {
                             Label = "Open theme designer",
-                        },
+                        },*/
                         new OpenExternalLinkButton(themeManager.Store)
                         {
                             Label = "Open themes folder",
