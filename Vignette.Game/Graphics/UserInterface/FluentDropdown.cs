@@ -213,7 +213,8 @@ namespace Vignette.Game.Graphics.UserInterface
         private void addItem(LocalisableString text, T item)
         {
             if (itemMap.ContainsKey(item))
-                throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
+                return;
+            //throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
 
             var menuItem = new FluentMenuItem(text, () =>
             {
