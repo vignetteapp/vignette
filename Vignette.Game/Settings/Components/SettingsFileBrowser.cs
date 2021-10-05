@@ -17,7 +17,7 @@ namespace Vignette.Game.Settings.Components
     {
         protected virtual string[] Extensions => null;
 
-        protected override FluentTextBox CreateControl() => new FluentTextBox { RelativeSizeAxes = Axes.X };
+        protected override FluentTextBox CreateControl() => new FluentTextBox { RelativeSizeAxes = Axes.X, CharacterLimit = 10000 };
 
         private readonly Bindable<FileInfo> currentDirectory = new Bindable<FileInfo>();
 
