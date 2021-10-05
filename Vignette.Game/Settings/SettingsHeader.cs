@@ -63,6 +63,7 @@ namespace Vignette.Game.Settings
                             Width = 250,
                             Anchor = Anchor.BottomCentre,
                             Origin = Anchor.BottomCentre,
+                            CharacterLimit = 30
                         }
                     }
                 },
