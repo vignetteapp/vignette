@@ -214,7 +214,7 @@ namespace Vignette.Game.Graphics.UserInterface
         {
             if (itemMap.ContainsKey(item))
                 return;
-            //throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
+            throw new WarningException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}. Skipping.");
 
             var menuItem = new FluentMenuItem(text, () =>
             {
