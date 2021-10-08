@@ -27,7 +27,7 @@ namespace Vignette.Game.Screens.Stage
             }
             catch (TextureTooLargeForGLException)
             {
-                throw new WarningException("The image is too large for Vignette. Choose a smaller one.");
+                //TODO: Warn user that the image is too big
                 return Drawable.Empty();
             }
         }
