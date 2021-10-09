@@ -98,15 +98,15 @@ namespace Vignette.Live2D.Graphics
 
             using var settingStream = GetModelSettingsStream();
 
-            if (settingStream == null)
-                throw new FileNotFoundException($"{nameof(Resources)} does not contain a model setting file or is not found.");
+            if (settingStream == null || settingStream == Stream.Null)
+                return;
 
             Settings = CubismUtils.ReadJsonSetting<CubismModelSetting>(settingStream);
 
             using var mocStream = GetModelMocStream();
 
-            if (mocStream == null)
-                throw new FileNotFoundException($"{nameof(Resources)} does not contain a moc file or is not found.");
+            if (mocStream == null || mocStream == Stream.Null)
+                return;
 
             moc = new CubismMoc(mocStream);
 
@@ -151,7 +151,17 @@ namespace Vignette.Live2D.Graphics
             return Resources.GetStream(modelSettingFile);
         }
 
-        protected virtual Stream GetModelMocStream() => Resources.GetStream(Settings.FileReferences.Moc);
+        protected virtual Stream GetModelMocStream()
+        {
+            try
+            {
+                return Resources.GetStream(Settings.FileReferences.Moc);
+            }
+            catch (Exception)
+            {
+                return Stream.Null;
+            }
+        }
 
         #region Drawable Management
 
@@ -459,7 +469,10 @@ namespace Vignette.Live2D.Graphics
             if (isDisposing)
                 Marshal.FreeHGlobal(buffer);
 
-            moc.Dispose();
+            if (moc != null)
+            {
+                moc.Dispose();
+            }
 
             base.Dispose(isDisposing);
         }
