@@ -117,6 +117,10 @@ namespace Vignette.Live2D.Graphics
             if (!string.IsNullOrEmpty(Settings.FileReferences.DisplayInfo))
             {
                 using var auxStream = Resources.GetStream(Settings.FileReferences.DisplayInfo);
+
+                if (auxStream == null) //invalid model
+                    return;
+
                 DisplayAuxilliarySettings = CubismUtils.ReadJsonSetting<CubismAuxDisplaySetting>(auxStream);
             }
 
@@ -433,20 +437,24 @@ namespace Vignette.Live2D.Graphics
 
         protected override void Dispose(bool isDisposing)
         {
-            updateTaskCancellationToken.Cancel();
-            updateTask.Wait();
+            if (updateTaskCancellationToken != null)
+            {
+                //if the model was actually loaded
+                updateTaskCancellationToken.Cancel();
+                updateTask.Wait();
 
-            updateTask.Dispose();
-            updateTask = null;
+                updateTask.Dispose();
+                updateTask = null;
 
-            updateTaskCancellationToken.Dispose();
-            updateTaskCancellationToken = null;
+                updateTaskCancellationToken.Dispose();
+                updateTaskCancellationToken = null;
 
-            foreach (var drawable in drawables)
-                drawable.Dispose();
+                foreach (var drawable in drawables)
+                    drawable.Dispose();
 
-            foreach (var context in maskingContexts)
-                context.Dispose();
+                foreach (var context in maskingContexts)
+                    context.Dispose();
+            }
 
             if (isDisposing)
                 Marshal.FreeHGlobal(buffer);
