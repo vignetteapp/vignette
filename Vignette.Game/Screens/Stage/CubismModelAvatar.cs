@@ -35,8 +35,15 @@ namespace Vignette.Game.Screens.Stage
 
         protected override Stream GetModelMocStream()
         {
-            string mocFile = storage.GetFiles(".", "*.moc3").FirstOrDefault();
-            return storage.GetStream(mocFile);
+            try
+            {
+                string mocFile = storage.GetFiles(".", "*.moc3").FirstOrDefault();
+                return storage.GetStream(mocFile);
+            }
+            catch (Exception )
+            {
+                return Stream.Null;
+            }
         }
     }
 }
