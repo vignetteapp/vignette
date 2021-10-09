@@ -27,11 +27,11 @@ namespace Vignette.Game.Settings.Panels
         public ThemeDesignerPanel(IThemeSource source)
         {
             theme = new Bindable<Theme>(source.Current.Value);
-            Children = new Drawable[]
+            /*Children = new Drawable[]
             {
                 new PreviewSection(),
                 new CustomizationSection(),
-            };
+            };*/
         }
 
         private class PreviewSection : SettingsSection
