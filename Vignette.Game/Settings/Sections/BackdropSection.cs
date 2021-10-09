@@ -69,7 +69,7 @@ namespace Vignette.Game.Settings.Sections
                                     new SettingsColourPicker
                                     {
                                         Icon = SegoeFluent.ColorBackground,
-                                        Label = "Background Color",
+                                        Label = "Background Colour",
                                         Current = config.GetBindable<Colour4>(VignetteSetting.BackgroundColour),
                                     }
                                 },
