@@ -2,7 +2,6 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.IO;
-using FFmpeg.AutoGen;
 using osu.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
