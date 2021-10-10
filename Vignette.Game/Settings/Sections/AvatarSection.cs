@@ -41,7 +41,7 @@ namespace Vignette.Game.Settings.Sections
             {
                 new SettingsSubSection
                 {
-                    Child = new SettingsFileBrowser
+                    Child = new SettingsDirectoryBrowser
                     {
                         Label = "Location",
                         Current = config.GetBindable<string>(VignetteSetting.AvatarPath),
