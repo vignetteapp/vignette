@@ -40,7 +40,7 @@ namespace Vignette.Game.Screens.Stage
                 string mocFile = storage.GetFiles(".", "*.moc3").FirstOrDefault();
                 return storage.GetStream(mocFile);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return Stream.Null;
             }
