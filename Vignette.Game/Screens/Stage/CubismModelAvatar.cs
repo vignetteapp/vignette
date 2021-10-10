@@ -1,6 +1,7 @@
 // Copyright 2020 - 2021 Vignette Project
 // Licensed under NPOSLv3. See LICENSE for details.
 
+using System;
 using System.IO;
 using System.Linq;
 using osu.Framework.IO.Stores;
@@ -21,14 +22,28 @@ namespace Vignette.Game.Screens.Stage
 
         protected override Stream GetModelSettingsStream()
         {
-            string settingsFile = storage.GetFiles(".", "*.model3.json").FirstOrDefault();
-            return storage.GetStream(settingsFile);
+            try
+            {
+                string settingsFile = storage.GetFiles(".", "*.model3.json").FirstOrDefault();
+                return storage.GetStream(settingsFile);
+            }
+            catch (Exception)
+            {
+                return Stream.Null;
+            }
         }
 
         protected override Stream GetModelMocStream()
         {
-            string mocFile = storage.GetFiles(".", "*.moc3").FirstOrDefault();
-            return storage.GetStream(mocFile);
+            try
+            {
+                string mocFile = storage.GetFiles(".", "*.moc3").FirstOrDefault();
+                return storage.GetStream(mocFile);
+            }
+            catch (Exception)
+            {
+                return Stream.Null;
+            }
         }
     }
 }

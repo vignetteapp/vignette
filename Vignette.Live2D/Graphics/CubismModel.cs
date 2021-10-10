@@ -98,15 +98,15 @@ namespace Vignette.Live2D.Graphics
 
             using var settingStream = GetModelSettingsStream();
 
-            if (settingStream == null)
-                throw new FileNotFoundException($"{nameof(Resources)} does not contain a model setting file or is not found.");
+            if (settingStream == null || settingStream == Stream.Null)
+                return;
 
             Settings = CubismUtils.ReadJsonSetting<CubismModelSetting>(settingStream);
 
             using var mocStream = GetModelMocStream();
 
-            if (mocStream == null)
-                throw new FileNotFoundException($"{nameof(Resources)} does not contain a moc file or is not found.");
+            if (mocStream == null || mocStream == Stream.Null)
+                return;
 
             moc = new CubismMoc(mocStream);
 
@@ -117,6 +117,10 @@ namespace Vignette.Live2D.Graphics
             if (!string.IsNullOrEmpty(Settings.FileReferences.DisplayInfo))
             {
                 using var auxStream = Resources.GetStream(Settings.FileReferences.DisplayInfo);
+
+                if (auxStream == null) //invalid model
+                    return;
+
                 DisplayAuxilliarySettings = CubismUtils.ReadJsonSetting<CubismAuxDisplaySetting>(auxStream);
             }
 
@@ -147,7 +151,17 @@ namespace Vignette.Live2D.Graphics
             return Resources.GetStream(modelSettingFile);
         }
 
-        protected virtual Stream GetModelMocStream() => Resources.GetStream(Settings.FileReferences.Moc);
+        protected virtual Stream GetModelMocStream()
+        {
+            try
+            {
+                return Resources.GetStream(Settings.FileReferences.Moc);
+            }
+            catch (Exception)
+            {
+                return Stream.Null;
+            }
+        }
 
         #region Drawable Management
 
@@ -433,25 +447,32 @@ namespace Vignette.Live2D.Graphics
 
         protected override void Dispose(bool isDisposing)
         {
-            updateTaskCancellationToken.Cancel();
-            updateTask.Wait();
+            if (updateTaskCancellationToken != null)
+            {
+                //if the model was actually loaded
+                updateTaskCancellationToken.Cancel();
+                updateTask.Wait();
 
-            updateTask.Dispose();
-            updateTask = null;
+                updateTask.Dispose();
+                updateTask = null;
 
-            updateTaskCancellationToken.Dispose();
-            updateTaskCancellationToken = null;
+                updateTaskCancellationToken.Dispose();
+                updateTaskCancellationToken = null;
 
-            foreach (var drawable in drawables)
-                drawable.Dispose();
+                foreach (var drawable in drawables)
+                    drawable.Dispose();
 
-            foreach (var context in maskingContexts)
-                context.Dispose();
+                foreach (var context in maskingContexts)
+                    context.Dispose();
+            }
 
             if (isDisposing)
                 Marshal.FreeHGlobal(buffer);
 
-            moc.Dispose();
+            if (moc != null)
+            {
+                moc.Dispose();
+            }
 
             base.Dispose(isDisposing);
         }
