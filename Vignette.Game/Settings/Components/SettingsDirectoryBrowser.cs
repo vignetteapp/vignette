@@ -2,6 +2,7 @@
 // Licensed under NPOSLv3. See LICENSE for details.
 
 using System.IO;
+using osu.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
@@ -53,7 +54,19 @@ namespace Vignette.Game.Settings.Components
                 }
             });
 
-            currentDirectory.ValueChanged += e => Current.Value = e.NewValue.FullName;
+            currentDirectory.ValueChanged += updateValue;
+        }
+
+        private void updateValue(ValueChangedEvent<DirectoryInfo> e)
+        {
+            if (RuntimeInfo.IsUnix && e.NewValue == null) //if we are on "Computer" on unix
+            {
+                Current.Value = "/";
+            }
+            else
+            {
+                Current.Value = e.NewValue.FullName;
+            }
         }
 
         public Popover GetPopover() => new FluentPopover
