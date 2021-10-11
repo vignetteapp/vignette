@@ -42,10 +42,16 @@ jobs:
           source-url: https://nuget.pkg.github.com/vignette-project/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ github.token }}
-
+          
+      - name: Download Cubism SDK
+        run:  | 
+          wget https://cubism.live2d.com/sdk-native/bin/CubismSdkForNative-4-r.3.zip
+          unzip CubismSdkForNative-4-r.3.zip cubism-sdk
+        
       - name: Build
         run: |
           dotnet publish Vignette.Desktop/Vignette.Desktop.csproj -c Release -o ./release -r ${{ matrix.os.runtime }} --self-contained true -p:Version=${{ needs.variables.outputs.version }}
+          # copy .so/.dll
           7z a -tzip Vignette.${{ needs.variables.outputs.version }}-${{ matrix.os.runtime }}.zip release/*
 
       - name: Stage Artifact for AppCenter
