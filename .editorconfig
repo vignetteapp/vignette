@@ -15,7 +15,7 @@ indent_size = 2
 
 [*.cs]
 indent_size = 4
-file_header_template = Copyright 2020 - 2021 Vignette Project\nLicensed under NPOSLv3. See LICENSE for details.
+file_header_template = Copyright (c) The Vignette Authors\nLicensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 # Require File Header
 dotnet_diagnostic.IDE0073.severity = error
