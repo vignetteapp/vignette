@@ -23,11 +23,11 @@ namespace Vignette.Game.Settings.Sections
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    new HomeSectionLink(SegoeFluent.Heart, "https://github.com/vignetteapp/vignette"),
-                    new HomeSectionLink(FontAwesome.Brands.Github, "https://github.com/vignetteapp/vignette"),
+                    new HomeSectionLink(SegoeFluent.Heart, "https://github.com/sponsors/vignetteapp"),
+                    new HomeSectionLink(FontAwesome.Brands.Github, "https://github.com/vignetteapp"),
                     new HomeSectionLink(SegoeFluent.Globe, "https://vignetteapp.org"),
-                    new HomeSectionLink(FontAwesome.Brands.Discord, "https://opencollective.com/vignette"),
-                    new HomeSectionLink(FontAwesome.Brands.Twitter, "https://twitter.com/ProjectVignette"),
+                    new HomeSectionLink(FontAwesome.Brands.Discord, "https://discord.vignetteapp.org"),
+                    new HomeSectionLink(FontAwesome.Brands.Twitter, "https://twitter.com/vignette_org"),
                 }
             };
         }

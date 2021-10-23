@@ -102,7 +102,7 @@ namespace Vignette.Game.Settings
                             RowDimensions = new[]
                             {
                                 new Dimension(GridSizeMode.AutoSize),
-                                new Dimension(GridSizeMode.Distributed),
+                                new Dimension(),
                             },
                             Content = new Drawable[][]
                             {
@@ -118,10 +118,10 @@ namespace Vignette.Game.Settings
                                         Children = new Drawable[]
                                         {
                                             new HomeSection(),
-                                            new SystemSection(),
+                                            new RecognitionSection(),
                                             new AvatarSection(),
                                             new BackdropSection(),
-                                            new RecognitionSection(),
+                                            new SystemSection(),
                                             new FooterSection(),
                                         },
                                     },

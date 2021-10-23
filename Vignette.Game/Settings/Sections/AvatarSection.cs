@@ -41,14 +41,6 @@ namespace Vignette.Game.Settings.Sections
             {
                 new SettingsSubSection
                 {
-                    Child = new SettingsDirectoryBrowser
-                    {
-                        Label = "Location",
-                        Current = config.GetBindable<string>(VignetteSetting.AvatarPath),
-                    },
-                },
-                new SettingsSubSection
-                {
                     Children = new Drawable[]
                     {
                         new OffsetItem(),

@@ -173,7 +173,7 @@ namespace Vignette.Game
 
                 default:
                     return OnPressed(action);
-            };
+            }
         }
 
         protected override void Dispose(bool isDisposing)
