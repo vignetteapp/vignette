@@ -17,8 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721" />
-    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+    <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721"
+        Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' " />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721"
+        Condition=" '$(OS)' == 'Windows_NT' " />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
