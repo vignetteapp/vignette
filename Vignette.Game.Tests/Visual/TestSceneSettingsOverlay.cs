@@ -56,7 +56,7 @@ namespace Vignette.Game.Tests.Visual
         {
             AddStep("open submenu", () => overlay.ShowSubPanel(settingsSubPanel()));
             AddAssert("overlay is visible", () => overlay.State.Value == Visibility.Visible);
-            AddAssert("buttons disabled", () => overlay.NavigationButtonsEnabled == false);
+            AddAssert("buttons enabled", () => overlay.NavigationButtonsEnabled == true);
             AddStep("close submenu", () => overlay.Back());
             AddAssert("buttons enabled", () => overlay.NavigationButtonsEnabled == true);
 
