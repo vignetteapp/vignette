@@ -12,6 +12,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
+using osu.Framework.Logging;
 using osuTK;
 using Vignette.Game.Extensions;
 using Vignette.Game.Graphics.Containers;
@@ -213,8 +214,7 @@ namespace Vignette.Game.Graphics.UserInterface
         private void addItem(LocalisableString text, T item)
         {
             if (itemMap.ContainsKey(item))
-                return;
-            //throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
+                throw new ArgumentException($"The item {item} already exists in this {nameof(FluentDropdown<T>)}.");
 
             var menuItem = new FluentMenuItem(text, () =>
             {

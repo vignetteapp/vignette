@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
