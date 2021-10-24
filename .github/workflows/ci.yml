@@ -44,7 +44,10 @@ jobs:
           dotnet-version: '5.0.x'
 
       - name: Test
-        run: dotnet test --filter "TestCategory!=RequiresOpenCVRuntimeTest" --logger "trx;LogFileName=TestResults-Vignette.Game.Tests.trx"
+        run: |
+          for test_project in Vignette.*.Tests; do
+            dotnet test "$test_project" --filter "TestCategory!=RequiresOpenCVRuntimeTest" --logger "trx;LogFileName=TestResults-$test_project.trx"
+          done
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v2
