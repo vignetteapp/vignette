@@ -44,7 +44,7 @@ jobs:
           dotnet-version: '5.0.x'
 
       - name: Test
-        run: dotnet test --logger "trx;LogFileName=TestResults-Vignette.Game.Tests.trx"
+        run: dotnet test --filter "TestCategory!=RequiresOpenCVRuntimeTest" --logger "trx;LogFileName=TestResults-Vignette.Game.Tests.trx"
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v2

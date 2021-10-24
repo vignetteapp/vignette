@@ -12,6 +12,7 @@ using Vignette.Game.Settings.Sections;
 
 namespace Vignette.Game.Tests.Visual
 {
+    [RequiresOpenCVRuntime]
     public class TestSceneSettingsOverlay : VignetteTestScene
     {
         [Cached]

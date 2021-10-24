@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace Vignette.Game.Tests.Visual
 {
+    [RequiresOpenCVRuntime]
     [Description("The full Vignette experience.")]
     public class TestSceneVignetteGame : VignetteTestScene
     {
