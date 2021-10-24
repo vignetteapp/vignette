@@ -16,6 +16,16 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <PropertyGroup Label="Post-build task">
+    <PostBuildEvent Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
+      if [ -f runtimes/ubuntu.20.04-x64/native/libcvextern.so ]; then
+        mkdir -p x64
+        mv runtimes/ubuntu.20.04-x64/native/libcvextern.so x64/
+        echo "Moved libcvextern.so into detectable directory"
+      fi
+    </PostBuildEvent>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721"
         Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' " />

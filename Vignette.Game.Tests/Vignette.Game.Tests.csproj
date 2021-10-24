@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
     <ProjectReference Include="..\Vignette.Game\Vignette.Game.csproj" />
     <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721"
@@ -6,18 +7,32 @@
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721"
         Condition=" '$(OS)' == 'Windows_NT' " />
   </ItemGroup>
+
+  <PropertyGroup Label="Post-build task">
+    <PostBuildEvent Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
+      if [ -f runtimes/ubuntu.20.04-x64/native/libcvextern.so ]; then
+        mkdir -p x64
+        mv runtimes/ubuntu.20.04-x64/native/libcvextern.so x64/
+        echo "Moved libcvextern.so into detectable directory"
+      fi
+    </PostBuildEvent>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Resources\**\*" />
   </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <StartupObject>Vignette.Game.Tests.Program</StartupObject>
   </PropertyGroup>
+
 </Project>
