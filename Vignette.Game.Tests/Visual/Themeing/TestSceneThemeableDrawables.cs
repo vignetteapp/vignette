@@ -35,7 +35,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
                 });
             }));
 
-            AddAssert("is colour white", () => themable.Target.Colour == Colour4.White);
+            AddAssert("is colour white", () => themable.Target.Colour == Theme.Light.Get(ThemeSlot.White));
             AddStep("change theme", () => Provider.Current.Value = Theme.Dark);
             AddAssert("is colour black", () => themable.Target.Colour == Theme.Dark.Get(ThemeSlot.White));
         }
@@ -58,7 +58,7 @@ namespace Vignette.Game.Tests.Visual.Themeing
                 }));
             }));
 
-            AddAssert("is target white", () => target.Colour == Colour4.White);
+            AddAssert("is target white", () => target.Colour == Theme.Light.Get(ThemeSlot.White));
             AddStep("change theme", () => Provider.Current.Value = Theme.Dark);
             AddAssert("is target black", () => target.Colour == Theme.Dark.Get(ThemeSlot.White));
 
