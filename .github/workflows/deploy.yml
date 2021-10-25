@@ -61,7 +61,7 @@ jobs:
      runs-on: ubuntu-latest
      strategy:
         matrix:
-           runtime: ['win-x64', 'linux-x64']
+           runtime: ['win-x64', 'ubuntu.20.04-x64']
      steps:
        - name: Download Artifact
          uses: actions/download-artifact@v2
