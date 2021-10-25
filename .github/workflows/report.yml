@@ -15,5 +15,5 @@ jobs:
         with:
           artifact: Vignette Test Results
           name: Test Results
-          path: "*.trx"
+          path: ${{ github.workspace }}/Vignette.*.Tests/TestResults/*.trx
           reporter: dotnet-trx
