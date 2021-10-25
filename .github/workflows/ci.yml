@@ -61,6 +61,6 @@ jobs:
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
-          name: All Vignette Test Results
+          name: TestResults-Vignette
           path: ${{ github.workspace }}/Vignette.*.Tests/TestResults/*.trx
 
