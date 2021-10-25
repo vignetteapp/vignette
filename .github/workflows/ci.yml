@@ -46,34 +46,21 @@ jobs:
       # Tests
       - name: Test (Camera)
         if: ${{ always() }}
-        run: dotnet test "Vignette.Camera.Tests" --filter "TestCategory!=RequiresOpenCVRuntimeTest" --logger "trx;LogFileName=TestResults-Vignette.Camera.Tests.trx"
+        run: dotnet test Vignette.Camera.Tests --filter TestCategory!=RequiresOpenCVRuntimeTest --logger "trx;LogFileName=TestResults-Vignette.Camera.Tests.trx"
 
       - name: Test (Game)
         if: ${{ always() }}
-        run: dotnet test "Vignette.Game.Tests" --filter "TestCategory!=RequiresOpenCVRuntimeTest" --logger "trx;LogFileName=TestResults-Vignette.Game.Tests.trx"
+        run: dotnet test Vignette.Game.Tests --filter TestCategory!=RequiresOpenCVRuntimeTest --logger "trx;LogFileName=TestResults-Vignette.Game.Tests.trx"
 
       - name: Test (Live2D)
         if: ${{ always() }}
-        run: dotnet test "Vignette.Live2D.Tests" --filter "TestCategory!=RequiresOpenCVRuntimeTest" --logger "trx;LogFileName=TestResults-Vignette.Live2D.Tests.trx"
+        run: dotnet test Vignette.Live2D.Tests --filter TestCategory!=RequiresOpenCVRuntimeTest --logger "trx;LogFileName=TestResults-Vignette.Live2D.Tests.trx"
 
       # Test uploads
-      - name: Upload Test Results (Camera)
+      - name: Upload Test Results
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
-          name: TestResults-Vignette.Camera.Tests
-          path: ${{ github.workspace }}/Vignette.Camera.Tests/TestResults/TestResults-Vignette.Camera.Tests.trx
+          name: TestResults-Vignette.*.Tests
+          path: ${{ github.workspace }}/Vignette.*.Tests/TestResults/*.trx
 
-      - name: Upload Test Results (Game)
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: TestResults-Vignette.Game.Tests
-          path: ${{ github.workspace }}/Vignette.Game.Tests/TestResults/TestResults-Vignette.Game.Tests.trx
-
-      - name: Upload Test Results (Live2D)
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: TestResults-Vignette.Live2D.Tests
-          path: ${{ github.workspace }}/Vignette.Live2D.Tests/TestResults/TestResults-Vignette.Live2D.Tests.trx
