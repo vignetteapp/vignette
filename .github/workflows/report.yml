@@ -13,7 +13,7 @@ jobs:
       - name: Report
         uses: dorny/test-reporter@v1.4.2
         with:
-          artifact: Vignette Test Results
+          artifact: TestResults-Vignette
           name: Test Results
           path: ${{ github.workspace }}/Vignette.*.Tests/TestResults/*.trx
           reporter: dotnet-trx
