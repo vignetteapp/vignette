@@ -30,7 +30,7 @@ jobs:
       matrix:
         os:
           - { runner: windows-latest, runtime: win-x64 }
-          - { runner: ubuntu-latest, runtime: linux-x64 }
+          - { runner: ubuntu-latest, runtime: ubuntu.20.04-x64 }
     steps:
       - name: Checkout
         uses: actions/checkout@v2
