@@ -13,7 +13,7 @@ jobs:
       - name: Report
         uses: dorny/test-reporter@v1.4.2
         with:
-          artifact: TestResults-Vignette.Game.Tests
+          artifact: Vignette Test Results
           name: Test Results
           path: "*.trx"
           reporter: dotnet-trx
