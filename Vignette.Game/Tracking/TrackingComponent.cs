@@ -29,7 +29,7 @@ namespace Vignette.Game.Tracking
 
         private GCHandle packetCallbackHandle;
 
-        public void Initialize(string configText)
+        public TrackingComponent(string configText)
         {
             graph = new CalculatorGraph(configText);
             imagePoller = graph.AddOutputStreamPoller<ImageFrame>(kOutputStream0).Value();
