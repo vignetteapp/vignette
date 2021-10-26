@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using osu.Framework.Graphics;
-using Akihabara;
+using Emgu.CV;
+using Emgu.CV.Util;
+using Emgu.CV.CvEnum;
 using Akihabara.External;
 using Akihabara.Framework;
 using Akihabara.Framework.ImageFormat;
@@ -47,9 +49,33 @@ namespace Vignette.Game.Tracking
             return Status.Ok();
         }
 
-        public void OnFrame(dynamic frame)
+        // Taken from Vignette.Camera/Camera.cs -> private void handleImageGrabbed()
+        private byte[] getBytesFromFrame(Mat frame, string format, Dictionary<ImwriteFlags, int> encodingParams = null)
         {
-            var inputFrame = new ImageFrame(ImageFormat.Format.Srgba, frame.Width, frame.Height, frame.Width * 4, frame.Data);
+            if (frame.IsEmpty)
+                throw new ArgumentException("The frame is empty.");
+
+            using (var vector = new VectorOfByte())
+            {
+                CvInvoke.Imencode(format, frame, vector, encodingParams?.ToArray());
+                return vector.ToArray();
+            }
+        }
+
+        // TODO: figure out encoding params
+        public void OnFrame(Mat frame, string format, Dictionary<ImwriteFlags, int> encodingParams = null)
+        {
+            byte[] frameBytes = getBytesFromFrame(frame, format, encodingParams);
+            var pixelData = new UnmanagedArray<byte>(frameBytes.Length);
+            pixelData.CopyFrom(frameBytes);
+
+            var inputFrame = new ImageFrame(
+                ImageFormat.Format.Unknown, // depends on encoding params
+                frame.Width,
+                frame.Height,
+                frame.Width * 4, // depends on encoding params, for example RGB vs. RGBA
+                pixelData
+            );
 
             // Then, we need a timestamp to package the image frame in an actual `ImageFramePacket`.
             int timestamp = System.Environment.TickCount & int.MaxValue;
@@ -71,7 +97,6 @@ namespace Vignette.Game.Tracking
 
         void IDisposable.Dispose()
         {
-
             graph.CloseInputStream(kInputStream);
             var doneStatus = graph.WaitUntilDone();
             packetCallbackHandle.Free();
