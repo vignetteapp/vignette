@@ -71,7 +71,7 @@ namespace Vignette.Game.Tracking
             return imageFrame;
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
 
             graph.CloseInputStream(kInputStream);
