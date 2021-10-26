@@ -27,13 +27,13 @@ namespace Vignette.Game.Tracking
 
         private OutputStreamPoller<ImageFrame> imagePoller;
 
-        private GCHandle _callbackHandle;
+        private GCHandle packetCallbackHandle;
 
         public void Initialize(string configText)
         {
             graph = new CalculatorGraph(configText);
             imagePoller = graph.AddOutputStreamPoller<ImageFrame>(kOutputStream0).Value();
-            graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(kOutputStream1, handleLandmarks, out _callbackHandle).AssertOk();
+            graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(kOutputStream1, handleLandmarks, out packetCallbackHandle).AssertOk();
 
             graph.StartRun().AssertOk();
         }
@@ -65,8 +65,6 @@ namespace Vignette.Game.Tracking
             if (!imagePoller.Next(packet))
                 throw new InvalidOperationException("No frame in the queue");
 
-                // After getting the packet, we retrieve the image frame and then the raw byte data
-            // to finally send it in raw binary form to stdout.
             var imageFrame = packet.Get();
             return imageFrame;
         }
@@ -76,7 +74,7 @@ namespace Vignette.Game.Tracking
 
             graph.CloseInputStream(kInputStream);
             var doneStatus = graph.WaitUntilDone();
-            _callbackHandle.Free();
+            packetCallbackHandle.Free();
             doneStatus.AssertOk();
         }
     }
