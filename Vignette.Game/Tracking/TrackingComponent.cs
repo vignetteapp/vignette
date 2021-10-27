@@ -16,14 +16,15 @@ using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
 using UnmanageUtility;
+using Vignette.Game.Screens.Stage;
 
 namespace Vignette.Game.Tracking
 {
     public class TrackingComponent : Component, IDisposable
     {
-        const string k_input_stream = "input_video";
-        const string k_output_stream_0 = "output_video";
-        const string k_output_stream_1 = "multi_face_landmarks";
+        private const string input_stream = "input_video";
+        private const string output_stream0 = "output_video";
+        private const string output_stream1 = "multi_face_landmarks";
 
         private CalculatorGraph graph;
 
@@ -31,11 +32,12 @@ namespace Vignette.Game.Tracking
 
         private GCHandle packetCallbackHandle;
 
+
         public TrackingComponent(string configText)
         {
             graph = new CalculatorGraph(configText);
-            imagePoller = graph.AddOutputStreamPoller<ImageFrame>(k_output_stream_0).Value();
-            graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(k_output_stream_1, handleLandmarks, out packetCallbackHandle).AssertOk();
+            imagePoller = graph.AddOutputStreamPoller<ImageFrame>(output_stream0).Value();
+            graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(output_stream1, handleLandmarks, out packetCallbackHandle).AssertOk();
 
             graph.StartRun().AssertOk();
         }
@@ -46,6 +48,9 @@ namespace Vignette.Game.Tracking
             Glog.Log(Glog.Severity.Info, $"Got landmarks at timestamp {timestamp}");
 
             var landmarks = packet.Get();
+
+            //move model
+
             return Status.Ok();
         }
 
@@ -82,10 +87,10 @@ namespace Vignette.Game.Tracking
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
 
             // Finally send the packet to the graph
-            graph.AddPacketToInputStream(k_input_stream, inputPacket);
+            graph.AddPacketToInputStream(input_stream, inputPacket);
         }
 
-        public ImageFrame GetprocessedFrame()
+        public ImageFrame GetProcessedFrame()
         {
             var packet = new ImageFramePacket();
             if (!imagePoller.Next(packet))
@@ -97,7 +102,7 @@ namespace Vignette.Game.Tracking
 
         void IDisposable.Dispose()
         {
-            graph.CloseInputStream(k_input_stream);
+            graph.CloseInputStream(input_stream);
             var doneStatus = graph.WaitUntilDone();
             packetCallbackHandle.Free();
             doneStatus.AssertOk();

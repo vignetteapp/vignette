@@ -17,7 +17,7 @@ namespace Vignette.Game.Screens.Stage
 {
     public class Avatar : CompositeDrawable
     {
-        private CubismModel model;
+        public CubismModel Model;
         private Bindable<bool> adjustable;
         private Bindable<string> path;
         private Bindable<Vector2> offset;
@@ -50,9 +50,9 @@ namespace Vignette.Game.Screens.Stage
 
         private void handleVisualChange()
         {
-            model?.MoveTo(offset.Value, shouldEase ? 200 : 0, Easing.OutQuint);
-            model?.RotateTo(rotation.Value, shouldEase ? 200 : 0, Easing.OutQuint);
-            model?.ResizeTo(512 * scale.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            Model?.MoveTo(offset.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            Model?.RotateTo(rotation.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            Model?.ResizeTo(512 * scale.Value, shouldEase ? 200 : 0, Easing.OutQuint);
             shouldEase = true;
         }
 
@@ -60,11 +60,11 @@ namespace Vignette.Game.Screens.Stage
         {
             shouldEase = false;
 
-            model?.Expire();
+            Model?.Expire();
 
             if (!string.IsNullOrEmpty(path.Value) && tryCreateCubismModel(path.Value, out var newModel))
             {
-                AddInternal(model = newModel.With(m =>
+                AddInternal(Model = newModel.With(m =>
                 {
                     m.Size = new Vector2(512);
                     m.Anchor = Anchor.Centre;
