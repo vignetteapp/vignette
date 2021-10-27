@@ -32,8 +32,8 @@ The style guide is defined in the [`.editorconfig`](./.editorconfig) at the root
 
 ## License
 
-Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under Non-Profit Open Source License v3.0. For the full license text please see the [LICENSE](./LICENSE) file in this repository. Live2D however is also additionally under another license which can be found here: [Live2D Open Software License](http://live2d.com/eula/live2d-open-software-license-agreement_en.html).
+Vignette is Copyright &copy; 2020 Ayane Satomi and the Vignette Authors, licensed under GNU General Public License v3.0 with SDK exception. For the full license text please see the [LICENSE](./LICENSE) file in this repository. Live2D however is also additionally under another license which can be found here: [Live2D Open Software License](http://live2d.com/eula/live2d-open-software-license-agreement_en.html).
 
 ## Commercial Use and Support
 
-While Vignette is NPOSL-3.0, We do not provide commercial support, there is nothing stopping you from using it commercially but if you want proper dedicated support from the Vignette engineers, we highly recommend the Enterprise tier on our [Open Collective](https://opencollective.com/vignette).
+While Vignette is GPL-3.0, We do not provide commercial support, there is nothing stopping you from using it commercially but if you want proper dedicated support from the Vignette engineers, we highly recommend the Enterprise tier on our [Open Collective](https://opencollective.com/vignette).
