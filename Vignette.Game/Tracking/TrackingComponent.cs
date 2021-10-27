@@ -21,9 +21,9 @@ namespace Vignette.Game.Tracking
 {
     public class TrackingComponent : Component, IDisposable
     {
-        const string kInputStream = "input_video";
-        const string kOutputStream0 = "output_video";
-        const string kOutputStream1 = "multi_face_landmarks";
+        const string k_input_stream = "input_video";
+        const string k_output_stream_0 = "output_video";
+        const string k_output_stream_1 = "multi_face_landmarks";
 
         private CalculatorGraph graph;
 
@@ -34,8 +34,8 @@ namespace Vignette.Game.Tracking
         public TrackingComponent(string configText)
         {
             graph = new CalculatorGraph(configText);
-            imagePoller = graph.AddOutputStreamPoller<ImageFrame>(kOutputStream0).Value();
-            graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(kOutputStream1, handleLandmarks, out packetCallbackHandle).AssertOk();
+            imagePoller = graph.AddOutputStreamPoller<ImageFrame>(k_output_stream_0).Value();
+            graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(k_output_stream_1, handleLandmarks, out packetCallbackHandle).AssertOk();
 
             graph.StartRun().AssertOk();
         }
@@ -82,7 +82,7 @@ namespace Vignette.Game.Tracking
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
 
             // Finally send the packet to the graph
-            graph.AddPacketToInputStream(kInputStream, inputPacket);
+            graph.AddPacketToInputStream(k_input_stream, inputPacket);
         }
 
         public ImageFrame GetprocessedFrame()
@@ -97,7 +97,7 @@ namespace Vignette.Game.Tracking
 
         void IDisposable.Dispose()
         {
-            graph.CloseInputStream(kInputStream);
+            graph.CloseInputStream(k_input_stream);
             var doneStatus = graph.WaitUntilDone();
             packetCallbackHandle.Free();
             doneStatus.AssertOk();
