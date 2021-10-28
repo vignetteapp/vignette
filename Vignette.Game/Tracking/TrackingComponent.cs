@@ -100,7 +100,7 @@ namespace Vignette.Game.Tracking
             pixelData.CopyFrom(frameBytes);
 
             var inputFrame = new ImageFrame(
-                ImageFormat.Format.Unknown, // depends on encoding params
+                ImageFormat.Format.Srgb, // depends on encoding params
                 frame.Width,
                 frame.Height,
                 frame.Width * 4, // depends on encoding params, for example RGB vs. RGBA
