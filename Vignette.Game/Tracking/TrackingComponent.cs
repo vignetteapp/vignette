@@ -42,16 +42,15 @@ namespace Vignette.Game.Tracking
         private GCHandle packetCallbackHandle;
 
         private MotionController motionController { get; set; }
-
-        [Resolved]
         private IBindable<CameraDevice> camera { get; set; }
 
         [BackgroundDependencyLoader]
-        private void load(MotionController controller, ResourceStore<byte[]> store)
+        private void load(MotionController controller, ResourceStore<byte[]> store, IBindable<CameraDevice> cam)
         {
             motionController = controller;
             string graphConfig = Encoding.UTF8.GetString(store.Get("Graphs/face_mesh_desktop_live.pbtxt"));
             Initialize(graphConfig);
+            camera = cam;
             camera.Value.Start();
             camera.Value.OnTick += () =>
             {
