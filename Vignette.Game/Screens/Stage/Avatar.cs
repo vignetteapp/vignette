@@ -31,6 +31,9 @@ namespace Vignette.Game.Screens.Stage
         [Resolved]
         private GameHost host { get; set; }
 
+        [Cached]
+        private TrackingComponent tracker = new TrackingComponent();
+
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager config, SessionConfigManager session)
         {
@@ -49,8 +52,6 @@ namespace Vignette.Game.Screens.Stage
 
             path = config.GetBindable<string>(VignetteSetting.AvatarPath);
             path.BindValueChanged(_ => handlePathChange(), true);
-
-            AddInternal(new TrackingComponent(model));
         }
 
         private void handleVisualChange()
@@ -65,7 +66,7 @@ namespace Vignette.Game.Screens.Stage
         {
             shouldEase = false;
 
-            InternalChildren.Where(x => x.GetType() == typeof(TrackingComponent)).ForEach(x => x.Dispose());
+            tracker.Dispose();
 
             model?.Expire();
 
@@ -79,7 +80,7 @@ namespace Vignette.Game.Screens.Stage
                 }));
             }
 
-            AddInternal(new TrackingComponent(model));
+            tracker = new TrackingComponent();
 
             handleVisualChange();
         }

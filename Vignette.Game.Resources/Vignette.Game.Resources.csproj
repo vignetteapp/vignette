@@ -9,6 +9,7 @@
     <EmbeddedResource Include="Themes\**\*" />
     <EmbeddedResource Include="Shaders\**\*" />
     <EmbeddedResource Include="Textures\**\*" />
+    <EmbeddedResource Include="Graphs\**\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,9 +41,5 @@
     <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_24.png" />
     <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_25.png" />
     <None Remove="Fonts\SegoeFluent\SegoeFluent-Regular_26.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Graphs\" />
   </ItemGroup>
 </Project>

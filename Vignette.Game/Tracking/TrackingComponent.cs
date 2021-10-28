@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using osu.Framework.Graphics;
 using Emgu.CV;
 using Emgu.CV.Util;
@@ -17,6 +18,7 @@ using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
 using Emgu.CV.Dnn;
 using osu.Framework.Allocation;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using UnmanageUtility;
 using Vignette.Game.Screens.Stage;
@@ -37,15 +39,14 @@ namespace Vignette.Game.Tracking
 
         private GCHandle packetCallbackHandle;
 
-        private Model model;
-
-        public TrackingComponent(Model theModel) => model = theModel;
+        private CubismController cubismController { get; set; }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(CubismController controller, ResourceStore<byte[]> store)
         {
-            // TODO: load the graph config using DI
-            //Initialize("gibberish");
+            cubismController = controller;
+            string graphConfig = Encoding.UTF8.GetString(store.Get("Graphs/face_mesh_desktop_live.pbtxt"));
+            Initialize(graphConfig);
         }
 
         public void Initialize(string configText)
