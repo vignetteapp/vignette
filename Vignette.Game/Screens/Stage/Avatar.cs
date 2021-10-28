@@ -2,8 +2,10 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System.IO;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
@@ -11,13 +13,14 @@ using osu.Framework.Platform;
 using osuTK;
 using Vignette.Game.Configuration;
 using Vignette.Game.IO;
+using Vignette.Game.Tracking;
 using Vignette.Live2D.Graphics;
 
 namespace Vignette.Game.Screens.Stage
 {
     public class Avatar : CompositeDrawable
     {
-        public CubismModel Model;
+        private CubismModel model;
         private Bindable<bool> adjustable;
         private Bindable<string> path;
         private Bindable<Vector2> offset;
@@ -46,13 +49,15 @@ namespace Vignette.Game.Screens.Stage
 
             path = config.GetBindable<string>(VignetteSetting.AvatarPath);
             path.BindValueChanged(_ => handlePathChange(), true);
+
+            AddInternal(new TrackingComponent(model));
         }
 
         private void handleVisualChange()
         {
-            Model?.MoveTo(offset.Value, shouldEase ? 200 : 0, Easing.OutQuint);
-            Model?.RotateTo(rotation.Value, shouldEase ? 200 : 0, Easing.OutQuint);
-            Model?.ResizeTo(512 * scale.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            model?.MoveTo(offset.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            model?.RotateTo(rotation.Value, shouldEase ? 200 : 0, Easing.OutQuint);
+            model?.ResizeTo(512 * scale.Value, shouldEase ? 200 : 0, Easing.OutQuint);
             shouldEase = true;
         }
 
@@ -60,17 +65,21 @@ namespace Vignette.Game.Screens.Stage
         {
             shouldEase = false;
 
-            Model?.Expire();
+            InternalChildren.Where(x => x.GetType() == typeof(TrackingComponent)).ForEach(x => x.Dispose());
+
+            model?.Expire();
 
             if (!string.IsNullOrEmpty(path.Value) && tryCreateCubismModel(path.Value, out var newModel))
             {
-                AddInternal(Model = newModel.With(m =>
+                AddInternal(model = newModel.With(m =>
                 {
                     m.Size = new Vector2(512);
                     m.Anchor = Anchor.Centre;
                     m.Origin = Anchor.Centre;
                 }));
             }
+
+            AddInternal(new TrackingComponent(model));
 
             handleVisualChange();
         }

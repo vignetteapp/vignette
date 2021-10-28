@@ -15,8 +15,13 @@ using Akihabara.Framework.ImageFormat;
 using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
+using Emgu.CV.Dnn;
+using osu.Framework.Allocation;
+using osu.Framework.Platform;
 using UnmanageUtility;
 using Vignette.Game.Screens.Stage;
+using Vignette.Live2D.Graphics;
+using Model = Vignette.Live2D.Graphics.CubismModel;
 
 namespace Vignette.Game.Tracking
 {
@@ -32,8 +37,18 @@ namespace Vignette.Game.Tracking
 
         private GCHandle packetCallbackHandle;
 
+        private Model model;
 
-        public TrackingComponent(string configText)
+        public TrackingComponent(Model theModel) => model = theModel;
+
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            // TODO: load the graph config using DI
+            //Initialize("gibberish");
+        }
+
+        public void Initialize(string configText)
         {
             graph = new CalculatorGraph(configText);
             imagePoller = graph.AddOutputStreamPoller<ImageFrame>(output_stream0).Value();
@@ -49,7 +64,7 @@ namespace Vignette.Game.Tracking
 
             var landmarks = packet.Get();
 
-            //move model
+            //get head
 
             return Status.Ok();
         }
