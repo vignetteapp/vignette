@@ -18,9 +18,11 @@ using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
 using Emgu.CV.Dnn;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using UnmanageUtility;
+using Vignette.Camera;
 using Vignette.Game.Screens.Stage;
 using Vignette.Live2D.Graphics;
 using Model = Vignette.Live2D.Graphics.CubismModel;
@@ -41,12 +43,20 @@ namespace Vignette.Game.Tracking
 
         private MotionController cubismController { get; set; }
 
+        [Resolved]
+        private IBindable<CameraDevice> camera { get; set; }
+
         [BackgroundDependencyLoader]
         private void load(MotionController controller, ResourceStore<byte[]> store)
         {
             cubismController = controller;
             string graphConfig = Encoding.UTF8.GetString(store.Get("Graphs/face_mesh_desktop_live.pbtxt"));
             Initialize(graphConfig);
+            camera.Value.Start();
+            camera.Value.OnTick += () =>
+            {
+                //handle frame and call SendFrame
+            };
         }
 
         public void Initialize(string configText)
