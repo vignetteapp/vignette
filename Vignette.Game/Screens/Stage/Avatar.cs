@@ -15,6 +15,7 @@ using Vignette.Game.Configuration;
 using Vignette.Game.IO;
 using Vignette.Game.Tracking;
 using Vignette.Live2D.Graphics;
+using Vignette.Live2D.Graphics.Controllers;
 
 namespace Vignette.Game.Screens.Stage
 {
@@ -34,7 +35,8 @@ namespace Vignette.Game.Screens.Stage
         [Cached]
         private TrackingComponent tracker = new TrackingComponent();
 
-        [Cached] private CubismController controller = new CubismController();
+        [Cached]
+        private MotionController controller = new MotionController();
 
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager config, SessionConfigManager session)
@@ -55,8 +57,8 @@ namespace Vignette.Game.Screens.Stage
             path = config.GetBindable<string>(VignetteSetting.AvatarPath);
             path.BindValueChanged(_ => handlePathChange(), true);
 
-            AddInternal(controller);
             AddInternal(tracker);
+            model.Add(controller);
         }
 
         private void handleVisualChange()

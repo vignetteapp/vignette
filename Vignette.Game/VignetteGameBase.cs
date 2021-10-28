@@ -151,6 +151,7 @@ namespace Vignette.Game
                     },
                 },
             });
+            dependencies.Cache(Resources);
         }
 
         public override void SetHost(GameHost host)
