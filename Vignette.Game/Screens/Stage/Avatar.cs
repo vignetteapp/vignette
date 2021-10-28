@@ -54,7 +54,7 @@ namespace Vignette.Game.Screens.Stage
 
             path = config.GetBindable<string>(VignetteSetting.AvatarPath);
             path.BindValueChanged(_ => handlePathChange(), true);
-            
+
             AddInternal(controller);
             AddInternal(tracker);
         }
