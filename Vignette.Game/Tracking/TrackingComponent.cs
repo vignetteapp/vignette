@@ -84,7 +84,7 @@ namespace Vignette.Game.Tracking
         }
 
         // TODO: figure out encoding params
-        public void OnFrame(Mat frame, string format, Dictionary<ImwriteFlags, int> encodingParams = null)
+        public void SendFrame(Mat frame, string format, Dictionary<ImwriteFlags, int> encodingParams = null)
         {
             byte[] frameBytes = getBytesFromFrame(frame, format, encodingParams);
             var pixelData = new UnmanagedArray<byte>(frameBytes.Length);
