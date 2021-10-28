@@ -39,12 +39,12 @@ namespace Vignette.Game.Tracking
 
         private GCHandle packetCallbackHandle;
 
-        private MotionController cubismController { get; set; }
+        private MotionController motionController { get; set; }
 
         [BackgroundDependencyLoader]
         private void load(MotionController controller, ResourceStore<byte[]> store)
         {
-            cubismController = controller;
+            motionController = controller;
             string graphConfig = Encoding.UTF8.GetString(store.Get("Graphs/face_mesh_desktop_live.pbtxt"));
             Initialize(graphConfig);
         }
@@ -65,7 +65,7 @@ namespace Vignette.Game.Tracking
 
             var landmarks = packet.Get();
 
-            cubismController.ApplyLandmarks(landmarks);
+            motionController.ApplyLandmarks(landmarks);
 
             return Status.Ok();
         }
