@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -67,7 +68,7 @@ namespace Vignette.Game.Tracking
                 obj.NewValue.OnTick += () =>
                 {
                     //handle frame and call SendFrame
-                    SendEncodedFrame(camera.Value.Data.ToArray(), camera.Value.Width, camera.Value.Height);
+                    SendEncodedFrame(camera.Value.Data.Reverse().ToArray(), camera.Value.Width, camera.Value.Height);
                 };
             }
         }
@@ -92,7 +93,6 @@ namespace Vignette.Game.Tracking
             {
                 motionController.ApplyLandmarks(landmarks);
             }
-
             return Status.Ok();
         }
 
@@ -108,12 +108,19 @@ namespace Vignette.Game.Tracking
                 return vector.ToArray();
             }
         }
-
+            
         public void SendEncodedFrame(byte[] encodedData, int width, int height)
         {
             var pixelMat = new Mat();
             CvInvoke.Imdecode(encodedData, ImreadModes.AnyColor, pixelMat);
+
+            if (pixelMat.IsEmpty)
+            {
+                throw new ArgumentException("Invalid frame");
+            }
+
             var pixelData = pixelMat.GetRawData().ToUnmanagedArray();
+
             var inputFrame = new ImageFrame(
                 ImageFormat.Format.Srgb, // depends on encoding params
                 width,
