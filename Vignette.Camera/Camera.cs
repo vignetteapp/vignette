@@ -51,7 +51,7 @@ namespace Vignette.Camera
 
         private static Logger logger => Logger.GetLogger("performance-camera");
 
-        private readonly EncodingFormat format;
+        public readonly EncodingFormat Format;
         private readonly Dictionary<ImwriteFlags, int> encodingParams;
         private byte[] data;
 
@@ -59,7 +59,7 @@ namespace Vignette.Camera
 
         public Camera(EncodingFormat format = EncodingFormat.PNG, Dictionary<ImwriteFlags, int> encodingParams = null)
         {
-            this.format = format;
+            Format = format;
             this.encodingParams = encodingParams;
         }
 
@@ -119,7 +119,7 @@ namespace Vignette.Camera
 
                     using (var vector = new VectorOfByte())
                     {
-                        CvInvoke.Imencode(getStringfromEncodingFormat(format), Mat, vector, encodingParams?.ToArray());
+                        CvInvoke.Imencode(getStringfromEncodingFormat(Format), Mat, vector, encodingParams?.ToArray());
                         data = vector.ToArray();
                     }
                 }
