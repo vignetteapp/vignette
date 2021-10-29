@@ -51,11 +51,25 @@ namespace Vignette.Game.Tracking
             string graphConfig = Encoding.UTF8.GetString(store.Get("Graphs/face_mesh_desktop_live.pbtxt"));
             Initialize(graphConfig);
             camera = cam;
-            camera.Value.Start();
-            camera.Value.OnTick += () =>
+            camera.BindValueChanged(onCameraChanged, true);
+        }
+
+        private void onCameraChanged(ValueChangedEvent<CameraDevice> obj)
+        {
+            if (obj.OldValue != null)
             {
-                //handle frame and call SendFrame
-            };
+                obj.OldValue.Stop();
+            }
+
+            if (obj.NewValue != null)
+            {
+                obj.NewValue.Start();
+                obj.NewValue.OnTick += () =>
+                {
+                    //handle frame and call SendFrame
+                    SendEncodedFrame(camera.Value.Data.ToUnmanagedArray(), camera.Value.Width, camera.Value.Height);
+                };
+            }
         }
 
         public void Initialize(string configText)
@@ -90,6 +104,24 @@ namespace Vignette.Game.Tracking
                 CvInvoke.Imencode(format, frame, vector, encodingParams?.ToArray());
                 return vector.ToArray();
             }
+        }
+
+        public void SendEncodedFrame(UnmanagedArray<byte> pixelData, int width, int height)
+        {
+            var inputFrame = new ImageFrame(
+                ImageFormat.Format.Srgb, // depends on encoding params
+                width,
+                height,
+                width * 4, // depends on encoding params, for example RGB vs. RGBA
+                pixelData
+            );
+
+            // Then, we need a timestamp to package the image frame in an actual `ImageFramePacket`.
+            int timestamp = System.Environment.TickCount & int.MaxValue;
+            var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
+
+            // Finally send the packet to the graph
+            graph.AddPacketToInputStream(input_stream, inputPacket);
         }
 
         // TODO: figure out encoding params

@@ -58,7 +58,11 @@ namespace Vignette.Game.Screens.Stage
             path.BindValueChanged(_ => handlePathChange(), true);
 
             AddInternal(tracker);
-            model.Add(controller);
+
+            if (model != null)
+            {
+                model.Add(controller);
+            }
         }
 
         private void handleVisualChange()
