@@ -5,6 +5,7 @@
     <Version>0.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Akihabara.Runtime.Windows_x64.CPU" Version="2021.1006.0" />
     <PackageReference Include="ppy.osu.Framework" Version="2021.907.0" />
     <PackageReference Include="Akihabara" Version="2021.1029.0" />
   </ItemGroup>
