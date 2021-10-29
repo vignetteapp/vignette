@@ -67,7 +67,7 @@ namespace Vignette.Game.Tracking
                 obj.NewValue.OnTick += () =>
                 {
                     //handle frame and call SendFrame
-                    SendEncodedFrame(camera.Value.Data.ToUnmanagedArray(), camera.Value.Width, camera.Value.Height);
+                    SendEncodedFrame(camera.Value.Data.ToArray(), camera.Value.Width, camera.Value.Height);
                 };
             }
         }
@@ -109,8 +109,11 @@ namespace Vignette.Game.Tracking
             }
         }
 
-        public void SendEncodedFrame(UnmanagedArray<byte> pixelData, int width, int height)
+        public void SendEncodedFrame(byte[] encodedData, int width, int height)
         {
+            var pixelMat = new Mat();
+            CvInvoke.Imdecode(encodedData, ImreadModes.AnyColor, pixelMat);
+            var pixelData = pixelMat.GetRawData().ToUnmanagedArray();
             var inputFrame = new ImageFrame(
                 ImageFormat.Format.Srgb, // depends on encoding params
                 width,
