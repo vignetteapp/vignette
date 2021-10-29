@@ -88,7 +88,10 @@ namespace Vignette.Game.Tracking
 
             var landmarks = packet.Get();
 
-            motionController.ApplyLandmarks(landmarks);
+            if (motionController != null)
+            {
+                motionController.ApplyLandmarks(landmarks);
+            }
 
             return Status.Ok();
         }
