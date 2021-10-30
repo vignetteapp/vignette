@@ -80,6 +80,7 @@ namespace Vignette.Game.Screens.Stage
             try
             {
                 model = new CubismModelAvatar(new RecursiveNativeStorage(path, host));
+                model.Add(new AvatarController());
                 return true;
             }
             catch (FileNotFoundException)

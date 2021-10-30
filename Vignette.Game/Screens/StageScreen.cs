@@ -27,6 +27,9 @@ namespace Vignette.Game.Screens
         [Resolved(canBeNull: true)]
         private SettingsOverlay settings { get; set; }
 
+        [Cached]
+        private readonly TrackingComponent tracker = new TrackingComponent();
+
         [BackgroundDependencyLoader]
         private void load(SessionConfigManager session)
         {
@@ -35,6 +38,7 @@ namespace Vignette.Game.Screens
                 new StageBackground(),
                 new Avatar(),
                 strip = new EditingStrip(),
+                tracker,
             });
 
             backgroundAdjust = session.GetBindable<bool>(SessionSetting.EditingBackground);

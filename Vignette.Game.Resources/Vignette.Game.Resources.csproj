@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Fonts\**\*" />
-    <EmbeddedResource Include="Themes\**\*" />
+    <EmbeddedResource Include="Graphs\**\*" />
     <EmbeddedResource Include="Shaders\**\*" />
     <EmbeddedResource Include="Textures\**\*" />
   </ItemGroup>

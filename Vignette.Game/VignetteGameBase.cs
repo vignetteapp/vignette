@@ -100,6 +100,7 @@ namespace Vignette.Game
             AddFont(Resources, @"Fonts/SegoeFluent/SegoeFluent-Regular");
             AddFont(Resources, @"Fonts/Vignette");
 
+            dependencies.CacheAs(new MediapipeGraphStore(new NamespacedResourceStore<byte[]>(Resources, "Graphs")));
             dependencies.CacheAs(this);
             dependencies.CacheAs(LocalConfig);
             dependencies.CacheAs(SessionConfig = new SessionConfigManager());
@@ -118,7 +119,7 @@ namespace Vignette.Game
                 cameraDevice.Value?.Dispose();
 
                 int id = CameraManager.CameraDeviceNames.ToList().IndexOf(e.NewValue);
-                cameraDevice.Value = new CameraDevice(id, EncodingFormat.JPEG);
+                cameraDevice.Value = new CameraDevice(id, EncodingFormat.Bitmap);
                 cameraDevice.Value.Start();
             }, true);
 
