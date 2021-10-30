@@ -61,7 +61,7 @@ namespace Vignette.Game.Screens.Stage
         {
             base.Update();
 
-            if (camera.Value == null)
+            if (camera.Value == null || !camera.Value.Ready)
                 return;
 
             int timestamp = Environment.TickCount & int.MaxValue;
