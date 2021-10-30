@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build (Debug)",
+            "label": "Build (Linux Debug)",
             "command": "dotnet",
             "type": "shell",
             "args": [
@@ -12,6 +12,8 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
+                "-r",
+                "ubuntu.20.04-x64",
                 "Vignette.Desktop"
             ],
             "group": "build",
@@ -21,7 +23,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build (Release)",
+            "label": "Build (Linux Release)",
             "command": "dotnet",
             "type": "shell",
             "args": [
@@ -30,6 +32,8 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
+                "-r",
+                "ubuntu.20.04-x64",
                 "Vignette.Desktop"
             ],
             "group": "build",
@@ -39,7 +43,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build Tests (Debug)",
+            "label": "Build Tests (Linux Debug)",
             "command": "dotnet",
             "type": "shell",
             "args": [
@@ -47,6 +51,8 @@
                 "/property:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
+                "-r",
+                "ubuntu.20.04-x64",
                 "Vignette.Game.Tests"
             ],
             "group": "build",
@@ -56,7 +62,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build Tests (Release)",
+            "label": "Build Tests (Linux Release)",
             "command": "dotnet",
             "type": "shell",
             "args": [
@@ -65,6 +71,86 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
+                "-r",
+                "ubuntu.20.04-x64",
+                "Vignette.Game.Tests"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build (Windows Debug)",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "-p:GenerateFullPaths=true",
+                "-m",
+                "-verbosity:m",
+                "-r",
+                "win-x64",
+                "Vignette.Desktop"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build (Windows Release)",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "-p:Configuration=Release",
+                "-p:GenerateFullPaths=true",
+                "-m",
+                "-verbosity:m",
+                "-r",
+                "win-x64",
+                "Vignette.Desktop"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Tests (Windows Debug)",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "-m",
+                "-verbosity:m",
+                "-r",
+                "win-x64",
+                "Vignette.Game.Tests"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Tests (Windows Release)",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "-p:Configuration=Release",
+                "-p:GenerateFullPaths=true",
+                "-m",
+                "-verbosity:m",
+                "-r",
+                "win-x64",
                 "Vignette.Game.Tests"
             ],
             "group": "build",
