@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Akihabara.Framework;
@@ -18,6 +19,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using UnmanageUtility;
 using Vignette.Camera;
@@ -82,15 +85,14 @@ namespace Vignette.Game.Screens.Stage
             byte[] image = bitmapToRawBGRA(bitmap);
 
             int timestamp = Environment.TickCount & int.MaxValue;
-            var inputFrame = new ImageFrame(ImageFormat.Format.Sbgra, bitmap.Width, bitmap.Height, bitmap.Height * 4,
+            var inputFrame = new ImageFrame(ImageFormat.Format.Sbgra, bitmap.Width, bitmap.Height, bitmap.Width * 4,
                 image.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
             graph.AddPacketToInputStream(input_video, inputPacket);
-
         }
 
-        public bool TryGetFrame(out ImageFrame frame)
+        public bool TryGetFrame(out Bitmap frame)
         {
             frame = null;
 
@@ -98,19 +100,20 @@ namespace Vignette.Game.Screens.Stage
             if (!poller.Next(packet))
                 return false;
 
-            frame = packet.Get();
+            var raw = packet.Get();
+            var arr = raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
+            frame = rawBGRAToBitmap(arr, raw.Width(), raw.Height());
             return true;
         }
 
         private byte[] bitmapToRawBGRA(Bitmap bitmap)
         {
             var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            //bitmap.Save("reference.png");
+
             byte[] data = new byte[locked.Stride * bitmap.Height];
             Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
             bitmap.UnlockBits(locked);
             //BGR24 --> RGB32
-            //System.IO.File.WriteAllBytes("image.raw", data);
 
             Image<Bgr24> start = Image.LoadPixelData<Bgr24>(data, bitmap.Width, bitmap.Height);
             //convert to 32 bit
@@ -124,8 +127,23 @@ namespace Vignette.Game.Screens.Stage
             Bgra32[] dest = new Bgra32[pixels.Length];
             Span<Bgra32> destination = new Span<Bgra32>(dest);
             PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
-
+            start.Dispose();
             return MemoryMarshal.AsBytes(destination).ToArray();
+        }
+
+        private Bitmap rawBGRAToBitmap(byte[] data, int width, int height)
+        {
+            var image = Image.LoadPixelData<Bgra32>(data, width, height);
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var imageEncoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(PngFormat.Instance);
+                image.Save(memoryStream, imageEncoder);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                return new Bitmap(memoryStream);
+            }
         }
     }
 }
