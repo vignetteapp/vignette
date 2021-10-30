@@ -89,7 +89,6 @@ namespace Vignette.Game.Screens.Stage
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
             graph.AddPacketToInputStream(input_video, inputPacket);
-            TryGetFrame(out var frame);
         }
 
         public bool TryGetFrame(out Bitmap frame)
