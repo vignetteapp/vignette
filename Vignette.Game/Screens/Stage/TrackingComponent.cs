@@ -105,6 +105,19 @@ namespace Vignette.Game.Screens.Stage
             return true;
         }
 
+        public bool TryGetRawFrame(out byte[] frame)
+        {
+            frame = null;
+
+            var packet = new ImageFramePacket();
+            if (!poller.Next(packet))
+                return false;
+
+            var raw = packet.Get();
+            frame = raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
+            return true;
+        }
+
         private byte[] bitmapToRawBGRA(Bitmap bitmap)
         {
             var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
