@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ppy.osu.Framework" Version="2021.907.0" />
-    <PackageReference Include="Akihabara" Version="2021.1005.0" />
+    <PackageReference Include="Akihabara" Version="2021.1029.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vignette.Camera\Vignette.Camera.csproj" />
