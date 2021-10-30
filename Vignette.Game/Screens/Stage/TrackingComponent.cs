@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Akihabara.Framework;
 using Akihabara.Framework.ImageFormat;
@@ -20,12 +21,15 @@ namespace Vignette.Game.Screens.Stage
 {
     public class TrackingComponent : Component
     {
+        public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks.ToList();
+
         [Resolved]
         private MediapipeGraphStore graphStore { get; set; }
 
         [Resolved]
         private IBindable<CameraDevice> camera { get; set; }
 
+        private List<NormalizedLandmarkList> landmarks;
         private GCHandle packetCallbackHandle;
         private CalculatorGraph graph;
         private OutputStreamPoller<ImageFrame> poller;
@@ -47,7 +51,11 @@ namespace Vignette.Game.Screens.Stage
             graph.StartRun().AssertOk();
         }
 
-        private Status handleLandmarks(NormalizedLandmarkListVectorPacket _) => Status.Ok();
+        private Status handleLandmarks(NormalizedLandmarkListVectorPacket packet)
+        {
+            landmarks = packet.Get();
+            return Status.Ok();
+        }
 
         protected override void Update()
         {
