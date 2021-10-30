@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Akihabara.Framework;
@@ -10,12 +12,14 @@ using Akihabara.Framework.ImageFormat;
 using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
+using Emgu.CV;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using UnmanageUtility;
 using Vignette.Camera;
 using Vignette.Game.IO;
+using ImageFormat = Akihabara.Framework.ImageFormat.ImageFormat;
 
 namespace Vignette.Game.Screens.Stage
 {
@@ -64,9 +68,16 @@ namespace Vignette.Game.Screens.Stage
             if (camera.Value == null)
                 return;
 
+            using var bitmap = camera.Value.Mat.ToBitmap();
+            var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
+                bitmap.PixelFormat);
+
+            byte[] data = new byte[locked.Stride * bitmap.Height];
+            Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
+
             int timestamp = Environment.TickCount & int.MaxValue;
-            var inputFrame = new ImageFrame(ImageFormat.Format.Srgb, camera.Value.Width, camera.Value.Height, camera.Value.Width * 4,
-                camera.Value.Data.ToUnmanagedArray());
+            var inputFrame = new ImageFrame(ImageFormat.Format.Srgb, bitmap.Width, bitmap.Height, bitmap.Width * 4,
+                data.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
             graph.AddPacketToInputStream(input_video, inputPacket);

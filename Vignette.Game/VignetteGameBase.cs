@@ -119,7 +119,7 @@ namespace Vignette.Game
                 cameraDevice.Value?.Dispose();
 
                 int id = CameraManager.CameraDeviceNames.ToList().IndexOf(e.NewValue);
-                cameraDevice.Value = new CameraDevice(id, EncodingFormat.Bitmap);
+                cameraDevice.Value = new CameraDevice(id, EncodingFormat.JPEG);
                 cameraDevice.Value.Start();
             }, true);
 

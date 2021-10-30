@@ -47,7 +47,7 @@ namespace Vignette.Camera
 
         protected DecoderState State { get; private set; } = DecoderState.Ready;
 
-        protected Mat Mat { get; private set; }
+        public Mat Mat { get; private set; }
 
         private static Logger logger => Logger.GetLogger("performance-camera");
 
