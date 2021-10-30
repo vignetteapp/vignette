@@ -134,15 +134,26 @@ namespace Vignette.Game.Screens.Stage
         {
             var image = Image.LoadPixelData<Bgra32>(data, width, height);
 
-            using (var memoryStream = new MemoryStream())
+            Span<Bgra32> pixels;
+
+            if (!image.TryGetSinglePixelSpan(out pixels))
             {
-                var imageEncoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(BmpFormat.Instance);
-                image.Save(memoryStream, imageEncoder);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                return new Bitmap(memoryStream);
+                throw new InvalidOperationException("Image is too big");
             }
+
+            byte[] outData = MemoryMarshal.AsBytes(pixels).ToArray();
+
+            Bitmap b = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+
+            Rectangle BoundsRect = new Rectangle(0, 0, width, height);
+            BitmapData bmpData = b.LockBits(BoundsRect,
+                ImageLockMode.WriteOnly,
+                b.PixelFormat);
+
+            IntPtr ptr = bmpData.Scan0;
+            Marshal.Copy(outData, 0, ptr, outData.Length);
+            b.UnlockBits(bmpData);
+            return b;
         }
     }
 }
