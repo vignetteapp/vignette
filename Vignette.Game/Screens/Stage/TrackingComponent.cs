@@ -145,17 +145,6 @@ namespace Vignette.Game.Screens.Stage
 
         private Bitmap rawBGRAToBitmap(byte[] data, int width, int height)
         {
-            var image = Image.LoadPixelData<Bgra32>(data, width, height);
-
-            Span<Bgra32> pixels;
-
-            if (!image.TryGetSinglePixelSpan(out pixels))
-            {
-                throw new InvalidOperationException("Image is too big");
-            }
-
-            byte[] outData = MemoryMarshal.AsBytes(pixels).ToArray();
-
             Bitmap b = new Bitmap(width, height, PixelFormat.Format32bppArgb);
 
             Rectangle BoundsRect = new Rectangle(0, 0, width, height);
@@ -164,7 +153,7 @@ namespace Vignette.Game.Screens.Stage
                 b.PixelFormat);
 
             IntPtr ptr = bmpData.Scan0;
-            Marshal.Copy(outData, 0, ptr, outData.Length);
+            Marshal.Copy(data, 0, ptr, data.Length);
             b.UnlockBits(bmpData);
             return b;
         }
