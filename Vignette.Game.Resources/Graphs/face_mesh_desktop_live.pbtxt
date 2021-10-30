@@ -1,4 +1,4 @@
-﻿# MediaPipe graph that performs face mesh with TensorFlow Lite on CPU.
+# MediaPipe graph that performs face mesh with TensorFlow Lite on CPU.
 
 # Input image. (ImageFrame)
 input_stream: "input_video"
