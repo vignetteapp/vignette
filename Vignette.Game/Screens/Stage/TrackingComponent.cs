@@ -74,7 +74,7 @@ namespace Vignette.Game.Screens.Stage
         {
             base.Update();
 
-            if (camera.Value == null || camera.Value.Mat == null)
+            if (camera.Value == null || camera.Value.Mat == null || camera.Value.Mat.IsEmpty)
                 return;
 
             var bitmap = camera.Value.Mat.ToBitmap();
