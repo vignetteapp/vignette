@@ -65,18 +65,20 @@ namespace Vignette.Game.Screens.Stage
         {
             base.Update();
 
-            if (camera.Value == null)
+            if (camera.Value == null || camera.Value.Mat == null)
                 return;
 
             using var bitmap = camera.Value.Mat.ToBitmap();
+
             var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
                 bitmap.PixelFormat);
-
+            int step = locked.Stride * bitmap.Width;
             byte[] data = new byte[locked.Stride * bitmap.Height];
             Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
+            bitmap.UnlockBits(locked);
 
             int timestamp = Environment.TickCount & int.MaxValue;
-            var inputFrame = new ImageFrame(ImageFormat.Format.Srgb, bitmap.Width, bitmap.Height, bitmap.Width * 4,
+            var inputFrame = new ImageFrame(ImageFormat.Format.Srgb, bitmap.Width, bitmap.Height, step,
                 data.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
