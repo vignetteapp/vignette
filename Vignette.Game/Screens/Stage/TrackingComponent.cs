@@ -20,7 +20,7 @@ using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.PixelFormats;
 using UnmanageUtility;
 using Vignette.Camera;
@@ -83,13 +83,13 @@ namespace Vignette.Game.Screens.Stage
                 return;
 
             byte[] image = bitmapToRawBGRA(bitmap);
-
             int timestamp = Environment.TickCount & int.MaxValue;
-            var inputFrame = new ImageFrame(ImageFormat.Format.Sbgra, bitmap.Width, bitmap.Height, bitmap.Width * 4,
+            var inputFrame = new ImageFrame(ImageFormat.Format.Srgba, bitmap.Width, bitmap.Height, bitmap.Width * 4,
                 image.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
             graph.AddPacketToInputStream(input_video, inputPacket);
+            TryGetFrame(out var frame);
         }
 
         public bool TryGetFrame(out Bitmap frame)
@@ -137,7 +137,7 @@ namespace Vignette.Game.Screens.Stage
 
             using (var memoryStream = new MemoryStream())
             {
-                var imageEncoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(PngFormat.Instance);
+                var imageEncoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(BmpFormat.Instance);
                 image.Save(memoryStream, imageEncoder);
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
