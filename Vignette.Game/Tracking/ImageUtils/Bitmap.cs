@@ -2,6 +2,9 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 using System.Drawing;
 
+// This is a reimplementation of the internal classes in osuTK's assembly.
+// unfortunately we cannot access internal methods and classes...
+// so we do it the icky way - reimplementing them.
 namespace Vignette.Game.Tracking.ImageUtils
 {
     public sealed class Bitmap : Image
