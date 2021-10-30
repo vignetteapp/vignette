@@ -8,7 +8,6 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Akihabara.Framework;
-using Akihabara.Framework.ImageFormat;
 using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
@@ -16,12 +15,17 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using UnmanageUtility;
 using Vignette.Camera;
 using Vignette.Game.IO;
+using Image = SixLabors.ImageSharp.Image;
 using ImageFormat = Akihabara.Framework.ImageFormat.ImageFormat;
+using ImageFrame = Akihabara.Framework.ImageFormat.ImageFrame;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Vignette.Game.Screens.Stage
 {
@@ -101,19 +105,27 @@ namespace Vignette.Game.Screens.Stage
         private byte[] bitmapToRawBGRA(Bitmap bitmap)
         {
             var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            int step = locked.Stride * bitmap.Width;
             //bitmap.Save("reference.png");
             byte[] data = new byte[locked.Stride * bitmap.Height];
             Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
             bitmap.UnlockBits(locked);
             //BGR24 --> RGB32
             //System.IO.File.WriteAllBytes("image.raw", data);
-            byte[] image = null;
 
+            Image<Bgr24> start = Image.LoadPixelData<Bgr24>(data, bitmap.Width, bitmap.Height);
             //convert to 32 bit
 
-            //add alpha channel
-            CvInvoke.CvtColor(data, image, ColorConversion.Bgr2Bgra);
+            Span<Bgr24> pixels;
+            if (!start.TryGetSinglePixelSpan(out pixels))
+            {
+                throw new InvalidOperationException("Image is too big");
+            }
+
+            Bgra32[] dest = new Bgra32[pixels.Length];
+            Span<Bgra32> destination = new Span<Bgra32>(dest);
+            PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
+
+            return MemoryMarshal.AsBytes(destination).ToArray();
         }
     }
 }
