@@ -13,9 +13,11 @@ using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using SixLabors.ImageSharp.PixelFormats;
 using UnmanageUtility;
 using Vignette.Camera;
 using Vignette.Game.IO;
@@ -68,18 +70,16 @@ namespace Vignette.Game.Screens.Stage
             if (camera.Value == null || camera.Value.Mat == null)
                 return;
 
-            using var bitmap = camera.Value.Mat.ToBitmap();
+            var bitmap = camera.Value.Mat.ToBitmap();
 
-            var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
-                bitmap.PixelFormat);
-            int step = locked.Stride * bitmap.Width;
-            byte[] data = new byte[locked.Stride * bitmap.Height];
-            Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
-            bitmap.UnlockBits(locked);
+            if (bitmap == null)
+                return;
+
+            byte[] image = bitmapToRawBGRA(bitmap);
 
             int timestamp = Environment.TickCount & int.MaxValue;
-            var inputFrame = new ImageFrame(ImageFormat.Format.Srgb, bitmap.Width, bitmap.Height, step,
-                data.ToUnmanagedArray());
+            var inputFrame = new ImageFrame(ImageFormat.Format.Sbgra, bitmap.Width, bitmap.Height, bitmap.Height * 4,
+                image.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
             graph.AddPacketToInputStream(input_video, inputPacket);
@@ -96,6 +96,24 @@ namespace Vignette.Game.Screens.Stage
 
             frame = packet.Get();
             return true;
+        }
+
+        private byte[] bitmapToRawBGRA(Bitmap bitmap)
+        {
+            var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            int step = locked.Stride * bitmap.Width;
+            //bitmap.Save("reference.png");
+            byte[] data = new byte[locked.Stride * bitmap.Height];
+            Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
+            bitmap.UnlockBits(locked);
+            //BGR24 --> RGB32
+            //System.IO.File.WriteAllBytes("image.raw", data);
+            byte[] image = null;
+
+            //convert to 32 bit
+
+            //add alpha channel
+            CvInvoke.CvtColor(data, image, ColorConversion.Bgr2Bgra);
         }
     }
 }
