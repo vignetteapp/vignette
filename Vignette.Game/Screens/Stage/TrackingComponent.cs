@@ -77,6 +77,9 @@ namespace Vignette.Game.Screens.Stage
             if (camera.Value == null || camera.Value.Mat == null || camera.Value.Mat.IsEmpty)
                 return;
 
+            if (camera.Value.Mat.IsEmpty)
+                return;
+
             var bitmap = camera.Value.Mat.ToBitmap();
 
             if (bitmap == null)
