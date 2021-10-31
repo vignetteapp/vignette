@@ -27,8 +27,11 @@ namespace Vignette.Game.Tracking
         public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks?.ToList();
 
         public byte[] OutputFrame { get; private set; }
+
         public int OutputFrameWidth { get; private set; }
+
         public int OutputFrameHeight { get; private set; }
+
         public int OutputFrameWidthStep { get; private set; }
 
         public IReadOnlyList<FaceData> Faces
@@ -69,6 +72,8 @@ namespace Vignette.Game.Tracking
                 output_landmarks, handleLandmarks, out packetCallbackHandle).AssertOk();
 
             graph.StartRun().AssertOk();
+
+            camera.Value.OnTick += handleCameraTick;
         }
 
         private Status handleLandmarks(NormalizedLandmarkListVectorPacket packet)
@@ -85,10 +90,8 @@ namespace Vignette.Game.Tracking
             return Status.Ok();
         }
 
-        protected override void Update()
+        private void handleCameraTick()
         {
-            base.Update();
-
             if (camera.Value?.Mat == null || camera.Value.Mat.IsEmpty)
                 return;
 
@@ -113,10 +116,10 @@ namespace Vignette.Game.Tracking
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
             graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
 
-            FlushOutputPoller(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
+            flushOutputPoller(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
         }
 
-        public ImageFramePacket FetchPacketFromQueue()
+        private ImageFramePacket fetchPacketFromQueue()
         {
             var packet = new ImageFramePacket();
             if (!poller.Next(packet))
@@ -125,11 +128,11 @@ namespace Vignette.Game.Tracking
             return packet;
         }
 
-        public void FlushOutputPoller()
+        private void flushOutputPoller()
         {
             try
             {
-                OutputFrame = TryGetRawFrame(out var width, out var height, out var widthStep);
+                OutputFrame = getRawFrame(out var width, out var height, out var widthStep);
                 OutputFrameWidth = width;
                 OutputFrameHeight = height;
                 OutputFrameWidthStep = widthStep;
@@ -139,9 +142,9 @@ namespace Vignette.Game.Tracking
             }
         }
 
-        public byte[] TryGetRawFrame(out int width, out int height, out int widthStep)
+        private byte[] getRawFrame(out int width, out int height, out int widthStep)
         {
-            var packet = FetchPacketFromQueue();
+            var packet = fetchPacketFromQueue();
             var raw = packet.Get();
             width = raw.Width();
             height = raw.Height();
@@ -149,13 +152,11 @@ namespace Vignette.Game.Tracking
             return raw.CopyToByteBuffer(height * widthStep);
         }
 
-
-
-
         protected override void Dispose(bool isDisposing)
         {
             base.Dispose(isDisposing);
             packetCallbackHandle.Free();
+            camera.Value.OnTick -= handleCameraTick;
         }
     }
 
