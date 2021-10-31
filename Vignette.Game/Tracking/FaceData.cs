@@ -96,28 +96,11 @@ namespace Vignette.Game.Tracking
             return MathF.Sqrt(dx * dx + dy * dy + dz * dz);
         }
 
-        private static float euclidian_distance_xy(NormalizedLandmark a, NormalizedLandmark b)
-        {
-            float dx = b.X - a.X;
-            float dy = b.Y - a.Y;
-            return MathF.Sqrt(dx * dx + dy * dy);
-        }
+        private static float distance(float x, float y) => MathF.Sqrt(x * x + y * y);
 
-        private static float euclidian_distance_xz(NormalizedLandmark a, NormalizedLandmark b)
-        {
-            float dx = b.X - a.X;
-            float dz = b.Z - a.Z;
-            return MathF.Sqrt(dx * dx + dz * dz);
-        }
-
-        private static float euclidian_distance_yz(NormalizedLandmark a, NormalizedLandmark b)
-        {
-            float dx = b.Y - a.Y;
-            float dy = b.Z - a.Z;
-            return MathF.Sqrt(dx * dx + dy * dy);
-        }
-
-
+        private static float euclidian_distance_xy(NormalizedLandmark a, NormalizedLandmark b) => distance(b.X - a.X, b.Y - a.Y);
+        private static float euclidian_distance_xz(NormalizedLandmark a, NormalizedLandmark b) => distance(b.X - a.X, b.Z - a.Z);
+        private static float euclidian_distance_yz(NormalizedLandmark a, NormalizedLandmark b) => distance(b.Y - a.Y, b.Z - a.Z);
 
         private static float aspect_ratio(float va, float vb, float h)
             => (va + vb) / (2.0f * h);
