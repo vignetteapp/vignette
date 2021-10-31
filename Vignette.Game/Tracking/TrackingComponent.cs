@@ -99,12 +99,16 @@ namespace Vignette.Game.Tracking
 
             int width = camera.Value.Width;
             int height = camera.Value.Height;
-            var bitmap = camera.Value.Mat.GetData(false);
-            if (bitmap == null || bitmap.GetType() != typeof(byte[]))
-                return;
-            var btmap = bitmap.Cast<byte>().ToArray();
 
-            byte[] image = bitmapToRawBGRA(btmap, width, height);
+            var data = camera.Value.Mat.GetData(false);
+            if (data == null)
+                return;
+
+            var bitmap = data.Cast<byte>().ToArray();
+            if (bitmap == null)
+                return;
+
+            byte[] image = bitmapToRawBGRA(bitmap, width, height);
 
             timestampCounter++;
 
