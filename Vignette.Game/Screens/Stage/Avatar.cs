@@ -12,6 +12,7 @@ using osuTK;
 using Vignette.Game.Configuration;
 using Vignette.Game.IO;
 using Vignette.Live2D.Graphics;
+using Vignette.Live2D.Graphics.Controllers;
 
 namespace Vignette.Game.Screens.Stage
 {
@@ -80,7 +81,10 @@ namespace Vignette.Game.Screens.Stage
             try
             {
                 model = new CubismModelAvatar(new RecursiveNativeStorage(path, host));
-                model.Add(new AvatarController());
+                model.AddRange(new CubismController[]
+                {
+                    new AvatarController(),
+                });
                 return true;
             }
             catch (FileNotFoundException)

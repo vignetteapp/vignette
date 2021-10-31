@@ -87,7 +87,7 @@ namespace Vignette.Game.Settings.Sections
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = Colour4.Black,
-                    }
+                    },
                 };
 
                 device.BindValueChanged(_ => onNewCameraDevice(), true);

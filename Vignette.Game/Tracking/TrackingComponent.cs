@@ -30,12 +30,20 @@ using ImageFormat = Akihabara.Framework.ImageFormat.ImageFormat;
 using ImageFrame = Akihabara.Framework.ImageFormat.ImageFrame;
 using Rectangle = System.Drawing.Rectangle;
 
-namespace Vignette.Game.Screens.Stage
+namespace Vignette.Game.Tracking
 {
     public class TrackingComponent : Component
     {
-        public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks.ToList();
-        public FaceControlPoints ControlPoints { get; private set; }
+        public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks?.ToList();
+
+        public IReadOnlyList<FaceData> Faces
+        {
+            get
+            {
+                lock (faces)
+                    return faces.ToList();
+            }
+        }
 
         [Resolved]
         private MediapipeGraphStore graphStore { get; set; }
@@ -43,6 +51,7 @@ namespace Vignette.Game.Screens.Stage
         [Resolved]
         private IBindable<CameraDevice> camera { get; set; }
 
+        private readonly List<FaceData> faces = new List<FaceData>();
         private List<NormalizedLandmarkList> landmarks;
         private GCHandle packetCallbackHandle;
         private CalculatorGraph graph;
@@ -68,7 +77,14 @@ namespace Vignette.Game.Screens.Stage
         private Status handleLandmarks(NormalizedLandmarkListVectorPacket packet)
         {
             landmarks = packet.Get();
-            ControlPoints = new FaceControlPoints(landmarks[0]);
+
+            lock (faces)
+            {
+                faces.Clear();
+                foreach (var landmark in landmarks)
+                    faces.Add(new FaceData(landmark));
+            }
+
             return Status.Ok();
         }
 
@@ -76,7 +92,7 @@ namespace Vignette.Game.Screens.Stage
         {
             base.Update();
 
-            if (camera.Value == null || camera.Value.Mat == null || camera.Value.Mat.IsEmpty)
+            if (camera.Value?.Mat == null || camera.Value.Mat.IsEmpty)
                 return;
 
             var bitmap = camera.Value.Mat.ToBitmap();
@@ -158,6 +174,12 @@ namespace Vignette.Game.Screens.Stage
             Marshal.Copy(data, 0, ptr, data.Length);
             b.UnlockBits(bmpData);
             return b;
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+            packetCallbackHandle.Free();
         }
     }
 }
