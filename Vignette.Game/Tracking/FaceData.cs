@@ -76,9 +76,10 @@ namespace Vignette.Game.Tracking
             get
             {
                 var angles = new Vector3();
-                angles.X = MathF.Acos((faceRight.Y - faceLeft.Y) / euclidian_distance_yz(faceLeft, faceRight));
-                angles.Y = MathF.Acos((faceRight.X - faceLeft.X) / euclidian_distance_xz(faceLeft, faceRight));
-                angles.Z = MathF.Acos((faceRight.X - faceLeft.X) / euclidian_distance_xy(faceLeft, faceRight));
+                // Y and X assigns are inverted, because the logic is a bit different for Live2D parameters...
+                angles.X = MathF.Acos((faceRight.Z - faceLeft.Z) / euclidian_distance_zx(faceLeft, faceRight)) * 2 - MathF.PI;
+                angles.Y = MathF.Asin((faceTop.Z - faceBottom.Z) / euclidian_distance_yz(faceBottom, faceTop)) * 2;
+                angles.Z = MathF.Asin((faceRight.Y - faceLeft.Y) / euclidian_distance_xy(faceLeft, faceRight)) * 2;
                 return angles;
             }
         }
@@ -93,8 +94,8 @@ namespace Vignette.Game.Tracking
 
         private static float euclidian_distance(NormalizedLandmark a, NormalizedLandmark b) => norm(b.X - a.X, b.Y - a.Y, b.Z - a.Z);
         private static float euclidian_distance_xy(NormalizedLandmark a, NormalizedLandmark b) => norm(b.X - a.X, b.Y - a.Y);
-        private static float euclidian_distance_xz(NormalizedLandmark a, NormalizedLandmark b) => norm(b.X - a.X, b.Z - a.Z);
         private static float euclidian_distance_yz(NormalizedLandmark a, NormalizedLandmark b) => norm(b.Y - a.Y, b.Z - a.Z);
+        private static float euclidian_distance_zx(NormalizedLandmark a, NormalizedLandmark b) => norm(b.Z - a.Z, b.X - a.X);
 
         private static float aspect_ratio(float va, float vb, float h)
             => (va + vb) / (2.0f * h);
