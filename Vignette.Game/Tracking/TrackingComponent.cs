@@ -117,6 +117,7 @@ namespace Vignette.Game.Tracking
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
             graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
+            RemovePacketFromQueue();
         }
 
         public bool TryGetFrame(out Bitmap frame)
@@ -130,6 +131,15 @@ namespace Vignette.Game.Tracking
             var raw = packet.Get();
             var arr = raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
             frame = rawBGRAToBitmap(arr, raw.Width(), raw.Height());
+            return true;
+        }
+
+        public bool RemovePacketFromQueue()
+        {
+            var packet = new ImageFramePacket();
+            if (!poller.Next(packet))
+                return false;
+
             return true;
         }
 
@@ -163,7 +173,7 @@ namespace Vignette.Game.Tracking
             Span<Bgra32> destination = new Span<Bgra32>(dest);
             PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
             start.Dispose();
-            GC.SuppressFinalize(this);
+            GC.Collect();
             return MemoryMarshal.AsBytes(destination).ToArray();
         }
 
