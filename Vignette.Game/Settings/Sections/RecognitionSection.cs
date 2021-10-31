@@ -1,6 +1,7 @@
 // Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -95,6 +96,8 @@ namespace Vignette.Game.Settings.Sections
                     {
                         RelativeSizeAxes = Axes.Both,
                         FillMode = FillMode.Fit,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
                     },
                 };
             }
@@ -108,10 +111,21 @@ namespace Vignette.Game.Settings.Sections
 
                 lock (tracker.OutputFrame)
                 {
-                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Bgra32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+
+                    Span<Bgra32> pixels;
+                    if (!pixelData.TryGetSinglePixelSpan(out pixels))
+                    {
+                        throw new InvalidOperationException("Image is too big");
+                    }
+
+                    Rgba32[] dest = new Rgba32[pixels.Length];
+                    Span<Rgba32> destination = new Span<Rgba32>(dest);
+                    PixelOperations<Bgra32>.Instance.ToRgba32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
+                    var image = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(dest, pixelData.Width, pixelData.Height);
 
                     var texture = new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
-                    var upload = new TextureUpload(pixelData);
+                    var upload = new TextureUpload(image);
                     texture.SetData(upload);
 
                     preview.Texture = texture;

@@ -209,7 +209,7 @@ namespace Vignette.Game.Tracking
         }
     }
 
-    internal class NoPacketException : Exception
+    internal class NoPacketException : IOException
     {
         public NoPacketException() : base("No packet in the poller")
         {
