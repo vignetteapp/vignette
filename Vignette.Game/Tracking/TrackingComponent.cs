@@ -37,6 +37,7 @@ namespace Vignette.Game.Tracking
     public class TrackingComponent : Component
     {
         public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks?.ToList();
+        public ImageFrame OutputFrame { get; private set; }
 
         public IReadOnlyList<FaceData> Faces
         {
@@ -136,7 +137,8 @@ namespace Vignette.Game.Tracking
         {
             try
             {
-                FetchPacketFromQueue();
+                var packet = FetchPacketFromQueue();
+                OutputFrame = packet.Get();
             }
             catch (NoPacketException)
             {
