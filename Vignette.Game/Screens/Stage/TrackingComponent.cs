@@ -35,6 +35,7 @@ namespace Vignette.Game.Screens.Stage
     public class TrackingComponent : Component
     {
         public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks.ToList();
+        public FaceControlPoints ControlPoints { get; private set; }
 
         [Resolved]
         private MediapipeGraphStore graphStore { get; set; }
@@ -67,6 +68,7 @@ namespace Vignette.Game.Screens.Stage
         private Status handleLandmarks(NormalizedLandmarkListVectorPacket packet)
         {
             landmarks = packet.Get();
+            ControlPoints = new FaceControlPoints(landmarks[0]);
             return Status.Ok();
         }
 
