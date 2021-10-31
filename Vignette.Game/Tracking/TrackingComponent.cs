@@ -173,7 +173,6 @@ namespace Vignette.Game.Tracking
             Span<Bgra32> destination = new Span<Bgra32>(dest);
             PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
             start.Dispose();
-            GC.Collect();
             return MemoryMarshal.AsBytes(destination).ToArray();
         }
 
