@@ -11,6 +11,7 @@
             "preLaunchTask": "Build (Linux Debug)",
             "program": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/ubuntu.20.04-x64/Vignette.dll",
             "args": [],
+            "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
@@ -22,6 +23,7 @@
             "preLaunchTask": "Build (Linux Release)",
             "program": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/ubuntu.20.04-x64/Vignette.dll",
             "args": [],
+            "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
@@ -33,6 +35,7 @@
             "preLaunchTask": "Build Tests (Linux Debug)",
             "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Debug/net5.0/ubuntu.20.04-x64/Vignette.Game.Tests.dll",
             "args": [],
+            "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
@@ -44,6 +47,7 @@
             "preLaunchTask": "Build Tests (Linux Release)",
             "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Release/net5.0/ubuntu.20.04-x64/Vignette.Game.Tests.dll",
             "args": [],
+            "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
