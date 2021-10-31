@@ -106,7 +106,7 @@ namespace Vignette.Game.Tracking
                 image.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
-            graph.AddPacketToInputStream(input_video, inputPacket);
+            graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
         }
 
         public bool TryGetFrame(out Bitmap frame)
@@ -158,6 +158,7 @@ namespace Vignette.Game.Tracking
             Span<Bgra32> destination = new Span<Bgra32>(dest);
             PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
             start.Dispose();
+            GC.Collect();
             return MemoryMarshal.AsBytes(destination).ToArray();
         }
 
