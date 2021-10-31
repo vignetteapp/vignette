@@ -22,11 +22,22 @@ namespace Vignette.Game.Screens.Stage
 
             var face = tracker.Faces[0];
 
+            setNormalizedParamValue("ParamAngleX", face.Angles.X);
+            setNormalizedParamValue("PARAM_ANGLE_X", face.Angles.X);
+
+            setNormalizedParamValue("ParamAngleY", face.Angles.Y);
+            setNormalizedParamValue("PARAM_ANGLE_Y", face.Angles.Y);
+
+            setNormalizedParamValue("PARAM_ANGLE_Z", face.Angles.Z);
+            setNormalizedParamValue("ParamAngleZ", face.Angles.Z);
+
             setNormalizedParamValue("ParamMouthOpenY", face.MouthOpen);
-            setNormalizedParamValue("ParamEyeLOpen", face.LeftEyeOpen);
-            setNormalizedParamValue("ParamEyeROpen", face.RightEyeOpen);
             setNormalizedParamValue("PARAM_MOUTH_OPEN_Y", face.MouthOpen);
+
+            setNormalizedParamValue("ParamEyeLOpen", face.LeftEyeOpen);
             setNormalizedParamValue("PARAM_EYE_L_OPEN", face.LeftEyeOpen);
+
+            setNormalizedParamValue("ParamEyeROpen", face.RightEyeOpen);
             setNormalizedParamValue("PARAM_EYE_R_OPEN", face.RightEyeOpen);
         }
 
