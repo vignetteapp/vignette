@@ -2,12 +2,14 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using Akihabara.Framework;
 using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
@@ -117,43 +119,43 @@ namespace Vignette.Game.Tracking
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
             graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
-            RemovePacketFromQueue();
+
+            FlushOutputPoller(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
         }
 
-        public bool TryGetFrame(out Bitmap frame)
+        public ImageFramePacket FetchPacketFromQueue()
         {
-            frame = null;
-
             var packet = new ImageFramePacket();
             if (!poller.Next(packet))
-                return false;
+                throw new NoPacketException();
 
+            return packet;
+        }
+
+        public void FlushOutputPoller()
+        {
+            try
+            {
+                FetchPacketFromQueue();
+            }
+            catch (NoPacketException)
+            {
+            }
+        }
+
+        public Bitmap TryGetFrame()
+        {
+            var packet = FetchPacketFromQueue();
             var raw = packet.Get();
             var arr = raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
-            frame = rawBGRAToBitmap(arr, raw.Width(), raw.Height());
-            return true;
+            return rawBGRAToBitmap(arr, raw.Width(), raw.Height());
         }
 
-        public bool RemovePacketFromQueue()
+        public byte[] TryGetRawFrame()
         {
-            var packet = new ImageFramePacket();
-            if (!poller.Next(packet))
-                return false;
-
-            return true;
-        }
-
-        public bool TryGetRawFrame(out byte[] frame)
-        {
-            frame = null;
-
-            var packet = new ImageFramePacket();
-            if (!poller.Next(packet))
-                return false;
-
+            var packet = FetchPacketFromQueue();
             var raw = packet.Get();
-            frame = raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
-            return true;
+            return raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
         }
 
         private byte[] bitmapToRawBGRA(byte[] data, int width, int height)
@@ -195,6 +197,13 @@ namespace Vignette.Game.Tracking
         {
             base.Dispose(isDisposing);
             packetCallbackHandle.Free();
+        }
+    }
+
+    internal class NoPacketException : Exception
+    {
+        public NoPacketException() : base("No packet in the poller")
+        {
         }
     }
 }
