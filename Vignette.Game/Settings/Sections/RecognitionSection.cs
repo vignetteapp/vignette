@@ -122,12 +122,13 @@ namespace Vignette.Game.Settings.Sections
                     Rgba32[] dest = new Rgba32[pixels.Length];
                     Span<Rgba32> destination = new Span<Rgba32>(dest);
                     PixelOperations<Bgra32>.Instance.ToRgba32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
+                    pixelData.Dispose();
                     var image = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(dest, pixelData.Width, pixelData.Height);
 
                     var texture = new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
                     var upload = new TextureUpload(image);
                     texture.SetData(upload);
-
+                    
                     preview.Texture = texture;
                 };
             }
