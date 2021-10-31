@@ -2,6 +2,7 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 using Akihabara.Framework.Protobuf;
 
@@ -70,6 +71,18 @@ namespace Vignette.Game.Tracking
             }
         }
 
+        public Vector3 Angles
+        {
+            get
+            {
+                var angles = new Vector3();
+                angles.X = MathF.Acos((faceRight.Y - faceLeft.Y) / euclidian_distance_yz(faceLeft, faceRight));
+                angles.Y = MathF.Acos((faceRight.X - faceLeft.X) / euclidian_distance_xz(faceLeft, faceRight));
+                angles.Z = MathF.Acos((faceRight.X - faceLeft.X) / euclidian_distance_xy(faceLeft, faceRight));
+                return angles;
+            }
+        }
+
         public FaceData(NormalizedLandmarkList landmarkList)
         {
             landmarks = landmarkList.Landmark;
@@ -79,8 +92,32 @@ namespace Vignette.Game.Tracking
         {
             float dx = b.X - a.X;
             float dy = b.Y - a.Y;
+            float dz = b.Z - a.Z;
+            return MathF.Sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        private static float euclidian_distance_xy(NormalizedLandmark a, NormalizedLandmark b)
+        {
+            float dx = b.X - a.X;
+            float dy = b.Y - a.Y;
             return MathF.Sqrt(dx * dx + dy * dy);
         }
+
+        private static float euclidian_distance_xz(NormalizedLandmark a, NormalizedLandmark b)
+        {
+            float dx = b.X - a.X;
+            float dz = b.Z - a.Z;
+            return MathF.Sqrt(dx * dx + dz * dz);
+        }
+
+        private static float euclidian_distance_yz(NormalizedLandmark a, NormalizedLandmark b)
+        {
+            float dx = b.Y - a.Y;
+            float dy = b.Z - a.Z;
+            return MathF.Sqrt(dx * dx + dy * dy);
+        }
+
+
 
         private static float aspect_ratio(float va, float vb, float h)
             => (va + vb) / (2.0f * h);
