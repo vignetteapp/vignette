@@ -1,36 +1,24 @@
 // Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using Akihabara.Framework;
 using Akihabara.Framework.Packet;
 using Akihabara.Framework.Port;
 using Akihabara.Framework.Protobuf;
-using Emgu.CV;
-using Emgu.CV.CvEnum;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.PixelFormats;
 using UnmanageUtility;
 using Vignette.Camera;
 using Vignette.Game.IO;
-using Image = SixLabors.ImageSharp.Image;
+using static Vignette.Game.Graphics.Utils;
 using ImageFormat = Akihabara.Framework.ImageFormat.ImageFormat;
 using ImageFrame = Akihabara.Framework.ImageFormat.ImageFrame;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace Vignette.Game.Tracking
 {
@@ -115,7 +103,7 @@ namespace Vignette.Game.Tracking
             if (bitmap == null)
                 return;
 
-            byte[] image = bitmapToRawBGRA(bitmap, width, height);
+            byte[] image = ConvertRaw<Bgr24, Rgba32>(bitmap, width, height);
 
             timestampCounter++;
 
@@ -151,12 +139,6 @@ namespace Vignette.Game.Tracking
             }
         }
 
-        public Bitmap TryGetFrame()
-        {
-            var rawFrame = TryGetRawFrame(out var width, out var height, out var _);
-            return rawBGRAToBitmap(rawFrame, width, height);
-        }
-
         public byte[] TryGetRawFrame(out int width, out int height, out int widthStep)
         {
             var packet = FetchPacketFromQueue();
@@ -167,40 +149,8 @@ namespace Vignette.Game.Tracking
             return raw.CopyToByteBuffer(height * widthStep);
         }
 
-        private byte[] bitmapToRawBGRA(byte[] data, int width, int height)
-        {
-            //BGR24 --> RGB32
 
-            Image<Bgr24> start = Image.LoadPixelData<Bgr24>(data, width, height);
-            //convert to 32 bit
 
-            Span<Bgr24> pixels;
-            if (!start.TryGetSinglePixelSpan(out pixels))
-            {
-                throw new InvalidOperationException("Image is too big");
-            }
-
-            Bgra32[] dest = new Bgra32[pixels.Length];
-            Span<Bgra32> destination = new Span<Bgra32>(dest);
-            PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
-            start.Dispose();
-            return MemoryMarshal.AsBytes(destination).ToArray();
-        }
-
-        private Bitmap rawBGRAToBitmap(byte[] data, int width, int height)
-        {
-            Bitmap b = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
-            Rectangle BoundsRect = new Rectangle(0, 0, width, height);
-            BitmapData bmpData = b.LockBits(BoundsRect,
-                ImageLockMode.WriteOnly,
-                b.PixelFormat);
-
-            IntPtr ptr = bmpData.Scan0;
-            Marshal.Copy(data, 0, ptr, data.Length);
-            b.UnlockBits(bmpData);
-            return b;
-        }
 
         protected override void Dispose(bool isDisposing)
         {
