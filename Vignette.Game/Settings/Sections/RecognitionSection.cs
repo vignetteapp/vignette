@@ -7,14 +7,17 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Localisation;
 using osuTK;
+using SixLabors.ImageSharp.PixelFormats;
 using Vignette.Camera;
 using Vignette.Camera.Graphics;
 using Vignette.Camera.Platform;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Settings.Components;
+using Vignette.Game.Tracking;
 
 namespace Vignette.Game.Settings.Sections
 {
@@ -39,7 +42,7 @@ namespace Vignette.Game.Settings.Sections
                     Label = "Camera",
                     Children = new Drawable[]
                     {
-                        new CameraPreview(),
+                        new CameraTrackingPreview(),
                         new SettingsDropdown<string>
                         {
                             Icon = SegoeFluent.Camera,
@@ -68,12 +71,12 @@ namespace Vignette.Game.Settings.Sections
                 devices.Remove(name);
         }
 
-        private class CameraPreview : Container
+        private class CameraTrackingPreview : Container
         {
             [Resolved]
-            private IBindable<CameraDevice> device { get; set; }
+            private TrackingComponent tracker { get; set; }
 
-            private DrawableCameraDevice preview;
+            private Sprite preview;
 
             [BackgroundDependencyLoader]
             private void load()
@@ -88,22 +91,31 @@ namespace Vignette.Game.Settings.Sections
                         RelativeSizeAxes = Axes.Both,
                         Colour = Colour4.Black,
                     },
+                    preview = new Sprite
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        FillMode = FillMode.Fit,
+                    },
                 };
-
-                device.BindValueChanged(_ => onNewCameraDevice(), true);
             }
 
-            private void onNewCameraDevice()
+            protected override void Update()
             {
-                preview?.Expire();
+                base.Update();
 
-                if (device.Value == null)
+                if (tracker?.OutputFrame == null)
                     return;
 
-                Add(preview = new DrawableCameraDevice(device.Value, false)
+                lock (tracker.OutputFrame)
                 {
-                    RelativeSizeAxes = Axes.Both,
-                });
+                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+
+                    var texture = new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+                    var upload = new TextureUpload(pixelData);
+                    texture.SetData(upload);
+
+                    preview.Texture = texture;
+                };
             }
         }
     }
