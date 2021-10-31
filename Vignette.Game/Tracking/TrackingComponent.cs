@@ -1,4 +1,4 @@
-﻿// Copyright (c) The Vignette Authors
+// Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
@@ -62,6 +62,8 @@ namespace Vignette.Game.Tracking
         private const string output_video = "output_video";
         private const string output_landmarks = "multi_face_landmarks";
 
+        private long timestampCounter = 0;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -101,11 +103,11 @@ namespace Vignette.Game.Tracking
                 return;
 
             byte[] image = bitmapToRawBGRA(bitmap);
-            int timestamp = Environment.TickCount & int.MaxValue;
+            timestampCounter++;
             var inputFrame = new ImageFrame(ImageFormat.Format.Srgba, bitmap.Width, bitmap.Height, bitmap.Width * 4,
                 image.ToUnmanagedArray());
 
-            var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestamp));
+            var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
             graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
         }
 
