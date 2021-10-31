@@ -37,7 +37,11 @@ namespace Vignette.Game.Tracking
     public class TrackingComponent : Component
     {
         public IReadOnlyList<NormalizedLandmarkList> Landmarks => landmarks?.ToList();
-        public ImageFrame OutputFrame { get; private set; }
+
+        public byte[] OutputFrame { get; private set; }
+        public int OutputFrameWidth { get; private set; }
+        public int OutputFrameHeight { get; private set; }
+        public int OutputFrameWidthStep { get; private set; }
 
         public IReadOnlyList<FaceData> Faces
         {
@@ -137,8 +141,10 @@ namespace Vignette.Game.Tracking
         {
             try
             {
-                var packet = FetchPacketFromQueue();
-                OutputFrame = packet.Get();
+                OutputFrame = TryGetRawFrame(out var width, out var height, out var widthStep);
+                OutputFrameWidth = width;
+                OutputFrameHeight = height;
+                OutputFrameWidthStep = widthStep;
             }
             catch (NoPacketException)
             {
