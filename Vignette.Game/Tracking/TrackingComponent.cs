@@ -145,17 +145,18 @@ namespace Vignette.Game.Tracking
 
         public Bitmap TryGetFrame()
         {
-            var packet = FetchPacketFromQueue();
-            var raw = packet.Get();
-            var arr = raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
-            return rawBGRAToBitmap(arr, raw.Width(), raw.Height());
+            var rawFrame = TryGetRawFrame(out var width, out var height, out var _);
+            return rawBGRAToBitmap(rawFrame, width, height);
         }
 
-        public byte[] TryGetRawFrame()
+        public byte[] TryGetRawFrame(out int width, out int height, out int widthStep)
         {
             var packet = FetchPacketFromQueue();
             var raw = packet.Get();
-            return raw.CopyToByteBuffer(raw.Height() * raw.WidthStep());
+            width = raw.Width();
+            height = raw.Height();
+            widthStep = raw.WidthStep();
+            return raw.CopyToByteBuffer(height * widthStep);
         }
 
         private byte[] bitmapToRawBGRA(byte[] data, int width, int height)
