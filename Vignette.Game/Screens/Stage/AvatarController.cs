@@ -25,6 +25,9 @@ namespace Vignette.Game.Screens.Stage
             setNormalizedParamValue("ParamMouthOpenY", face.MouthOpen);
             setNormalizedParamValue("ParamEyeLOpen", face.LeftEyeOpen);
             setNormalizedParamValue("ParamEyeROpen", face.RightEyeOpen);
+            setNormalizedParamValue("PARAM_MOUTH_OPEN_Y", face.MouthOpen);
+            setNormalizedParamValue("PARAM_EYE_L_OPEN", face.LeftEyeOpen);
+            setNormalizedParamValue("PARAM_EYE_R_OPEN", face.RightEyeOpen);
         }
 
         private void setNormalizedParamValue(string paramName, float value)
