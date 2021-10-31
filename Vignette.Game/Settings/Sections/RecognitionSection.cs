@@ -111,24 +111,12 @@ namespace Vignette.Game.Settings.Sections
 
                 lock (tracker.OutputFrame)
                 {
-                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Bgra32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
-
-                    Span<Bgra32> pixels;
-                    if (!pixelData.TryGetSinglePixelSpan(out pixels))
-                    {
-                        throw new InvalidOperationException("Image is too big");
-                    }
-
-                    Rgba32[] dest = new Rgba32[pixels.Length];
-                    Span<Rgba32> destination = new Span<Rgba32>(dest);
-                    PixelOperations<Bgra32>.Instance.ToRgba32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
-                    pixelData.Dispose();
-                    var image = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(dest, pixelData.Width, pixelData.Height);
+                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
 
                     var texture = new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
-                    var upload = new TextureUpload(image);
+                    var upload = new TextureUpload(pixelData);
                     texture.SetData(upload);
-                    
+
                     preview.Texture = texture;
                 };
             }
