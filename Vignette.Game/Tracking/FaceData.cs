@@ -77,7 +77,7 @@ namespace Vignette.Game.Tracking
             {
                 var angles = new Vector3();
                 // Y and X assigns are inverted, because the logic is a bit different for Live2D parameters...
-                angles.X = MathF.Acos((faceRight.Z - faceLeft.Z) / euclidian_distance_zx(faceLeft, faceRight)) * 2 - MathF.PI;
+                angles.X = MathF.Acos((faceLeft.Z - faceRight.Z) / euclidian_distance_zx(faceLeft, faceRight)) * 2 - MathF.PI;
                 angles.Y = MathF.Asin((faceTop.Z - faceBottom.Z) / euclidian_distance_yz(faceBottom, faceTop)) * 2;
                 angles.Z = MathF.Asin((faceRight.Y - faceLeft.Y) / euclidian_distance_xy(faceLeft, faceRight)) * 2;
                 return angles;
