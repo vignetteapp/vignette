@@ -449,3 +449,10 @@ $RECYCLE.BIN/
 
 # Mediapipe graphs and modules for testing
 mediapipe/
+
+# osu!framework cache
+cache/
+
+# configuration files
+config.dev.ini
+framework.ini
