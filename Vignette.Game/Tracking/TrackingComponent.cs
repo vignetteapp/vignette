@@ -97,14 +97,18 @@ namespace Vignette.Game.Tracking
             if (camera.Value?.Mat == null || camera.Value.Mat.IsEmpty)
                 return;
 
-            var bitmap = camera.Value.Mat.ToBitmap();
+            int width = camera.Value.Width;
+            int height = camera.Value.Height;
+            var bitmap = camera.Value.Mat.GetData(false).Cast<byte>().ToArray();
 
             if (bitmap == null)
                 return;
 
-            byte[] image = bitmapToRawBGRA(bitmap);
+            byte[] image = bitmapToRawBGRA(bitmap, width, height);
+
             timestampCounter++;
-            var inputFrame = new ImageFrame(ImageFormat.Format.Srgba, bitmap.Width, bitmap.Height, bitmap.Width * 4,
+
+            var inputFrame = new ImageFrame(ImageFormat.Format.Srgba, width, height, width * 4,
                 image.ToUnmanagedArray());
 
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
@@ -138,16 +142,11 @@ namespace Vignette.Game.Tracking
             return true;
         }
 
-        private byte[] bitmapToRawBGRA(Bitmap bitmap)
+        private byte[] bitmapToRawBGRA(byte[] data, int width, int height)
         {
-            var locked = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-
-            byte[] data = new byte[locked.Stride * bitmap.Height];
-            Marshal.Copy(locked.Scan0, data, 0, locked.Stride * bitmap.Height);
-            bitmap.UnlockBits(locked);
             //BGR24 --> RGB32
 
-            Image<Bgr24> start = Image.LoadPixelData<Bgr24>(data, bitmap.Width, bitmap.Height);
+            Image<Bgr24> start = Image.LoadPixelData<Bgr24>(data, width, height);
             //convert to 32 bit
 
             Span<Bgr24> pixels;
@@ -160,7 +159,7 @@ namespace Vignette.Game.Tracking
             Span<Bgra32> destination = new Span<Bgra32>(dest);
             PixelOperations<Bgr24>.Instance.ToBgra32(new SixLabors.ImageSharp.Configuration(), pixels, destination);
             start.Dispose();
-            GC.Collect();
+            GC.SuppressFinalize(this);
             return MemoryMarshal.AsBytes(destination).ToArray();
         }
 
