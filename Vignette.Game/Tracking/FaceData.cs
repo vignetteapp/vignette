@@ -11,14 +11,40 @@ namespace Vignette.Game.Tracking
     {
         private readonly IReadOnlyList<NormalizedLandmark> landmarks;
 
+        private NormalizedLandmark faceTop => landmarks[10];
+        private NormalizedLandmark faceLeft => landmarks[234];
+        private NormalizedLandmark faceBottom => landmarks[152];
+        private NormalizedLandmark faceRight => landmarks[454];
+
+        private NormalizedLandmark leftEyeTopRight => landmarks[158];
+        private NormalizedLandmark leftEyeTopLeft => landmarks[160];
+        private NormalizedLandmark leftEyeLeft => landmarks[33];
+        private NormalizedLandmark leftEyeBottomLeft => landmarks[144];
+        private NormalizedLandmark leftEyeBottomRight => landmarks[153];
+        private NormalizedLandmark leftEyeRight => landmarks[133];
+
+        private NormalizedLandmark rightEyeTopRight => landmarks[387];
+        private NormalizedLandmark rightEyeTopLeft => landmarks[385];
+        private NormalizedLandmark rightEyeLeft => landmarks[362];
+        private NormalizedLandmark rightEyeBottomLeft => landmarks[380];
+        private NormalizedLandmark rightEyeBottomRight => landmarks[373];
+        private NormalizedLandmark rightEyeRight => landmarks[263];
+
+        private NormalizedLandmark mouthTopRight => landmarks[312];
+        private NormalizedLandmark mouthTopLeft => landmarks[82];
+        private NormalizedLandmark mouthLeft => landmarks[61];
+        private NormalizedLandmark mouthBottomLeft => landmarks[87];
+        private NormalizedLandmark mouthBottomRight => landmarks[317];
+        private NormalizedLandmark mouthRight => landmarks[291];
+
         public float LeftEyeOpen
         {
             get
             {
-                float va = get_euclidean_dist(landmarks[160], landmarks[144]);
-                float vb = get_euclidean_dist(landmarks[158], landmarks[153]);
-                float h = get_euclidean_dist(landmarks[33], landmarks[133]);
-                return get_aspect_ratio(va, vb, h);
+                float va = euclidian_distance(leftEyeTopLeft, leftEyeBottomLeft);
+                float vb = euclidian_distance(leftEyeTopRight, leftEyeBottomRight);
+                float h = euclidian_distance(leftEyeLeft, leftEyeRight);
+                return aspect_ratio(va, vb, h);
             }
         }
 
@@ -26,10 +52,10 @@ namespace Vignette.Game.Tracking
         {
             get
             {
-                float va = get_euclidean_dist(landmarks[385], landmarks[380]);
-                float vb = get_euclidean_dist(landmarks[387], landmarks[373]);
-                float h = get_euclidean_dist(landmarks[362], landmarks[263]);
-                return get_aspect_ratio(va, vb, h);
+                float va = euclidian_distance(rightEyeTopLeft, rightEyeBottomLeft);
+                float vb = euclidian_distance(rightEyeTopRight, rightEyeBottomRight);
+                float h = euclidian_distance(rightEyeLeft, rightEyeRight);
+                return aspect_ratio(va, vb, h);
             }
         }
 
@@ -37,10 +63,10 @@ namespace Vignette.Game.Tracking
         {
             get
             {
-                float va = get_euclidean_dist(landmarks[82], landmarks[87]);
-                float vb = get_euclidean_dist(landmarks[312], landmarks[317]);
-                float h = get_euclidean_dist(landmarks[76], landmarks[293]);
-                return get_aspect_ratio(va, vb, h);
+                float va = euclidian_distance(mouthTopLeft, mouthBottomLeft);
+                float vb = euclidian_distance(mouthTopRight, mouthBottomRight);
+                float h = euclidian_distance(mouthLeft, mouthRight);
+                return aspect_ratio(va, vb, h);
             }
         }
 
@@ -49,14 +75,14 @@ namespace Vignette.Game.Tracking
             landmarks = landmarkList.Landmark;
         }
 
-        private static float get_euclidean_dist(NormalizedLandmark a, NormalizedLandmark b)
+        private static float euclidian_distance(NormalizedLandmark a, NormalizedLandmark b)
         {
             float dx = b.X - a.X;
             float dy = b.Y - a.Y;
             return MathF.Sqrt(dx * dx + dy * dy);
         }
 
-        private static float get_aspect_ratio(float va, float vb, float h)
+        private static float aspect_ratio(float va, float vb, float h)
             => (va + vb) / (2.0f * h);
     }
 }
