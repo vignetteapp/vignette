@@ -1,4 +1,4 @@
-// Copyright (c) The Vignette Authors
+﻿// Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System.Linq;
@@ -14,19 +14,15 @@ namespace Vignette.Game.Screens.Stage
         [Resolved(canBeNull: true)]
         private TrackingComponent tracker { get; set; }
 
-        private static string[] names_angle_x = new string[] { "ParamAngleX", "PARAM_ANGLE_X" };
-        private static string[] names_angle_y = new string[] { "ParamAngleY", "PARAM_ANGLE_Y" };
-        private static string[] names_angle_z = new string[] { "ParamAngleZ", "PARAM_ANGLE_Z" };
-        private static string[] names_mouth_open_y = new string[] { "ParamMouthOpenY", "PARAM_MOUTH_OPEN_Y" };
-        private static string[] names_eye_l_open = new string[] { "ParamEyeLOpen", "PARAM_EYE_L_OPEN" };
-        private static string[] names_eye_r_open = new string[] { "ParamEyeROpen", "PARAM_EYE_R_OPEN" };
-
-        private CubismParameter angleX => tryGetParameter(names_angle_x);
-        private CubismParameter angleY => tryGetParameter(names_angle_y);
-        private CubismParameter angleZ => tryGetParameter(names_angle_z);
-        private CubismParameter mouthOpenY => tryGetParameter(names_mouth_open_y);
-        private CubismParameter eyeLOpen => tryGetParameter(names_eye_l_open);
-        private CubismParameter eyeROpen => tryGetParameter(names_eye_r_open);
+        private CubismParameter angleX => tryGetParameter("ParamAngleX", "PARAM_ANGLE_X");
+        private CubismParameter angleY => tryGetParameter("ParamAngleY", "PARAM_ANGLE_Y");
+        private CubismParameter angleZ => tryGetParameter("ParamAngleZ", "PARAM_ANGLE_Z");
+        private CubismParameter bodyAngleX => tryGetParameter("ParamBodyAngleX", "PARAM_BODY_ANGLE_X");
+        private CubismParameter bodyAngleY => tryGetParameter("ParamBodyAngleY", "PARAM_BODY_ANGLE_Y");
+        private CubismParameter bodyAngleZ => tryGetParameter("ParamBodyAngleZ", "PARAM_BODY_ANGLE_Z");
+        private CubismParameter mouthOpenY => tryGetParameter("ParamMouthOpenY", "PARAM_MOUTH_OPEN_Y");
+        private CubismParameter eyeLOpen => tryGetParameter("ParamEyeLOpen", "PARAM_EYE_L_OPEN");
+        private CubismParameter eyeROpen => tryGetParameter("ParamEyeROpen", "PARAM_EYE_R_OPEN");
 
         protected override void Update()
         {
@@ -40,6 +36,11 @@ namespace Vignette.Game.Screens.Stage
             setNormalizedParamValue(angleX, face.Angles.X);
             setNormalizedParamValue(angleY, face.Angles.Y);
             setNormalizedParamValue(angleZ, face.Angles.Z);
+
+            setNormalizedParamValue(bodyAngleX, face.Position.X);
+            setNormalizedParamValue(bodyAngleY, face.Position.Y);
+            setNormalizedParamValue(bodyAngleZ, face.Position.Z);
+
             setNormalizedParamValue(mouthOpenY, face.MouthOpen);
             setNormalizedParamValue(eyeLOpen, face.LeftEyeOpen);
             setNormalizedParamValue(eyeROpen, face.RightEyeOpen);
@@ -55,7 +56,7 @@ namespace Vignette.Game.Screens.Stage
         /// <returns>
         /// The first cubism parameter found.
         /// </returns>
-        private CubismParameter tryGetParameter(string[] paramPossibleNames)
+        private CubismParameter tryGetParameter(params string[] paramPossibleNames)
         {
             CubismParameter parameter = null;
 

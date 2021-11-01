@@ -16,6 +16,7 @@ namespace Vignette.Game.Tracking
         private NormalizedLandmark faceLeft => landmarks[234];
         private NormalizedLandmark faceBottom => landmarks[152];
         private NormalizedLandmark faceRight => landmarks[454];
+        private NormalizedLandmark faceMiddle => landmarks[1];
 
         private NormalizedLandmark leftEyeTopRight => landmarks[158];
         private NormalizedLandmark leftEyeTopLeft => landmarks[160];
@@ -37,6 +38,8 @@ namespace Vignette.Game.Tracking
         private NormalizedLandmark mouthBottomLeft => landmarks[87];
         private NormalizedLandmark mouthBottomRight => landmarks[317];
         private NormalizedLandmark mouthRight => landmarks[291];
+
+        public Vector3 Position => new Vector3(faceMiddle.X, faceMiddle.Y, faceMiddle.Z);
 
         public float LeftEyeOpen
         {
