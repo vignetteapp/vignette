@@ -1,6 +1,7 @@
 ﻿// Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
+using System;
 using System.Linq;
 using osu.Framework.Allocation;
 using Vignette.Game.Tracking;
@@ -24,6 +25,9 @@ namespace Vignette.Game.Screens.Stage
         private CubismParameter eyeLOpen => tryGetParameter("ParamEyeLOpen", "PARAM_EYE_L_OPEN");
         private CubismParameter eyeROpen => tryGetParameter("ParamEyeROpen", "PARAM_EYE_R_OPEN");
 
+        private CubismPart armA => tryGetPart("PartArmA", "PART_ARM_A");
+        private CubismPart armB => tryGetPart("PartArmB", "PART_ARM_B");
+
         protected override void Update()
         {
             base.Update();
@@ -33,34 +37,37 @@ namespace Vignette.Game.Screens.Stage
 
             var face = tracker.Faces[0];
 
-            setNormalizedParamValue(angleX, face.Angles.X);
-            setNormalizedParamValue(angleY, face.Angles.Y);
-            setNormalizedParamValue(angleZ, face.Angles.Z);
+            setPartOpacity(armA, 1f);
+            setPartOpacity(armB, 0f);
 
-            setNormalizedParamValue(bodyAngleX, face.Position.X);
-            setNormalizedParamValue(bodyAngleY, face.Position.Y);
-            setNormalizedParamValue(bodyAngleZ, face.Position.Z);
+            setNormalized(angleX, face.Angles.X);
+            setNormalized(angleY, face.Angles.Y);
+            setNormalized(angleZ, face.Angles.Z);
 
-            setNormalizedParamValue(mouthOpenY, face.MouthOpen);
-            setNormalizedParamValue(eyeLOpen, face.LeftEyeOpen);
-            setNormalizedParamValue(eyeROpen, face.RightEyeOpen);
+            setNormalized(bodyAngleX, face.Position.X);
+            setNormalized(bodyAngleY, face.Position.Y);
+            setNormalized(bodyAngleZ, face.Position.Z);
+
+            setNormalized(mouthOpenY, face.MouthOpen);
+            setNormalized(eyeLOpen, face.LeftEyeOpen);
+            setNormalized(eyeROpen, face.RightEyeOpen);
         }
 
         /// <summary>
         /// Some models use CONSTANT_CASE for cubism parameter names while others use PascalCase.
         /// So there may be other cases or names used. This function is to try them one by one.
         /// </summary>
-        /// <param name="paramPossibleNames">
+        /// <param name="possibleNames">
         /// The possible names of the cubism parameter.
         /// </param>
         /// <returns>
         /// The first cubism parameter found.
         /// </returns>
-        private CubismParameter tryGetParameter(params string[] paramPossibleNames)
+        private CubismParameter tryGetParameter(params string[] possibleNames)
         {
             CubismParameter parameter = null;
 
-            foreach (var name in paramPossibleNames)
+            foreach (var name in possibleNames)
             {
                 parameter = Model.Parameters.FirstOrDefault(p => p.Name == name);
                 if (parameter != null)
@@ -70,12 +77,37 @@ namespace Vignette.Game.Screens.Stage
             return parameter;
         }
 
-        private void setNormalizedParamValue(CubismParameter parameter, float value)
+        private CubismPart tryGetPart(params string[] possibleNames)
+        {
+            CubismPart part = null;
+
+            foreach (var name in possibleNames)
+            {
+                part = Model.Parts.FirstOrDefault(p => p.Name == name);
+                if (part != null)
+                    break;
+            }
+
+            return part;
+        }
+
+        private void setNormalized(CubismParameter parameter, float value)
         {
             if (parameter == null)
                 return;
 
             parameter.Value = parameter.Maximum * value;
         }
+
+        private void setPartOpacity(CubismPart part, float value)
+        {
+            if (part == null)
+                return;
+
+            part.TargetOpacity = value;
+            part.CurrentOpacity = lerp(part.CurrentOpacity, part.TargetOpacity, .5f);
+        }
+
+        private float lerp(float start, float end, float p) => (end - start) * p + start;
     }
 }
