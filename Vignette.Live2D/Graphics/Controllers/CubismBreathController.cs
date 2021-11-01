@@ -32,14 +32,15 @@ namespace Vignette.Live2D.Graphics.Controllers
         {
             base.Update();
 
-            float phase = (float)(Clock.ElapsedFrameTime / Clock.FramesPerSecond) * MathF.Tau;
+            float t = (float)(Clock.CurrentTime / 1000d);
             foreach (var setting in settings)
             {
                 if (!parameterMap.TryGetValue(setting.Parameter, out var parameter))
                     continue; // Nitrous forgor 💀
 
-                float value = setting.Offset + setting.Peak * MathF.Sin(phase / setting.Cycle);
-                parameter.Value += value * setting.Weight;
+                float peak = (parameter.Maximum - parameter.Minimum) / 2f;
+                float value = peak * MathF.Tau * MathF.Cos(t * MathF.Tau / setting.Cycle) / setting.Cycle;
+                parameter.Value += value * setting.Weight * (float)(Clock.ElapsedFrameTime) / 1000f;
             }
         }
 
