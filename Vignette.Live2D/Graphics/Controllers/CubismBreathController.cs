@@ -40,7 +40,7 @@ namespace Vignette.Live2D.Graphics.Controllers
 
                 float peak = (parameter.Maximum - parameter.Minimum) / 2f;
                 float offset = (parameter.Maximum + parameter.Minimum) / 2f;
-                parameter.Value = peak * MathF.Sin(phi / setting.Cycle) * setting.Weight + offset;
+                parameter.CurrentValue = peak * MathF.Sin(phi / setting.Cycle) * setting.Weight + offset;
             }
         }
 

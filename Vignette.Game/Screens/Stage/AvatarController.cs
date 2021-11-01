@@ -96,7 +96,8 @@ namespace Vignette.Game.Screens.Stage
             if (parameter == null)
                 return;
 
-            parameter.Value = parameter.Maximum * value;
+            parameter.TargetValue = parameter.Maximum * value;
+            parameter.CurrentValue = lerp(parameter.CurrentValue, parameter.TargetValue, .3f);
         }
 
         private void setPartOpacity(CubismPart part, float value)

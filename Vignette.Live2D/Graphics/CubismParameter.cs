@@ -16,11 +16,17 @@ namespace Vignette.Live2D.Graphics
         public readonly float Default;
 
         private float val;
-
-        public float Value
+        public float CurrentValue
         {
             get => val;
             set => val = Math.Clamp(value, Minimum, Maximum);
+        }
+
+        private float targetVal;
+        public float TargetValue
+        {
+            get => targetVal;
+            set => targetVal = Math.Clamp(value, Minimum, Maximum);
         }
 
         public CubismParameter(int id, string name, float min, float max, float def)

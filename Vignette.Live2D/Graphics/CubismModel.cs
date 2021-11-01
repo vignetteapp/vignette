@@ -357,12 +357,12 @@ namespace Vignette.Live2D.Graphics
         private void copyParameterValuesFromModel()
         {
             for (int i = 0; i < parameters.Count; i++)
-                parameters[i].Value = parameterValues[i];
+                parameters[i].CurrentValue = parameterValues[i];
         }
 
         private void copyParameterValuesToModel()
         {
-            var values = parameters.Select(p => p.Value).ToArray();
+            var values = parameters.Select(p => p.CurrentValue).ToArray();
             Marshal.Copy(values, 0, (IntPtr)parameterValues, values.Length);
         }
 

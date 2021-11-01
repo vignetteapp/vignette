@@ -53,7 +53,7 @@ namespace Vignette.Live2D.Graphics.Controllers
                 return;
 
             foreach (var parameter in parameters)
-                parameter.Value = parameter.Maximum * (Source?.CurrentAmplitudes.Average ?? 0.0f);
+                parameter.CurrentValue = parameter.Maximum * (Source?.CurrentAmplitudes.Average ?? 0.0f);
         }
     }
 }

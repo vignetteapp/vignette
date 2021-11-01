@@ -180,12 +180,12 @@ namespace Vignette.Live2D.Physics
 
             if (weight >= 1.0f)
             {
-                parameter.Value = value;
+                parameter.CurrentValue = value;
             }
             else
             {
-                value = (parameter.Value * (1.0f - weight)) + (value * weight);
-                parameter.Value = value;
+                value = (parameter.CurrentValue * (1.0f - weight)) + (value * weight);
+                parameter.CurrentValue = value;
             }
         }
     }
