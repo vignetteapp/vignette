@@ -44,26 +44,20 @@ namespace Vignette.Live2D.Graphics.Controllers
             }
         }
 
-        private static readonly CubismBreathParameter[] default_parameters = new[] { new CubismBreathParameter("ParamBreath", 0.5f, 0.5f, 3.2345f, 0.5f) };
+        private static readonly CubismBreathParameter[] default_parameters = new[] { new CubismBreathParameter("ParamBreath", 3.2345f, 0.5f) };
     }
 
     public struct CubismBreathParameter
     {
         public string Parameter { get; set; }
 
-        public float Offset { get; set; }
-
-        public float Peak { get; set; }
-
         public float Cycle { get; set; }
 
         public float Weight { get; set; }
 
-        public CubismBreathParameter(string parameterName, float offset, float peak, float cycle, float weight)
+        public CubismBreathParameter(string parameterName, float cycle, float weight)
         {
             Parameter = parameterName;
-            Offset = offset;
-            Peak = peak;
             Cycle = cycle;
             Weight = weight;
         }

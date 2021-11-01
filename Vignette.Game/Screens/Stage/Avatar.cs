@@ -49,13 +49,7 @@ namespace Vignette.Game.Screens.Stage
                 {
                     new AvatarController(),
                     new CubismPhysicsController(),
-                    new CubismBreathController(
-                        new CubismBreathParameter("ParamAngleX", 0.0f, 15.0f, 6.5345f, 0.5f),
-                        new CubismBreathParameter("ParamAngleY", 0.0f, 8.0f, 3.5345f, 0.5f),
-                        new CubismBreathParameter("ParamAngleZ", 0.0f, 10.0f, 5.5345f, 0.5f),
-                        new CubismBreathParameter("ParamBodyAngleX", 0.0f, 4.0f, 15.5345f, 0.5f),
-                        new CubismBreathParameter("ParamBreath", 0.5f, 0.5f, 3.2345f, 0.5f)
-                    ),
+                    new CubismBreathController(new CubismBreathParameter("ParamBreath", 3.2345f, 1f)),
                 }
             });
         }
