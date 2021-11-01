@@ -75,6 +75,8 @@ namespace Vignette.Game.Settings
         [Resolved(canBeNull: true)]
         private VignetteGame game { get; set; }
 
+        public AvatarSection AvatarSection;
+
         private IEnumerable<SettingsSection> sections => mainPanel.Children.OfType<SettingsSection>();
 
         [BackgroundDependencyLoader]
@@ -119,7 +121,7 @@ namespace Vignette.Game.Settings
                                         {
                                             new HomeSection(),
                                             new RecognitionSection(),
-                                            new AvatarSection(),
+                                            AvatarSection = new AvatarSection(),
                                             new BackdropSection(),
                                             new SystemSection(),
                                             new FooterSection(),

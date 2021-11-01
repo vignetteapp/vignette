@@ -48,7 +48,7 @@ namespace Vignette.Game.Tracking
                 float va = euclidian_distance(leftEyeTopLeft, leftEyeBottomLeft);
                 float vb = euclidian_distance(leftEyeTopRight, leftEyeBottomRight);
                 float h = euclidian_distance(leftEyeLeft, leftEyeRight);
-                return aspect_ratio(va, vb, h) * 2;
+                return (aspect_ratio(va, vb, h) - .3f);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Vignette.Game.Tracking
                 float va = euclidian_distance(rightEyeTopLeft, rightEyeBottomLeft);
                 float vb = euclidian_distance(rightEyeTopRight, rightEyeBottomRight);
                 float h = euclidian_distance(rightEyeLeft, rightEyeRight);
-                return aspect_ratio(va, vb, h) * 2;
+                return (aspect_ratio(va, vb, h) - .3f);
             }
         }
 

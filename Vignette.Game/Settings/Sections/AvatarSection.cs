@@ -1,6 +1,7 @@
 // Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -27,6 +28,8 @@ namespace Vignette.Game.Settings.Sections
         private Bindable<Vector2> position;
         private SettingsSlider<float> scaleSetting;
         private SettingsSlider<float> rotationSetting;
+
+        public event Action CalibrateAction;
 
         [Resolved]
         private SettingsOverlay overlay { get; set; }
@@ -84,6 +87,15 @@ namespace Vignette.Game.Settings.Sections
                             Origin = Anchor.TopRight,
                             Action = handleResetAction,
                         },
+                        new FluentButton
+                        {
+                            Text = "Calibrate",
+                            Width = 90,
+                            Style = ButtonStyle.Secondary,
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopLeft,
+                            Action = () => CalibrateAction?.Invoke(),
+                        }
                     },
                 },
             };
@@ -100,6 +112,11 @@ namespace Vignette.Game.Settings.Sections
             rotationSetting.Current.SetDefault();
             scaleSetting.Current.SetDefault();
             position.SetDefault();
+        }
+
+        private void handleCalibrateAction()
+        {
+
         }
 
         private class OffsetItem : SettingsItem

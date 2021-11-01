@@ -24,6 +24,8 @@ namespace Vignette.Game.Screens.Stage
         private Bindable<float> rotation;
         private bool shouldEase;
 
+        private AvatarController controller;
+
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager config, VignetteGameBase game, SessionConfigManager session)
         {
@@ -47,7 +49,7 @@ namespace Vignette.Game.Screens.Stage
                 Origin = Anchor.Centre,
                 Children = new CubismController[]
                 {
-                    new AvatarController(),
+                    controller = new AvatarController(),
                     new CubismPhysicsController(),
                     new CubismBreathController(new CubismBreathParameter("ParamBreath", 3.2345f, 1f)),
                 }
@@ -60,6 +62,11 @@ namespace Vignette.Game.Screens.Stage
             model?.RotateTo(rotation.Value, shouldEase ? 200 : 0, Easing.OutQuint);
             model?.ResizeTo(512 * scale.Value, shouldEase ? 200 : 0, Easing.OutQuint);
             shouldEase = true;
+        }
+
+        public void Calibrate()
+        {
+            controller?.Calibrate();
         }
 
         protected override bool OnDragStart(DragStartEvent e)

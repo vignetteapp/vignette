@@ -4,6 +4,8 @@
 using System;
 using System.Linq;
 using osu.Framework.Allocation;
+using Vignette.Game.Settings;
+using Vignette.Game.Settings.Sections;
 using Vignette.Game.Tracking;
 using Vignette.Live2D.Graphics;
 using Vignette.Live2D.Graphics.Controllers;
@@ -14,6 +16,9 @@ namespace Vignette.Game.Screens.Stage
     {
         [Resolved(canBeNull: true)]
         private TrackingComponent tracker { get; set; }
+
+        [Resolved]
+        private SettingsOverlay overlay { get; set; }
 
         private CubismParameter angleX => tryGetParameter("ParamAngleX", "PARAM_ANGLE_X");
         private CubismParameter angleY => tryGetParameter("ParamAngleY", "PARAM_ANGLE_Y");
@@ -28,6 +33,30 @@ namespace Vignette.Game.Screens.Stage
         private CubismPart armA => tryGetPart("PartArmA", "PART_ARM_A");
         private CubismPart armB => tryGetPart("PartArmB", "PART_ARM_B");
 
+        private FaceData face;
+
+        #region Scalars for calibration
+        private float mouthOpenScalar = 1;
+        private float eyeLOpenScalar = 1;
+        private float eyeROpenScalar = 1;
+        #endregion
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            overlay.AvatarSection.CalibrateAction += Calibrate;
+        }
+
+        public void Calibrate()
+        {
+            if (face == null)
+                return;
+
+            mouthOpenScalar = face.MouthOpen;
+            eyeLOpenScalar = face.LeftEyeOpen;
+            eyeROpenScalar = face.RightEyeOpen;
+        }
+
         protected override void Update()
         {
             base.Update();
@@ -35,7 +64,7 @@ namespace Vignette.Game.Screens.Stage
             if (tracker?.Faces.Count == 0)
                 return;
 
-            var face = tracker.Faces[0];
+            face = tracker.Faces[0];
 
             setPartOpacity(armA, 1f);
             setPartOpacity(armB, 0f);
@@ -48,9 +77,9 @@ namespace Vignette.Game.Screens.Stage
             setNormalized(bodyAngleY, face.Position.Y);
             setNormalized(bodyAngleZ, face.Position.Z);
 
-            setNormalized(mouthOpenY, face.MouthOpen);
-            setNormalized(eyeLOpen, face.LeftEyeOpen);
-            setNormalized(eyeROpen, face.RightEyeOpen);
+            setNormalized(mouthOpenY, face.MouthOpen / mouthOpenScalar);
+            setNormalized(eyeLOpen, face.LeftEyeOpen / eyeLOpenScalar);
+            setNormalized(eyeROpen, face.RightEyeOpen / eyeROpenScalar);
         }
 
         /// <summary>
