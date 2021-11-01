@@ -78,8 +78,17 @@ namespace Vignette.Game.Screens.Stage
             setNormalized(bodyAngleZ, face.Position.Z);
 
             setNormalized(mouthOpenY, face.MouthOpen / mouthOpenScalar);
-            setNormalized(eyeLOpen, face.LeftEyeOpen / eyeLOpenScalar);
-            setNormalized(eyeROpen, face.RightEyeOpen / eyeROpenScalar);
+            setNormalized(eyeLOpen, easeInOutQuint(face.LeftEyeOpen / eyeLOpenScalar));
+            setNormalized(eyeROpen, easeInOutQuint(face.RightEyeOpen / eyeROpenScalar));
+        }
+
+        private float easeInOutQuint(float x)
+        {
+            x -= .1f;
+            float y = -2 * x + 2;
+            float y5 = y * y * y * y * y;
+            float x5 = x * x * x * x * x;
+            return x < 0.5 ? 16 * x5 : 1 - y5 / 2;
         }
 
         /// <summary>
