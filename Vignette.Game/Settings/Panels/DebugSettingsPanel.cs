@@ -13,6 +13,7 @@ using Vignette.Game.Graphics.Sprites;
 using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Settings.Components;
+using Vignette.Live2D;
 
 namespace Vignette.Game.Settings.Panels
 {
@@ -46,10 +47,10 @@ namespace Vignette.Game.Settings.Panels
                 private void load(VignetteGameBase game)
                 {
                     details.Add("Version", game.Version);
-                    details.Add("Channel", VignetteGameBase.IsInsidersBuild ? "Insiders" : "Public");
+                    details.Add("Channel", "Debut");
                     details.Add("Framework Version", resolveFrameworkVersion());
-                    details.Add("Live2D Runtime Version", "Unknown");
-                    details.Add("Live2D Model Version", "Unknown");
+                    details.Add("Live2D Runtime Version", $"{CubismCore.Version.Major}.{CubismCore.Version.Minor}.{CubismCore.Version.Patch}");
+                    details.Add("Live2D Model Version", CubismCore.LatestMocVersion.ToString());
                 }
 
                 protected override void LoadComplete()

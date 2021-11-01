@@ -1,7 +1,6 @@
-﻿// Copyright (c) The Vignette Authors
+// Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
-using System;
 using System.Linq;
 using osu.Framework.Allocation;
 using Vignette.Game.Tracking;
@@ -12,7 +11,7 @@ namespace Vignette.Game.Screens.Stage
 {
     public class AvatarController : CubismController
     {
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private TrackingComponent tracker { get; set; }
 
         private static string[] names_angle_x = new string[] { "ParamAngleX", "PARAM_ANGLE_X" };
@@ -33,7 +32,7 @@ namespace Vignette.Game.Screens.Stage
         {
             base.Update();
 
-            if (tracker.Faces.Count == 0)
+            if (tracker?.Faces.Count == 0)
                 return;
 
             var face = tracker.Faces[0];
@@ -45,9 +44,6 @@ namespace Vignette.Game.Screens.Stage
             setNormalizedParamValue(eyeLOpen, face.LeftEyeOpen);
             setNormalizedParamValue(eyeROpen, face.RightEyeOpen);
         }
-
-        private CubismParameter getParameter(string paramName) =>
-            Model.Parameters.FirstOrDefault(p => p.Name == paramName);
 
         /// <summary>
         /// Some models use CONSTANT_CASE for cubism parameter names while others use PascalCase.

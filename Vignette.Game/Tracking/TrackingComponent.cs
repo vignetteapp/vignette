@@ -2,7 +2,6 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Akihabara.Framework;
@@ -46,9 +45,7 @@ namespace Vignette.Game.Tracking
         [Resolved]
         private MediapipeGraphStore graphStore { get; set; }
 
-        [Resolved]
-        private IBindable<CameraDevice> camera { get; set; }
-
+        private readonly IBindable<CameraDevice> camera = new Bindable<CameraDevice>();
         private readonly List<FaceData> faces = new List<FaceData>();
         private List<NormalizedLandmarkList> landmarks;
         private GCHandle packetCallbackHandle;
@@ -63,7 +60,7 @@ namespace Vignette.Game.Tracking
         private long timestampCounter = 0;
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(IBindable<CameraDevice> camera)
         {
             graph = new CalculatorGraph(graphStore.Get(graph_name));
             poller = graph.AddOutputStreamPoller<ImageFrame>(output_video).Value();
@@ -73,7 +70,8 @@ namespace Vignette.Game.Tracking
 
             graph.StartRun().AssertOk();
 
-            camera.Value.OnTick += handleCameraTick;
+            this.camera.BindTo(camera);
+            this.camera.BindValueChanged(handleCameraChange, true);
         }
 
         private Status handleLandmarks(NormalizedLandmarkListVectorPacket packet)
@@ -88,6 +86,15 @@ namespace Vignette.Game.Tracking
             }
 
             return Status.Ok();
+        }
+
+        private void handleCameraChange(ValueChangedEvent<CameraDevice> e)
+        {
+            if (e.NewValue != null)
+                e.NewValue.OnTick += handleCameraTick;
+
+            if (e.OldValue != null)
+                e.OldValue.OnTick -= handleCameraTick;
         }
 
         private void handleCameraTick()
@@ -116,54 +123,30 @@ namespace Vignette.Game.Tracking
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
             graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
 
-            flushOutputPoller(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
+            flush(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
         }
 
-        private ImageFramePacket fetchPacketFromQueue()
+        private void flush()
         {
             var packet = new ImageFramePacket();
+
             if (!poller.Next(packet))
-                throw new NoPacketException();
+                return;
 
-            return packet;
-        }
-
-        private void flushOutputPoller()
-        {
-            try
-            {
-                OutputFrame = getRawFrame(out var width, out var height, out var widthStep);
-                OutputFrameWidth = width;
-                OutputFrameHeight = height;
-                OutputFrameWidthStep = widthStep;
-            }
-            catch (NoPacketException)
-            {
-            }
-        }
-
-        private byte[] getRawFrame(out int width, out int height, out int widthStep)
-        {
-            var packet = fetchPacketFromQueue();
-            var raw = packet.Get();
-            width = raw.Width();
-            height = raw.Height();
-            widthStep = raw.WidthStep();
-            return raw.CopyToByteBuffer(height * widthStep);
+            var frame = packet.Get();
+            OutputFrameWidth = frame.Width();
+            OutputFrameHeight = frame.Height();
+            OutputFrameWidthStep = frame.WidthStep();
+            OutputFrame = frame.CopyToByteBuffer(OutputFrameHeight * OutputFrameWidthStep);
         }
 
         protected override void Dispose(bool isDisposing)
         {
             base.Dispose(isDisposing);
             packetCallbackHandle.Free();
-            camera.Value.OnTick -= handleCameraTick;
-        }
-    }
 
-    internal class NoPacketException : IOException
-    {
-        public NoPacketException() : base("No packet in the poller")
-        {
+            if (camera.Value != null)
+                camera.Value.OnTick -= handleCameraTick;
         }
     }
 }

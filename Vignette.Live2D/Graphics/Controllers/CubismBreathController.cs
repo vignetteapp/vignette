@@ -15,10 +15,17 @@ namespace Vignette.Live2D.Graphics.Controllers
     public class CubismBreathController : CubismController
     {
         private readonly IEnumerable<CubismBreathParameter> settings = new List<CubismBreathParameter>();
+        private Dictionary<string, CubismParameter> parameterMap;
 
         public CubismBreathController(params CubismBreathParameter[] parameters)
         {
             settings = parameters.Any() ? parameters : default_parameters;
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            parameterMap = settings.ToDictionary(s => s.Parameter, s => Model.Parameters.FirstOrDefault(p => p.Name == s.Parameter));
         }
 
         protected override void Update()
@@ -28,12 +35,10 @@ namespace Vignette.Live2D.Graphics.Controllers
             float phase = (float)Clock.ElapsedFrameTime / 1000 * 2.0f * MathF.PI;
             foreach (var setting in settings)
             {
-                var parameter = Model.Parameters.FirstOrDefault(p => p.Name == setting.Parameter);
-
-                if (parameter == null)
+                if (!parameterMap.TryGetValue(setting.Parameter, out var parameter))
                     return;
 
-                parameter.Value += (setting.Offset + setting.Peak * MathF.Sin(phase / setting.Cycle)) * setting.Weight;
+                parameter.Value += setting.Offset + setting.Peak * MathF.Sin(phase / setting.Cycle) * setting.Weight;
             }
         }
 

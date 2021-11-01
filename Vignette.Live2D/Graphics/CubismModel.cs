@@ -90,11 +90,6 @@ namespace Vignette.Live2D.Graphics
         public CubismModel(IResourceStore<byte[]> resources)
         {
             Resources = resources;
-        }
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
 
             using var settingStream = GetModelSettingsStream();
 
@@ -124,14 +119,18 @@ namespace Vignette.Live2D.Graphics
                 DisplayAuxilliarySettings = CubismUtils.ReadJsonSetting<CubismAuxDisplaySetting>(auxStream);
             }
 
-            AddInternal(renderer = new CubismRenderer(this));
-
             initializeParameters();
             initializeParts();
             initializeDrawables();
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            AddInternal(renderer = new CubismRenderer(this));
 
             largeTextureStore = CreateTextureStore();
-
             initializeDrawableTextures();
 
             copyParameterValuesFromModel();

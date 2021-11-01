@@ -1,7 +1,6 @@
 // Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -12,8 +11,6 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Localisation;
 using osuTK;
 using SixLabors.ImageSharp.PixelFormats;
-using Vignette.Camera;
-using Vignette.Camera.Graphics;
 using Vignette.Camera.Platform;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Typesets;
@@ -74,7 +71,7 @@ namespace Vignette.Game.Settings.Sections
 
         private class CameraTrackingPreview : Container
         {
-            [Resolved]
+            [Resolved(canBeNull: true)]
             private TrackingComponent tracker { get; set; }
 
             private Sprite preview;
