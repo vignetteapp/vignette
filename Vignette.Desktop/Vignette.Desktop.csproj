@@ -17,6 +17,13 @@
     <AssemblyName>Vignette</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ContentWithTargetPath Include="MediapipeRsrc\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+
   <Choose>
     <When Condition="!$(Version.Contains('insiders'))">
       <PropertyGroup>
