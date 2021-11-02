@@ -1,4 +1,4 @@
-﻿// Copyright (c) The Vignette Authors
+// Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
@@ -44,7 +44,7 @@ namespace Vignette.Game.Screens.Stage
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            overlay.AvatarSection.CalibrateAction += Calibrate;
+            overlay.RecognitionSection.CalibrateAction += Calibrate;
         }
 
         public void Calibrate()
@@ -77,9 +77,9 @@ namespace Vignette.Game.Screens.Stage
             setNormalized(bodyAngleY, face.Position.Y);
             setNormalized(bodyAngleZ, face.Position.Z);
 
-            setNormalized(mouthOpenY, face.MouthOpen / mouthOpenScalar);
-            setNormalized(eyeLOpen, easeInOutQuint(face.LeftEyeOpen / eyeLOpenScalar));
-            setNormalized(eyeROpen, easeInOutQuint(face.RightEyeOpen / eyeROpenScalar));
+            setNormalized(mouthOpenY, face.MouthOpen / mouthOpenScalar, 0.00001f);
+            setNormalized(eyeLOpen, easeInOutQuint(face.LeftEyeOpen / eyeLOpenScalar), null);
+            setNormalized(eyeROpen, easeInOutQuint(face.RightEyeOpen / eyeROpenScalar), null);
         }
 
         private float easeInOutQuint(float x)
@@ -129,12 +129,17 @@ namespace Vignette.Game.Screens.Stage
             return part;
         }
 
-        private void setNormalized(CubismParameter parameter, float value)
+        private void setNormalized(CubismParameter parameter, float value, float? tolerance = 0.04f)
         {
             if (parameter == null)
                 return;
 
-            parameter.TargetValue = parameter.Maximum * value;
+            float toValue = parameter.Maximum * value;
+
+            if (tolerance.HasValue && MathF.Abs(parameter.TargetValue - toValue) < tolerance.Value)
+                return;
+
+            parameter.TargetValue = toValue;
             parameter.CurrentValue = lerp(parameter.CurrentValue, parameter.TargetValue, .3f);
         }
 

@@ -11,9 +11,12 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Localisation;
 using osuTK;
 using SixLabors.ImageSharp.PixelFormats;
+using System;
 using Vignette.Camera.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.Graphics.Containers;
 using Vignette.Game.Graphics.Typesets;
+using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Settings.Components;
 using Vignette.Game.Tracking;
 
@@ -24,6 +27,8 @@ namespace Vignette.Game.Settings.Sections
         public override IconUsage Icon => SegoeFluent.EyeShow;
 
         public override LocalisableString Label => "Recognition";
+
+        public event Action CalibrateAction;
 
         [Resolved]
         private CameraManager camera { get; set; }
@@ -48,6 +53,29 @@ namespace Vignette.Game.Settings.Sections
                             Current = config.GetBindable<string>(VignetteSetting.CameraDevice),
                         },
                     }
+                },
+                new ThemableTextFlowContainer
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    TextAnchor = Anchor.TopLeft,
+                    Text = "To properlay calibrate, please open your mouth and eyes wide first!",
+                },
+                new FillFlowContainer
+                {
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Horizontal,
+                    Spacing = new Vector2(5, 0),
+                    Child = new FluentButton
+                    {
+                        Text = "Calibrate",
+                        Width = 90,
+                        Style = ButtonStyle.Secondary,
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        Action = () => CalibrateAction?.Invoke(),
+                    },
                 },
             };
 

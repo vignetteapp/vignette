@@ -7,7 +7,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Framework.IO.Stores;
-using osu.Framework.Platform;
 using osuTK;
 using Vignette.Game.Configuration;
 using Vignette.Live2D.Graphics;
