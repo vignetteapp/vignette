@@ -12,6 +12,8 @@ using osu.Framework.Localisation;
 using osuTK;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
+using System.Collections.Concurrent;
+using Vignette.Camera;
 using Vignette.Camera.Platform;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Containers;
@@ -45,6 +47,7 @@ namespace Vignette.Game.Settings.Sections
                     Label = "Camera",
                     Children = new Drawable[]
                     {
+                        new CameraTrackingPreview(),
                         new SettingsDropdown<string>
                         {
                             Icon = SegoeFluent.Camera,
@@ -102,9 +105,10 @@ namespace Vignette.Game.Settings.Sections
             private TrackingComponent tracker { get; set; }
 
             private Sprite preview;
+            private Texture texture;
 
             [BackgroundDependencyLoader]
-            private void load()
+            private void load(IBindable<CameraDevice> camera)
             {
                 Size = new Vector2(250, 140);
                 Masking = true;
@@ -124,25 +128,36 @@ namespace Vignette.Game.Settings.Sections
                         Origin = Anchor.Centre,
                     },
                 };
+
+                camera.BindValueChanged(handleCamera, true);
             }
 
-            protected override void Update()
+            private void handleCamera(ValueChangedEvent<CameraDevice> e)
             {
-                base.Update();
+                Schedule(() => preview.Hide());
 
+                texture?.Dispose();
+                texture = null;
+
+                if (e.OldValue != null)
+                    e.OldValue.OnTick -= handleCameraTick;
+
+                if (e.NewValue != null)
+                    e.NewValue.OnTick += handleCameraTick;
+            }
+
+            private void handleCameraTick()
+            {
                 if (tracker?.OutputFrame == null)
                     return;
 
-                lock (tracker.OutputFrame)
-                {
-                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+                var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
 
-                    var texture = new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
-                    var upload = new TextureUpload(pixelData);
-                    texture.SetData(upload);
+                texture ??= new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+                texture.SetData(new TextureUpload(pixelData));
 
-                    preview.Texture = texture;
-                };
+                preview.Texture = texture;
+                Schedule(() => preview.Show());
             }
         }
     }

@@ -63,7 +63,7 @@ namespace Vignette.Game.Tracking
         private void load(IBindable<CameraDevice> camera)
         {
             graph = new CalculatorGraph(graphStore.Get(graph_name));
-            poller = graph.AddOutputStreamPoller<ImageFrame>(output_video).Value();
+            poller = graph.AddOutputStreamPoller<ImageFrame>(output_video).Value();;
 
             graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(
                 output_landmarks, handleLandmarks, out packetCallbackHandle).AssertOk();
@@ -90,6 +90,9 @@ namespace Vignette.Game.Tracking
 
         private void handleCameraChange(ValueChangedEvent<CameraDevice> e)
         {
+            if (OutputFrame != null)
+                clearOutputFrame();
+
             if (e.OldValue != null)
                 e.OldValue.OnTick -= handleCameraTick;
 
@@ -123,10 +126,10 @@ namespace Vignette.Game.Tracking
             var inputPacket = new ImageFramePacket(inputFrame, new Timestamp(timestampCounter));
             graph.AddPacketToInputStream(input_video, inputPacket).AssertOk();
 
-            flush(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
+            retrievePacket(); // VERY IMPORTANT!! Remove that and Vignette will leak a lot of memory.
         }
 
-        private void flush()
+        private void retrievePacket()
         {
             var packet = new ImageFramePacket();
 
@@ -138,6 +141,17 @@ namespace Vignette.Game.Tracking
             OutputFrameHeight = frame.Height();
             OutputFrameWidthStep = frame.WidthStep();
             OutputFrame = frame.CopyToByteBuffer(OutputFrameHeight * OutputFrameWidthStep);
+
+            packet.Dispose();
+        }
+
+        private void clearOutputFrame()
+        {
+            OutputFrame = null;
+            OutputFrameWidth = 0;
+            OutputFrameHeight = 0;
+            OutputFrameWidthStep = 0;
+            poller.Reset();
         }
 
         protected override void Dispose(bool isDisposing)
