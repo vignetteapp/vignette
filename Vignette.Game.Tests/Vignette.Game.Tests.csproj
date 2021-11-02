@@ -3,6 +3,13 @@
     <ProjectReference Include="..\Vignette.Game\Vignette.Game.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Vignette.Live2D.Native" Version="4.0.0-r3" />
+    <PackageReference Include="Akihabara.Runtime.Linux_x64.CPU" Version="2021.1030.0" />
+    <PackageReference Include="Akihabara.Runtime.Windows_x64.CPU" Version="2021.1030.0" />
+    <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />

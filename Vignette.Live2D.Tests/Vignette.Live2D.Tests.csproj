@@ -11,6 +11,7 @@
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.107" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="ppy.osu.Framework" Version="2021.907.0" />
+    <PackageReference Include="Vignette.Live2D.Native" Version="4.0.0-r3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vignette.Live2D\Vignette.Live2D.csproj" />
