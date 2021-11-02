@@ -447,9 +447,6 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Mediapipe graphs and modules for testing
-mediapipe/
-
 # osu!framework cache
 cache/
 
