@@ -63,7 +63,7 @@ namespace Vignette.Game.Tracking
         private void load(IBindable<CameraDevice> camera)
         {
             graph = new CalculatorGraph(graphStore.Get(graph_name));
-            poller = graph.AddOutputStreamPoller<ImageFrame>(output_video).Value();;
+            poller = graph.AddOutputStreamPoller<ImageFrame>(output_video).Value();
 
             graph.ObserveOutputStream<NormalizedLandmarkListVectorPacket, List<NormalizedLandmarkList>>(
                 output_landmarks, handleLandmarks, out packetCallbackHandle).AssertOk();
