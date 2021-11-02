@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Vignette Project</Authors>
+    <PackageId>Vignette.Application.Live2D.Native</PackageId>
+    <PackageTags>live2d;cubism;osu;osu!framework;vignette</PackageTags>
+    <RepositoryUrl>https://github.com/vignette-project/vignette-application-live2d-native/</RepositoryUrl>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="runtimes\**\*">
+      <Pack>true</Pack>
+      <PackagePath>runtimes</PackagePath>
+    </None>
+    <None Include="_._">
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
