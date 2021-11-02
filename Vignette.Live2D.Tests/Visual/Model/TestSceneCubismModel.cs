@@ -24,10 +24,10 @@ namespace Vignette.Live2D.Tests.Visual.Model
         public void TestModelParameterUpdate()
         {
             var target = Model.Parameters.FirstOrDefault(p => p.Name == "ParamMouthOpenY");
-            AddAssert("check if default", () => target.Value == target.Default);
-            AddStep("set to maximum", () => Schedule(() => target.Value = target.Maximum));
+            AddAssert("check if default", () => target.CurrentValue == target.Default);
+            AddStep("set to maximum", () => Schedule(() => target.CurrentValue = target.Maximum));
             AddWaitStep("wait", 5);
-            AddAssert("check if maximum", () => target.Value == target.Maximum);
+            AddAssert("check if maximum", () => target.CurrentValue == target.Maximum);
         }
     }
 }

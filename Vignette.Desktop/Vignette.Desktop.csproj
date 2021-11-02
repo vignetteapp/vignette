@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Akihabara.Runtime.Linux_x64.CPU" Version="2021.1030.0" />
+    <PackageReference Include="Akihabara.Runtime.Windows_x64.CPU" Version="2021.1030.0" />
     <PackageReference Include="Emgu.CV.runtime.ubuntu.20.04-x64" Version="4.5.3.4721" />
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.3.4721" />
   </ItemGroup>

@@ -5,8 +5,12 @@
     <Version>0.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Settings\Sections\AvatarSection.cs~RFa09c74.TMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Emgu.CV.Bitmap" Version="4.5.4.4788" />
     <PackageReference Include="ppy.osu.Framework" Version="2021.907.0" />
-    <PackageReference Include="Akihabara" Version="2021.1005.0" />
+    <PackageReference Include="Akihabara" Version="2021.1029.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vignette.Camera\Vignette.Camera.csproj" />

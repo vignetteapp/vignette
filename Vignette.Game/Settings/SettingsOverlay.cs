@@ -75,6 +75,8 @@ namespace Vignette.Game.Settings
         [Resolved(canBeNull: true)]
         private VignetteGame game { get; set; }
 
+        public RecognitionSection RecognitionSection { get; private set; }
+
         private IEnumerable<SettingsSection> sections => mainPanel.Children.OfType<SettingsSection>();
 
         [BackgroundDependencyLoader]
@@ -118,7 +120,7 @@ namespace Vignette.Game.Settings
                                         Children = new Drawable[]
                                         {
                                             new HomeSection(),
-                                            new RecognitionSection(),
+                                            RecognitionSection = new RecognitionSection(),
                                             new AvatarSection(),
                                             new BackdropSection(),
                                             new SystemSection(),

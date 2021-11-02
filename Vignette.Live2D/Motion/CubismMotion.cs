@@ -127,8 +127,8 @@ namespace Vignette.Live2D.Motion
                             weight *= calculateFadeOutWeight(time, Duration, curve.FadeOutTime, loop, LoopFading);
                     }
 
-                    double currentValue = curve.Parameter.Value;
-                    curve.Parameter.Value = (float)(currentValue + (value - currentValue) * weight);
+                    double currentValue = curve.Parameter.CurrentValue;
+                    curve.Parameter.CurrentValue = (float)(currentValue + (value - currentValue) * weight);
                 }
                 else if (curve.TargetType == CubismMotionTarget.PartOpacity)
                 {
@@ -141,8 +141,8 @@ namespace Vignette.Live2D.Motion
                 if (effectValues.TryGetValue(effectId, out var value))
                 {
                     double weight = globalFadeInWeight * globalFadeOutWeight;
-                    double currentValue = target.Value;
-                    target.Value = (float)(currentValue + (value - currentValue) * weight);
+                    double currentValue = target.CurrentValue;
+                    target.CurrentValue = (float)(currentValue + (value - currentValue) * weight);
                 }
 
                 i++;

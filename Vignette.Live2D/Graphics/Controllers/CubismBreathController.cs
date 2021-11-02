@@ -15,48 +15,49 @@ namespace Vignette.Live2D.Graphics.Controllers
     public class CubismBreathController : CubismController
     {
         private readonly IEnumerable<CubismBreathParameter> settings = new List<CubismBreathParameter>();
+        private Dictionary<string, CubismParameter> parameterMap;
 
         public CubismBreathController(params CubismBreathParameter[] parameters)
         {
             settings = parameters.Any() ? parameters : default_parameters;
         }
 
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            parameterMap = settings.ToDictionary(s => s.Parameter, s => Model.Parameters.FirstOrDefault(p => p.Name == s.Parameter));
+        }
+
         protected override void Update()
         {
             base.Update();
 
-            float phase = (float)Clock.ElapsedFrameTime / 1000 * 2.0f * MathF.PI;
+            float phi = (float)(Clock.CurrentTime / 1000d) * MathF.Tau;
             foreach (var setting in settings)
             {
-                var parameter = Model.Parameters.FirstOrDefault(p => p.Name == setting.Parameter);
+                if (!parameterMap.TryGetValue(setting.Parameter, out var parameter))
+                    continue; // Nitrous forgor 💀
 
-                if (parameter == null)
-                    return;
-
-                parameter.Value += (setting.Offset + setting.Peak * MathF.Sin(phase / setting.Cycle)) * setting.Weight;
+                float peak = (parameter.Maximum - parameter.Minimum) / 2f;
+                float offset = (parameter.Maximum + parameter.Minimum) / 2f;
+                parameter.CurrentValue = peak * MathF.Sin(phi / setting.Cycle) * setting.Weight + offset;
             }
         }
 
-        private static readonly CubismBreathParameter[] default_parameters = new[] { new CubismBreathParameter("ParamBreath", 0.5f, 0.5f, 3.2345f, 0.5f) };
+        private static readonly CubismBreathParameter[] default_parameters = new[] { new CubismBreathParameter("ParamBreath", 3.2345f, 0.5f) };
     }
 
     public struct CubismBreathParameter
     {
         public string Parameter { get; set; }
 
-        public float Offset { get; set; }
-
-        public float Peak { get; set; }
-
         public float Cycle { get; set; }
 
         public float Weight { get; set; }
 
-        public CubismBreathParameter(string parameterName, float offset, float peak, float cycle, float weight)
+        public CubismBreathParameter(string parameterName, float cycle, float weight)
         {
             Parameter = parameterName;
-            Offset = offset;
-            Peak = peak;
             Cycle = cycle;
             Weight = weight;
         }

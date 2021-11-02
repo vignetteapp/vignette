@@ -62,15 +62,15 @@ namespace Vignette.Live2D.Motion
                 switch (expressionParam.Blending)
                 {
                     case CubismExpressionBlending.Add:
-                        param.Value += (float)(param.Value + expressionParam.Value * Weight);
+                        param.CurrentValue += (float)(param.CurrentValue + expressionParam.Value * Weight);
                         break;
 
                     case CubismExpressionBlending.Multiply:
-                        param.Value *= (float)((expressionParam.Value - 1) * Weight + 1.0);
+                        param.CurrentValue *= (float)((expressionParam.Value - 1) * Weight + 1.0);
                         break;
 
                     case CubismExpressionBlending.Overwrite:
-                        param.Value = (float)(expressionParam.Value * (1 - Weight) + expressionParam.Value * Weight);
+                        param.CurrentValue = (float)(expressionParam.Value * (1 - Weight) + expressionParam.Value * Weight);
                         break;
                 }
             }

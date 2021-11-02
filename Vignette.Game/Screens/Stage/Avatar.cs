@@ -1,17 +1,16 @@
 // Copyright (c) The Vignette Authors
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
-using System.IO;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Platform;
+using osu.Framework.IO.Stores;
 using osuTK;
 using Vignette.Game.Configuration;
-using Vignette.Game.IO;
 using Vignette.Live2D.Graphics;
+using Vignette.Live2D.Graphics.Controllers;
 
 namespace Vignette.Game.Screens.Stage
 {
@@ -19,17 +18,15 @@ namespace Vignette.Game.Screens.Stage
     {
         private CubismModel model;
         private Bindable<bool> adjustable;
-        private Bindable<string> path;
         private Bindable<Vector2> offset;
         private Bindable<float> scale;
         private Bindable<float> rotation;
         private bool shouldEase;
 
-        [Resolved]
-        private GameHost host { get; set; }
+        private AvatarController controller;
 
         [BackgroundDependencyLoader]
-        private void load(VignetteConfigManager config, SessionConfigManager session)
+        private void load(VignetteConfigManager config, VignetteGameBase game, SessionConfigManager session)
         {
             RelativeSizeAxes = Axes.Both;
 
@@ -44,8 +41,18 @@ namespace Vignette.Game.Screens.Stage
             scale = config.GetBindable<float>(VignetteSetting.AvatarScale);
             scale.ValueChanged += _ => handleVisualChange();
 
-            path = config.GetBindable<string>(VignetteSetting.AvatarPath);
-            path.BindValueChanged(_ => handlePathChange(), true);
+            AddInternal(model = new CubismModel(new NamespacedResourceStore<byte[]>(game.Resources, "Model"))
+            {
+                Size = new Vector2(1024),
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Children = new CubismController[]
+                {
+                    controller = new AvatarController(),
+                    new CubismPhysicsController(),
+                    new CubismBreathController(new CubismBreathParameter("ParamBreath", 3.2345f, 1f)),
+                }
+            });
         }
 
         private void handleVisualChange()
@@ -56,37 +63,9 @@ namespace Vignette.Game.Screens.Stage
             shouldEase = true;
         }
 
-        private void handlePathChange()
+        public void Calibrate()
         {
-            shouldEase = false;
-
-            model?.Expire();
-
-            if (!string.IsNullOrEmpty(path.Value) && tryCreateCubismModel(path.Value, out var newModel))
-            {
-                AddInternal(model = newModel.With(m =>
-                {
-                    m.Size = new Vector2(512);
-                    m.Anchor = Anchor.Centre;
-                    m.Origin = Anchor.Centre;
-                }));
-            }
-
-            handleVisualChange();
-        }
-
-        private bool tryCreateCubismModel(string path, out CubismModel model)
-        {
-            try
-            {
-                model = new CubismModelAvatar(new RecursiveNativeStorage(path, host));
-                return true;
-            }
-            catch (FileNotFoundException)
-            {
-                model = null;
-                return false;
-            }
+            controller?.Calibrate();
         }
 
         protected override bool OnDragStart(DragStartEvent e)

@@ -24,6 +24,7 @@ using Vignette.Game.Resources;
 using Vignette.Game.Graphics.Themeing;
 using Vignette.Camera.Platform;
 using Vignette.Camera;
+using Vignette.Game.Tracking;
 using Vignette.Live2D.Resources;
 
 namespace Vignette.Game
@@ -65,6 +66,7 @@ namespace Vignette.Game
         private IBindable<bool> showFps;
         private Bindable<CameraDevice> cameraDevice;
         private Container content;
+        private TrackingComponent tracker;
 
         protected override Container<Drawable> Content => content;
 
@@ -100,9 +102,11 @@ namespace Vignette.Game
             AddFont(Resources, @"Fonts/SegoeFluent/SegoeFluent-Regular");
             AddFont(Resources, @"Fonts/Vignette");
 
+            dependencies.CacheAs(new MediapipeGraphStore(new NamespacedResourceStore<byte[]>(Resources, "Graphs")));
             dependencies.CacheAs(this);
             dependencies.CacheAs(LocalConfig);
             dependencies.CacheAs(SessionConfig = new SessionConfigManager());
+            dependencies.CacheAs(tracker = new TrackingComponent());
 
             dependencies.CacheAs(CameraManager = CameraManager.CreateSuitableManager(Scheduler));
             dependencies.CacheAs<IBindable<CameraDevice>>(cameraDevice = new Bindable<CameraDevice>());
@@ -148,6 +152,7 @@ namespace Vignette.Game
                             RelativeSizeAxes = Axes.Both,
                         },
                         new ConfigurationHandler(),
+                        tracker,
                     },
                 },
             });

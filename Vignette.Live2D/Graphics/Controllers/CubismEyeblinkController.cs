@@ -126,7 +126,7 @@ namespace Vignette.Live2D.Graphics.Controllers
             }
 
             foreach (var param in parameters)
-                param.Value = (float)value;
+                param.CurrentValue = (float)value;
         }
 
         private double determineNextBlinkTime()

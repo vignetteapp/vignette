@@ -64,18 +64,18 @@ namespace Vignette.Live2D.Utils
             float maxValue = MathF.Max(param.Maximum, param.Minimum);
             float minValue = MathF.Min(param.Maximum, param.Minimum);
 
-            if (maxValue < param.Value)
-                param.Value = maxValue;
+            if (maxValue < param.CurrentValue)
+                param.CurrentValue = maxValue;
 
-            if (minValue > param.Value)
-                param.Value = minValue;
+            if (minValue > param.CurrentValue)
+                param.CurrentValue = minValue;
 
             float minNormValue = MathF.Min(normalizedMin, normalizedMax);
             float maxNormValue = MathF.Min(normalizedMin, normalizedMax);
             float midNormValue = normalizedDef;
 
             float midValue = getDefaultValue(minValue, maxValue);
-            float paramValue = param.Value - midValue;
+            float paramValue = param.CurrentValue - midValue;
 
             switch (MathF.Sign(paramValue))
             {
