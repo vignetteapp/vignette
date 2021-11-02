@@ -90,11 +90,11 @@ namespace Vignette.Game.Tracking
 
         private void handleCameraChange(ValueChangedEvent<CameraDevice> e)
         {
-            if (e.NewValue != null)
-                e.NewValue.OnTick += handleCameraTick;
-
             if (e.OldValue != null)
                 e.OldValue.OnTick -= handleCameraTick;
+
+            if (e.NewValue != null)
+                e.NewValue.OnTick += handleCameraTick;
         }
 
         private void handleCameraTick()

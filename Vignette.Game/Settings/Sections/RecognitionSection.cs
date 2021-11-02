@@ -40,7 +40,6 @@ namespace Vignette.Game.Settings.Sections
                     Label = "Camera",
                     Children = new Drawable[]
                     {
-                        new CameraTrackingPreview(),
                         new SettingsDropdown<string>
                         {
                             Icon = SegoeFluent.Camera,
