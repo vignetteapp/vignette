@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/ubuntu.20.04-x64/Vignette.dll",
             "args": [],
             "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/ubuntu.20.04-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/ubuntu.20.04-x64/Vignette.dll",
             "args": [],
             "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/ubuntu.20.04-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -36,7 +36,7 @@
             "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Debug/net5.0/ubuntu.20.04-x64/Vignette.Game.Tests.dll",
             "args": [],
             "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/ubuntu.20.04-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -48,7 +48,7 @@
             "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Release/net5.0/ubuntu.20.04-x64/Vignette.Game.Tests.dll",
             "args": [],
             "env": { "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR": "0" },
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/ubuntu.20.04-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -59,7 +59,7 @@
             "preLaunchTask": "Build (Windows Debug)",
             "program": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/win-x64/Vignette.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/win-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -70,7 +70,7 @@
             "preLaunchTask": "Build (Windows Release)",
             "program": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/win-x64/Vignette.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/win-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -81,7 +81,7 @@
             "preLaunchTask": "Build Tests (Windows Debug)",
             "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Debug/net5.0/win-x64/Vignette.Game.Tests.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Debug/net5.0/win-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -92,7 +92,7 @@
             "preLaunchTask": "Build Tests (Windows Release)",
             "program": "${workspaceFolder}/Vignette.Game.Tests/bin/Release/net5.0/win-x64/Vignette.Game.Tests.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Vignette.Desktop/bin/Release/net5.0/win-x64",
             "console": "internalConsole",
             "stopAtEntry": false
         }
