@@ -3,7 +3,7 @@
 </p>
 <br/>
 
-Vignette is an open-source VTuber Toolkit using [Stride](https://strid3d.net).
+Vignette is an open-source VTuber Toolkit using [Stride](https://stride3d.net).
 
 ## Building
 Please make sure you meet the prerequisites:
