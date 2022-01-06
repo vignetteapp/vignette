@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources/**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Stride.Engine" Version="4.1.0.1459-beta+g68153c8f" />
   </ItemGroup>
 
