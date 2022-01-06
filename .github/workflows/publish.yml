@@ -1,0 +1,34 @@
+name: Publish
+on:
+  release:
+    types: [ released, prereleased ]
+
+jobs:
+  publish:
+    strategy:
+      matrix:
+        target:
+          - { project: Vignette.Desktop.Windows, runner: windows-latest, runtime: win-x64 }
+          - { project: Vignette.Desktop, runner: ubuntu-latest, runtime: ubuntu-20.04-x64 }
+    name: Publish
+    runs-on: ${{ matrix.target.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Build
+        run: |
+          dotnet publish src/desktop/${{ matrix.target.project }}/${{ matrix.target.project }}.csproj --nologo -c Release -o ./output -r ${{ matrix.target.runtime }} --self-contained true -p:Version=${{ github.ref_name }}
+          7z a -tzip ${{ matrix.target.runtime }}.zip output/*
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.ref_name }}-${{ matrix.target.runtime }}
+          path: ${{ github.workspace }}/${{ matrix.target.runtime }}.zip
+          retention-days: 1
