@@ -69,8 +69,8 @@ Hierarchy:
                         Name: null
                         Projection: Perspective
                         Slot: 932cf06a-f197-49ee-baff-253e04f5d794
-                    3ccabad9cca4a41bc4974037c1be4d12: !Vignette.BasicCameraController,Vignette
-                        Id: ba38cd8e-f10a-473d-8e23-3ee34da97570
+                    cb5239edf1551ed27393a3a5c1fb5517: !Vignette.Core.BasicCameraController,Vignette.Core
+                        Id: edbc4f6a-2018-4474-9242-d559ac815a66
                         Gamepad: false
                         KeyboardMovementSpeed: {X: 5.0, Y: 5.0, Z: 5.0}
                         TouchMovementSpeed: {X: 0.7, Y: 0.7, Z: 0.3}
