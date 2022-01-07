@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Vignette",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/desktop/Vignette.Desktop/bin/Debug/net6.0/Vignette.Desktop.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/desktop/Vignette.Desktop",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Attach to Process",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ]
+}

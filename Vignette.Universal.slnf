@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "Vignette.sln",
+    "projects": [
+      "src\\desktop\\Vignette.Desktop\\Vignette.Desktop.csproj",
+      "src\\core\\Vignette.Core\\Vignette.Core.csproj",
+    ]
+  }
+}
