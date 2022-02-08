@@ -1,5 +1,5 @@
 <p align="center">
-   <img width=200px src="assets/icon.png" >
+   <img width=200px src="https://avatars.githubusercontent.com/u/69518398?s=200&v=4" >
 </p>
 <br/>
 
