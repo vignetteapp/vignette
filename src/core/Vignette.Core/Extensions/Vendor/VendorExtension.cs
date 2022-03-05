@@ -73,7 +73,9 @@ namespace Vignette.Core.Extensions.Vendor
             Prepare(engine);
 
             engine.Execute(script);
-            engine.Script.activate();
+
+            if ((bool)engine.Evaluate("typeof activate === 'function'"))
+                engine.Script.activate();
         }
 
         public sealed override void Deactivate()
@@ -84,7 +86,10 @@ namespace Vignette.Core.Extensions.Vendor
 
         protected sealed override object Invoke(object method, params object[] args)
         {
-            throw new NotImplementedException();
+            if (method is ScriptObject item)
+                return item.Invoke(false, args);
+
+            return null;
         }
 
         protected virtual void Prepare(V8ScriptEngine engine)
@@ -113,7 +118,9 @@ namespace Vignette.Core.Extensions.Vendor
 
         private void cleanup()
         {
-            engine?.Script.deactivate();
+            if ((bool)engine?.Evaluate("typeof deactivate === 'function'"))
+                engine?.Script.deactivate();
+
             script?.Dispose();
             script = null;
             engine?.Dispose();
