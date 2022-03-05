@@ -5,7 +5,7 @@ using System;
 
 namespace Vignette.Core.Extensions
 {
-    public interface IExtension
+    public interface IExtension : IEquatable<IExtension>
     {
         string Name { get; }
         string Author { get; }

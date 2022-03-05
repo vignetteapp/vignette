@@ -30,6 +30,7 @@ namespace Vignette.Core.Extensions
 
         public virtual void Deactivate()
         {
+            ExtensionSystem = null;
             Activated = false;
         }
 
@@ -78,6 +79,17 @@ namespace Vignette.Core.Extensions
         protected bool Register(string channel, object action) => channels.TryAdd(channel, action);
         protected void Unregister(string channel) => channels.Remove(channel);
         protected abstract object Invoke(object method, params object[] args);
+
+        public bool Equals(IExtension other)
+            => Name.Equals(other.Name) && Author.Equals(other.Author)
+                && Description.Equals(other.Description) && Identifier.Equals(other.Identifier)
+                && Version.Equals(other.Version);
+
+        public override bool Equals(object obj)
+            => Equals(obj as IExtension);
+
+        public override int GetHashCode()
+            => HashCode.Combine(Name, Author, Description, Identifier, Version);
     }
 
     public class ChannelNotFoundException : Exception

@@ -14,26 +14,34 @@ namespace Vignette.Core.Extensions.Vendor
 {
     public abstract class VendorExtension : Extension, IDisposable
     {
-        [JsonProperty("name")]
-        public override string Name { get; }
+        public override string Name => name;
+        public override string Author => author;
+        public override string Description => description;
+        public override string Identifier => id;
+        public override Version Version => version;
+        public ExtensionIntents Intents => intents;
+        public IReadOnlyList<VendorExtensionDependency> Dependencies => dependencies;
 
-        [JsonProperty("author")]
-        public override string Author { get; }
+        [JsonProperty]
+        private string name { get; set; }
 
-        [JsonProperty("description")]
-        public override string Description { get; }
+        [JsonProperty]
+        private string author { get; set; }
 
-        [JsonProperty("id")]
-        public override string Identifier { get; }
+        [JsonProperty]
+        private string id { get; set; }
 
-        [JsonProperty("version", ItemConverterType = typeof(VersionConverter))]
-        public override Version Version { get; }
+        [JsonProperty]
+        private string description { get; set; }
 
-        [JsonProperty("intents", ItemConverterType = typeof(FlagConverter<ExtensionIntents>))]
-        public ExtensionIntents Intents { get; }
+        [JsonProperty(ItemConverterType = typeof(VersionConverter))]
+        private Version version { get; set; }
 
-        [JsonProperty("dependencies")]
-        public IReadOnlyList<VendorExtensionDependency> Dependencies { get; }
+        [JsonProperty(ItemConverterType = typeof(FlagConverter<ExtensionIntents>))]
+        private ExtensionIntents intents { get; set; }
+
+        [JsonProperty]
+        private VendorExtensionDependency[] dependencies { get; set; }
 
         protected readonly IVirtualFileProvider Files;
         private readonly V8Runtime runtime;

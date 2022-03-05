@@ -24,6 +24,9 @@ namespace Vignette.Core.Extensions
 
         public void Load(Extension extension)
         {
+            if (Loaded.Contains(extension, EqualityComparer<IExtension>.Default))
+                throw new ExtensionLoadException(@"Extension is already loaded.");
+
             if (extension is VendorExtension vendored)
             {
                 var missing = vendored.Dependencies?.Where(dep => !Loaded.Any(ext => ext.Identifier == dep.Identifier && ext.Version <= dep.Version));
@@ -38,6 +41,9 @@ namespace Vignette.Core.Extensions
 
         public void Unload(Extension extension)
         {
+            if (!Loaded.Contains(extension, EqualityComparer<IExtension>.Default))
+                throw new ExtensionUnloadException(@"Extension is not loaded.");
+
             if (extension is VendorExtension vendored)
             {
                 var allDependencies = Loaded.OfType<VendorExtension>().SelectMany(ext => ext.Dependencies).Distinct(EqualityComparer<VendorExtensionDependency>.Default);
