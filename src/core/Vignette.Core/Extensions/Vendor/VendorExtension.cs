@@ -8,6 +8,7 @@ using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 using Newtonsoft.Json;
 using Stride.Core.IO;
+using Vignette.Core.IO.Serialization;
 
 namespace Vignette.Core.Extensions.Vendor
 {
@@ -25,10 +26,10 @@ namespace Vignette.Core.Extensions.Vendor
         [JsonProperty("id")]
         public override string Identifier { get; }
 
-        [JsonProperty("version")]
+        [JsonProperty("version", ItemConverterType = typeof(VersionConverter))]
         public override Version Version { get; }
 
-        [JsonProperty("intents")]
+        [JsonProperty("intents", ItemConverterType = typeof(FlagConverter<ExtensionIntents>))]
         public ExtensionIntents Intents { get; }
 
         [JsonProperty("dependencies")]
