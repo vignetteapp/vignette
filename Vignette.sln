@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 16
 VisualStudioVersion = 16.0.0.0
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vignette.Desktop", "src\desktop\Vignette.Desktop\Vignette.Desktop.csproj", "{F9E6FD1F-ECEB-4D6B-AF7E-0D956F162CFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vignette.Desktop.Windows", "src\desktop\Vignette.Desktop.Windows\Vignette.Desktop.Windows.csproj", "{F2EC1766-D8F0-4AAF-8E61-E58DA667F273}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9382184D-E916-4D97-B545-4885E19F362B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vignette.Core.Tests", "tests\Vignette.Core.Tests\Vignette.Core.Tests.csproj", "{22C61C8D-5399-4F4F-AAA4-A822CA058A60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +65,18 @@ Global
 		{F2EC1766-D8F0-4AAF-8E61-E58DA667F273}.Release|x64.Build.0 = Release|Any CPU
 		{F2EC1766-D8F0-4AAF-8E61-E58DA667F273}.Release|x86.ActiveCfg = Release|Any CPU
 		{F2EC1766-D8F0-4AAF-8E61-E58DA667F273}.Release|x86.Build.0 = Release|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Debug|x64.Build.0 = Debug|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Debug|x86.Build.0 = Debug|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Release|x64.ActiveCfg = Release|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Release|x64.Build.0 = Release|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Release|x86.ActiveCfg = Release|Any CPU
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AB5C2DA7-E113-4FBB-A15E-F861839975CC} = {074EAA67-8F73-4FE6-A559-3BDE0730F5CA}
@@ -68,5 +84,6 @@ Global
 		{6DA85738-CC0C-4032-B4E0-A5C7B0359569} = {074EAA67-8F73-4FE6-A559-3BDE0730F5CA}
 		{F9E6FD1F-ECEB-4D6B-AF7E-0D956F162CFF} = {6DA85738-CC0C-4032-B4E0-A5C7B0359569}
 		{F2EC1766-D8F0-4AAF-8E61-E58DA667F273} = {6DA85738-CC0C-4032-B4E0-A5C7B0359569}
+		{22C61C8D-5399-4F4F-AAA4-A822CA058A60} = {9382184D-E916-4D97-B545-4885E19F362B}
 	EndGlobalSection
 EndGlobal

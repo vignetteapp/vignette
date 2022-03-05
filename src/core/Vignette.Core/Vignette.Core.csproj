@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ClearScript.V8" Version="7.2.2" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.linux-x64" Version="7.2.2" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.2.2" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Stride.Engine" Version="4.1.0.1459-beta" />
 
     <PackageReference Include="Stride.Video" Version="4.1.0.1459-beta" />
