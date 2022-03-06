@@ -12,14 +12,12 @@ using Vignette.Core.IO;
 
 namespace Vignette.Core.Extensions.Vendor
 {
-    public class ArchiveBackedVendorExtension : VendorExtension
+    public class ArchiveBackedVendorExtension : FileProviderBackedVendorExtension
     {
         public ArchiveBackedVendorExtension(V8Runtime runtime, string archivePath)
-            : base(runtime, new ArchiveFileProvider($"/extensions/{Path.GetFileNameWithoutExtension(archivePath)}", archivePath))
+            : base(runtime, new ArchiveFileProvider($"/extensions/{Path.GetFileNameWithoutExtension(archivePath)}", archivePath), string.Empty)
         {
         }
-
-        protected sealed override DocumentInfo CreateDocumentInfo(string code) => new DocumentInfo("extension.js") { Category = ModuleCategory.Standard };
 
         protected sealed override void Prepare(V8ScriptEngine engine)
         {

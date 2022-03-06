@@ -2,16 +2,16 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Vignette.Core.IO.Serialization
 {
     public class VersionConverter : JsonConverter<Version>
     {
-        public override Version ReadJson(JsonReader reader, Type objectType, Version existingValue, bool hasExistingValue, JsonSerializer serializer)
-            => new Version(serializer.Deserialize<string>(reader));
-
-        public override void WriteJson(JsonWriter writer, Version value, JsonSerializer serializer)
-            => writer.WriteValue(value.ToString(3));
+        public override Version Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            => new Version(reader.GetString());
+        public override void Write(Utf8JsonWriter writer, Version value, JsonSerializerOptions options)
+            => writer.WriteStringValue(value.ToString(3));
     }
 }

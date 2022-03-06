@@ -2,17 +2,17 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Vignette.Core.IO.Serialization;
 
 namespace Vignette.Core.Extensions.Vendor
 {
     public struct VendorExtensionDependency : IEquatable<VendorExtensionDependency>
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Identifier { get; set; }
 
-        [JsonProperty("version", ItemConverterType = typeof(VersionConverter))]
+        [JsonConverter(typeof(VersionConverter))]
         public Version Version { get; set; }
 
         public bool Equals(VendorExtensionDependency other)

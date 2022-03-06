@@ -17,19 +17,28 @@ namespace Vignette.Core.Extensions
         public abstract Version Version { get; }
         public bool Activated { get; private set; }
         protected ExtensionSystem ExtensionSystem { get; private set; }
+        protected IReadOnlyDictionary<string, object> Channels => channels;
         private readonly Dictionary<string, object> channels = new Dictionary<string, object>();
 
-        public virtual void Activate(ExtensionSystem extensionSystem)
+        public void Activate(ExtensionSystem extensionSystem)
         {
             if (Activated)
                 return;
 
-            ExtensionSystem = extensionSystem;
+            ExtensionSystem = extensionSystem ?? throw new ArgumentNullException(nameof(extensionSystem));
+
+            Initialize();
+
             Activated = true;
         }
 
-        public virtual void Deactivate()
+        public void Deactivate()
         {
+            if (!Activated)
+                return;
+
+            Destroy();
+
             ExtensionSystem = null;
             Activated = false;
         }
@@ -75,6 +84,14 @@ namespace Vignette.Core.Extensions
 
         public T Dispatch<T>(IExtension actor, string channel, params object[] args)
             => (T)Dispatch(actor, channel, args);
+
+        protected virtual void Initialize()
+        {
+        }
+
+        protected virtual void Destroy()
+        {
+        }
 
         protected bool Register(string channel, object action) => channels.TryAdd(channel, action);
         protected void Unregister(string channel) => channels.Remove(channel);

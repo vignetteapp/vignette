@@ -7,7 +7,7 @@ using System.Linq;
 using Stride.Core;
 using Stride.Core.Annotations;
 using Stride.Games;
-using Vignette.Core.Extensions.BuiltIns;
+using Vignette.Core.Extensions.Host;
 using Vignette.Core.Extensions.Vendor;
 
 namespace Vignette.Core.Extensions
@@ -24,6 +24,9 @@ namespace Vignette.Core.Extensions
 
         public void Load(Extension extension)
         {
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
             if (Loaded.Contains(extension, EqualityComparer<IExtension>.Default))
                 throw new ExtensionLoadException(@"Extension is already loaded.");
 
@@ -41,6 +44,9 @@ namespace Vignette.Core.Extensions
 
         public void Unload(Extension extension)
         {
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
             if (!Loaded.Contains(extension, EqualityComparer<IExtension>.Default))
                 throw new ExtensionUnloadException(@"Extension is not loaded.");
 
@@ -51,7 +57,7 @@ namespace Vignette.Core.Extensions
                     throw new ExtensionUnloadException(@"Failed to unload extension as one or more extensions depend on it.");
             }
 
-            if (extensions.Remove(extension) && extension is not BuiltInExtension)
+            if (extensions.Remove(extension) && extension is not HostExtension)
                 extension.Deactivate();
         }
     }

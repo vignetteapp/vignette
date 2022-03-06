@@ -2,23 +2,23 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Vignette.Core.Extensions.Vendor;
 
-namespace Vignette.Core.Extensions.BuiltIns
+namespace Vignette.Core.Extensions.Host
 {
-    public abstract class BuiltInExtension : Extension
+    public abstract class HostExtension : Extension
     {
         public override string Author { get; } = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
         public override Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
         public virtual ExtensionIntents Intent => ExtensionIntents.None;
 
-        public override void Activate(ExtensionSystem extensionSystem)
+        protected override void Initialize()
         {
-            base.Activate(extensionSystem);
-
             foreach (var method in GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
             {
                 var chan = method.GetCustomAttribute<ListenAttribute>();
@@ -26,11 +26,11 @@ namespace Vignette.Core.Extensions.BuiltIns
                 if (chan == null)
                     continue;
 
-                Register(chan.Name, method);
+                Register(chan.Name, new Dispatcher(GetType(), method));
             }
         }
 
-        public sealed override void Deactivate()
+        protected sealed override void Destroy()
         {
             throw new InvalidOperationException(@"Built-in extensions cannot be disabled.");
         }
@@ -50,7 +50,7 @@ namespace Vignette.Core.Extensions.BuiltIns
         }
 
         protected sealed override object Invoke(object method, params object[] args)
-            => (method as MethodInfo)?.Invoke(this, args);
+            => (method as Dispatcher)?.Invoke(this, args);
 
         [AttributeUsage(AttributeTargets.Method)]
         protected class ListenAttribute : Attribute
@@ -61,6 +61,42 @@ namespace Vignette.Core.Extensions.BuiltIns
             {
                 Name = name;
             }
+        }
+
+        private class Dispatcher
+        {
+            private readonly Func<object, object[], object> dispatch;
+
+            public Dispatcher(Type type, MethodInfo method)
+            {
+                var argsExpression = Expression.Parameter(typeof(object[]), "Params");
+                var targetExpression = Expression.Parameter(typeof(object), "Target");
+                var paramExpressions = method.GetParameters().Select((p, i) =>
+                {
+                    var constExpression = Expression.Constant(i, typeof(int));
+                    var indexExpression = Expression.ArrayIndex(argsExpression, constExpression);
+                    return Expression.Convert(indexExpression, p.ParameterType);
+                });
+                var invokeExpression = Expression.Call(Expression.Convert(targetExpression, type), method, paramExpressions);
+
+                LambdaExpression lambdaExpression;
+
+                if (method.ReturnType != typeof(void))
+                {
+                    lambdaExpression = Expression.Lambda(Expression.Convert(invokeExpression, typeof(object)), targetExpression, argsExpression);
+                }
+                else
+                {
+                    var nullExpression = Expression.Constant(null, typeof(object));
+                    var bodyExpression = Expression.Block(invokeExpression, nullExpression);
+                    lambdaExpression = Expression.Lambda(bodyExpression, targetExpression, argsExpression);
+                }
+
+                dispatch = (Func<object, object[], object>)lambdaExpression.Compile();
+            }
+
+            public object Invoke(object target, object[] args)
+                => dispatch(target, args);
         }
     }
 
