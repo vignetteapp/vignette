@@ -3,13 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
+using Vignette.Core.Extensions.Vendor.Modules;
+using Vignette.Core.Util;
 
 namespace Vignette.Core.Extensions.Vendor
 {
-    public abstract partial class VendorExtension : Extension, IDisposable
+    public abstract class VendorExtension : Extension, IDisposable
     {
         public override string Name => metadata.Name;
         public override string Author => metadata.Author;
@@ -31,6 +34,11 @@ namespace Vignette.Core.Extensions.Vendor
             this.metadata = metadata;
         }
 
+        public void AddModule(string name, VendorExtensionModule module)
+        {
+            engine?.DocumentSettings.AddSystemDocument(name, ModuleCategory.Standard, $"export const {{ {name} }} = import.meta;", module.ToDocumentContext);
+        }
+
         protected sealed override void Initialize()
         {
             var flags = V8ScriptEngineFlags.EnableDynamicModuleImports
@@ -40,7 +48,8 @@ namespace Vignette.Core.Extensions.Vendor
 
             engine = ExtensionSystem.Runtime.CreateScriptEngine(Identifier, flags);
             engine.DocumentSettings.AccessFlags = DocumentAccessFlags.EnforceRelativePrefix | DocumentAccessFlags.EnableFileLoading;
-            engine.DocumentSettings.AddSystemDocument("vignette", ModuleCategory.Standard, "export const { vignette } = import.meta;", getVendorMeta);
+
+            AddModule("vignette", new HostModule(this));
 
             var documentInfo = DocumentUri != null ? new DocumentInfo(DocumentUri) : new DocumentInfo("extension");
             documentInfo.Category = ModuleCategory.Standard;
@@ -57,10 +66,18 @@ namespace Vignette.Core.Extensions.Vendor
             Dispose();
         }
 
-        protected sealed override object Invoke(object method, params object[] args)
+        protected sealed override async Task<object> Invoke(object method, params object[] args)
         {
             if (method is ScriptObject item)
-                return item.Invoke(false, args);
+            {
+                var result = item.Invoke(false, args);
+
+                if (result is not Task task)
+                    return result;
+
+                await task.ConfigureAwait(false);
+                return task.GetResult();
+            }
 
             return null;
         }

@@ -2,6 +2,7 @@
 // Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Stride.Core;
@@ -29,13 +30,41 @@ namespace Vignette.Core.Tests.Extensions
         }
 
         [Test]
+        public void TestLoadSynchronous()
+        {
+            ext.Code = @"import { vignette } from 'vignette';
+
+export function activate() { }
+
+export function deactivate() { }
+
+";
+
+            Assert.That(() => sys.Load(ext), Throws.Nothing);
+        }
+
+        [Test]
+        public void TestLoadAsynchronous()
+        {
+            ext.Code = @"import { vignette } from 'vignette';
+
+export async function activate() { }
+
+export async function deactivate() { }
+
+";
+
+            Assert.That(() => sys.Load(ext), Throws.Nothing);
+        }
+
+        [Test]
         public void TestRegisterCommand()
         {
             ext.Code = @"import { vignette } from 'vignette';
 
 export function activate() {
     vignette.commands.register('testCommand', () => true);
-};
+}
 
 export function deactivate() { }
 
@@ -64,6 +93,24 @@ export function deactivate() { }
             sys.Load(new TestHostExtension());
             sys.Load(ext);
             Assert.That(ext.Dispatch(null, "testCommand"), Is.EqualTo("Hello World from Test"));
+        }
+
+        [Test]
+        public async Task TestDispatchCommandAsync()
+        {
+            ext.Code = @"import { vignette } from 'vignette';
+
+export function activate() {
+    vignette.commands.register('testCommand', async () => await vignette.commands.dispatchAsync('Test:sayHelloAsync', [ 'World' ]));
+}
+
+export function deactivate() { }
+
+";
+
+            sys.Load(new TestHostExtension());
+            sys.Load(ext);
+            Assert.That(await ext.DispatchAsync(null, "testCommand"), Is.EqualTo("Hello World from Test"));
         }
     }
 }

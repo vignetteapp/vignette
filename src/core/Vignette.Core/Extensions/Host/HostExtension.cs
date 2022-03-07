@@ -5,9 +5,9 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using Vignette.Core.Extensions.Vendor;
+using Vignette.Core.Util;
 
 namespace Vignette.Core.Extensions.Host
 {
@@ -35,22 +35,19 @@ namespace Vignette.Core.Extensions.Host
             throw new InvalidOperationException(@"Built-in extensions cannot be disabled.");
         }
 
-        public sealed override Task<bool> TryDispatchAsync(IExtension actor, string channel, out object value, CancellationToken token = default, params object[] args)
+        public sealed override Task<object> DispatchAsync(IExtension actor, string channel, params object[] args)
         {
             if (Intent != ExtensionIntents.None)
             {
                 if (actor is VendorExtension vendor && !vendor.Intents.HasFlag(Intent))
-                {
-                    value = new InsufficientIntentsException(@"Failed to dispatch as actor lacks proper intents to perform this action.");
-                    return Task.FromResult(false);
-                }
+                    throw new InsufficientIntentsException(@"Failed to dispatch as actor lacks proper intents to perform this action.");
             }
 
-            return base.TryDispatchAsync(actor, channel, out value, token, args);
+            return base.DispatchAsync(actor, channel, args);
         }
 
-        protected sealed override object Invoke(object method, params object[] args)
-            => (method as Dispatcher)?.Invoke(this, args);
+        protected sealed override Task<object> Invoke(object method, params object[] args)
+            => (method as Dispatcher)?.InvokeAsync(this, args);
 
         [AttributeUsage(AttributeTargets.Method)]
         protected class ListenAttribute : Attribute
@@ -95,8 +92,17 @@ namespace Vignette.Core.Extensions.Host
                 dispatch = (Func<object, object[], object>)lambdaExpression.Compile();
             }
 
-            public object Invoke(object target, object[] args)
-                => dispatch(target, args);
+            public async Task<object> InvokeAsync(object target, object[] args)
+            {
+                var result = dispatch(target, args);
+
+                if (result is not Task task)
+                    return result;
+
+                await task.ConfigureAwait(false);
+
+                return task.GetResult();
+            }
         }
     }
 

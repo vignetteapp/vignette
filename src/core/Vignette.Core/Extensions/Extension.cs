@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Vignette.Core.Extensions
@@ -16,7 +15,7 @@ namespace Vignette.Core.Extensions
         public abstract string Identifier { get; }
         public abstract Version Version { get; }
         public bool Activated { get; private set; }
-        protected ExtensionSystem ExtensionSystem { get; private set; }
+        public ExtensionSystem ExtensionSystem { get; private set; }
         protected IReadOnlyDictionary<string, object> Channels => channels;
         private readonly Dictionary<string, object> channels = new Dictionary<string, object>();
 
@@ -43,37 +42,12 @@ namespace Vignette.Core.Extensions
             Activated = false;
         }
 
-        public virtual Task<bool> TryDispatchAsync(IExtension actor, string channel, out object value, CancellationToken token = default, params object[] args)
+        public virtual async Task<object> DispatchAsync(IExtension actor, string channel, params object[] args)
         {
             if (!channels.TryGetValue(channel, out var item))
-            {
-                value = new ChannelNotFoundException();
-                return Task.FromResult(false);
-            }
+                throw new ChannelNotFoundException();
 
-            try
-            {
-                value = Invoke(item, args);
-                return Task.FromResult(true);
-            }
-            catch (Exception e)
-            {
-                value = e;
-                return Task.FromResult(false);
-            }
-        }
-
-        public bool TryDispatch(IExtension actor, string channel, out object value, params object[] args)
-            => TryDispatchAsync(actor, channel, out value, default, args).GetAwaiter().GetResult();
-
-        public async Task<object> DispatchAsync(IExtension actor, string channel, params object[] args)
-        {
-            await TryDispatchAsync(actor, channel, out var value, default, args);
-
-            if (value is Exception e)
-                throw e;
-
-            return value;
+            return await Invoke(item, args);
         }
 
         public object Dispatch(IExtension actor, string channel, params object[] args)
@@ -85,6 +59,9 @@ namespace Vignette.Core.Extensions
         public T Dispatch<T>(IExtension actor, string channel, params object[] args)
             => (T)Dispatch(actor, channel, args);
 
+        public bool Register(string channel, object action) => channels.TryAdd(channel, action);
+        public void Unregister(string channel) => channels.Remove(channel);
+
         protected virtual void Initialize()
         {
         }
@@ -93,9 +70,7 @@ namespace Vignette.Core.Extensions
         {
         }
 
-        protected bool Register(string channel, object action) => channels.TryAdd(channel, action);
-        protected void Unregister(string channel) => channels.Remove(channel);
-        protected abstract object Invoke(object method, params object[] args);
+        protected abstract Task<object> Invoke(object method, params object[] args);
 
         public bool Equals(IExtension other)
             => Name.Equals(other.Name) && Author.Equals(other.Author)
