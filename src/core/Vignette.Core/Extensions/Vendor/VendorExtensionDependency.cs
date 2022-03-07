@@ -15,6 +15,9 @@ namespace Vignette.Core.Extensions.Vendor
         [JsonConverter(typeof(VersionConverter))]
         public Version Version { get; set; }
 
+        [JsonPropertyName("required")]
+        public bool Required { get; set; }
+
         public bool Equals(VendorExtensionDependency other)
             => other.Identifier == Identifier && other.Version == Version;
 

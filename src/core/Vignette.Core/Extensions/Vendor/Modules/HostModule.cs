@@ -54,6 +54,9 @@ namespace Vignette.Core.Extensions.Vendor.Modules
             {
             }
 
+            [ScriptMember("has")]
+            public bool HasExtension(string identifier)
+                => Extension.ExtensionSystem.Loaded.Any(ext => ext.Identifier == identifier);
         }
 
         public class CommandsModule : VendorExtensionModule

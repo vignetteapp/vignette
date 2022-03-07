@@ -39,7 +39,7 @@ namespace Vignette.Core.Tests.Extensions
             {
                 Dependencies = new[]
                 {
-                    new VendorExtensionDependency { Identifier = "a", Version = new Version("0.0.1") }
+                    new VendorExtensionDependency { Identifier = "a", Version = new Version("0.0.1"), Required = true }
                 }
             });
 
@@ -48,18 +48,19 @@ namespace Vignette.Core.Tests.Extensions
             Assert.That(sys.Loaded.Count, Is.EqualTo(2));
         }
 
-        [Test]
-        public void TestThrowDependencyMissing()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void TestThrowDependencyMissing(bool isRequired)
         {
             var ext = new TestExtension(new VendorExtensionMetadata
             {
                 Dependencies = new[]
                 {
-                    new VendorExtensionDependency { Identifier = "test", Version = new Version("1.0.0") }
+                    new VendorExtensionDependency { Identifier = "test", Version = new Version("1.0.0"), Required = isRequired }
                 }
             });
 
-            Assert.That(() => sys.Load(ext), Throws.InstanceOf<ExtensionLoadException>());
+            Assert.That(() => sys.Load(ext), isRequired ? Throws.InstanceOf<ExtensionLoadException>() : Throws.Nothing);
         }
 
         [Test]
@@ -75,7 +76,7 @@ namespace Vignette.Core.Tests.Extensions
             {
                 Dependencies = new[]
                 {
-                    new VendorExtensionDependency { Identifier = "a", Version = new Version("2.0.0") }
+                    new VendorExtensionDependency { Identifier = "a", Version = new Version("2.0.0"), Required = true }
                 }
             });
 
