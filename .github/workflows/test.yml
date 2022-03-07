@@ -4,7 +4,7 @@ on: [ push, pull_request ]
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,5 +22,5 @@ jobs:
         if: ${{ always() }}
         with:
           name: TestResults-Vignette.Core.Tests
-          path: ${{ github.workspace }}/Vignette.Core.Tests/TestResults/TestResults-Vignette.Core.Tests.trx
+          path: ${{ github.workspace }}/tests/Vignette.Core.Tests/TestResults/TestResults-Vignette.Core.Tests.trx
 
