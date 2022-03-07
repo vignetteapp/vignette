@@ -34,9 +34,14 @@ namespace Vignette.Core.Extensions.Vendor
             this.metadata = metadata;
         }
 
-        public void AddModule(string name, VendorExtensionModule module)
+        public void AddDocument(string name, VendorExtensionModule module)
         {
             engine?.DocumentSettings.AddSystemDocument(name, ModuleCategory.Standard, $"export const {{ {name} }} = import.meta;", module.ToDocumentContext);
+        }
+
+        public void AddModule(VendorExtensionModule module)
+        {
+            engine?.AddHostObject(module.Name, module);
         }
 
         protected sealed override void Initialize()
@@ -49,7 +54,8 @@ namespace Vignette.Core.Extensions.Vendor
             engine = ExtensionSystem.Runtime.CreateScriptEngine(Identifier, flags);
             engine.DocumentSettings.AccessFlags = DocumentAccessFlags.EnforceRelativePrefix | DocumentAccessFlags.EnableFileLoading;
 
-            AddModule("vignette", new HostModule(this));
+            AddModule(new ConsoleModule(this));
+            AddDocument("vignette", new HostModule(this));
 
             var documentInfo = DocumentUri != null ? new DocumentInfo(DocumentUri) : new DocumentInfo("extension");
             documentInfo.Category = ModuleCategory.Standard;
