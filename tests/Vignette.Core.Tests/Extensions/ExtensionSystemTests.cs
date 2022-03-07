@@ -32,20 +32,20 @@ namespace Vignette.Core.Tests.Extensions
             var a = new TestExtension(new VendorExtensionMetadata
             {
                 Identifier = "a",
-                Version = new Version("0.1.0"),
+                Version = new Version("1.0.0"),
             });
 
             var b = new TestExtension(new VendorExtensionMetadata
             {
                 Dependencies = new[]
                 {
-                    new VendorExtensionDependency { Identifier = "a", Version = new Version("1.0.0") }
+                    new VendorExtensionDependency { Identifier = "a", Version = new Version("0.0.1") }
                 }
             });
 
             Assert.That(() => sys.Load(a), Throws.Nothing);
             Assert.That(() => sys.Load(b), Throws.Nothing);
-            Assert.That(sys.Loaded, Is.EqualTo(2));
+            Assert.That(sys.Loaded.Count, Is.EqualTo(2));
         }
 
         [Test]
