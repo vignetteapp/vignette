@@ -15,6 +15,7 @@ jobs:
         uses: github/super-linter@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: encore
           SUPPRESS_POSSUM: true
           VALIDATE_CSHARP: true
           VALIDATE_EDITORCONFIG: true
