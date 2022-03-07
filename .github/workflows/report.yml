@@ -14,7 +14,7 @@ jobs:
       - name: Report
         uses: dorny/test-reporter@v1.4.2
         with:
-          artifact: TestResults-${{ inputs.name }}
+          artifact: TestResults-Vignette.Core.Tests
           name: Test Results
           path: "*.trx"
           reporter: dotnet-trx
