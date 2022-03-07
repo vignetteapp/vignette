@@ -14,14 +14,13 @@ namespace Vignette.Core.Extensions.Vendor
 {
     public class ArchiveBackedVendorExtension : FileProviderBackedVendorExtension
     {
-        public ArchiveBackedVendorExtension(V8Runtime runtime, string archivePath)
-            : base(runtime, new ArchiveFileProvider($"/extensions/{Path.GetFileNameWithoutExtension(archivePath)}", archivePath), string.Empty)
+        public ArchiveBackedVendorExtension(string archivePath)
+            : base(new ArchiveFileProvider($"{MountPath}/{Path.GetFileNameWithoutExtension(archivePath)}", archivePath), string.Empty)
         {
         }
 
         protected sealed override void Prepare(V8ScriptEngine engine)
         {
-            base.Prepare(engine);
             engine.DocumentSettings.Loader = new ArchiveBackedDocumentLoader(this);
         }
 

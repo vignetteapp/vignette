@@ -5,8 +5,6 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.ClearScript;
-using Microsoft.ClearScript.JavaScript;
-using Microsoft.ClearScript.V8;
 using Stride.Core.IO;
 
 namespace Vignette.Core.Extensions.Vendor
@@ -15,17 +13,23 @@ namespace Vignette.Core.Extensions.Vendor
     {
         private const string metadata = @"meta.json";
         private const string entry = @"extension.js";
+        public const string MountPath = @"/extensions";
         protected readonly IVirtualFileProvider Files;
+        protected readonly IVirtualFileProvider Data;
         protected readonly string BasePath;
+        public override Uri DocumentUri => new Uri(Path.Combine(BasePath, "extension.js"));
 
-        protected FileProviderBackedVendorExtension(V8Runtime runtime, IVirtualFileProvider files, string basePath)
-            : base(runtime, getMetadata(files))
+        protected FileProviderBackedVendorExtension(IVirtualFileProvider files, string basePath)
+            : base(getMetadata(files))
         {
             Files = files;
             BasePath = basePath;
+
+            if (Intents.HasFlag(ExtensionIntents.Files))
+                Data = VirtualFileSystem.MountFileSystem($@"{MountPath}/data/{Identifier}", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions", Identifier));
         }
 
-        protected sealed override DocumentInfo GetDocumentInfo(out string code)
+        protected sealed override string GetDocumentContent(DocumentInfo documentInfo)
         {
             if (!Files.FileExists(entry))
                 throw new FileNotFoundException(null, entry);
@@ -33,13 +37,10 @@ namespace Vignette.Core.Extensions.Vendor
             using var stream = Files.OpenStream(entry, VirtualFileMode.Open, VirtualFileAccess.Read);
             using var reader = new StreamReader(stream);
 
-            code = reader.ReadToEnd();
+            string code = reader.ReadToEnd();
+            documentInfo.SourceMapUri = new Uri(code[code.IndexOf("//# sourceMappingURL=")..].Replace("//# sourceMappingURL=", string.Empty));
 
-            return new DocumentInfo(new Uri(Path.Combine(BasePath, "extension.js")))
-            {
-                Category = ModuleCategory.Standard,
-                SourceMapUri = new Uri(code[code.IndexOf("//# sourceMappingURL=")..].Replace("//# sourceMappingURL=", string.Empty))
-            };
+            return code;
         }
 
         private static VendorExtensionMetadata getMetadata(IVirtualFileProvider files)

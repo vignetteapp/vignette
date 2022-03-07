@@ -3,7 +3,6 @@
 
 using System.Linq;
 using Microsoft.ClearScript;
-using Microsoft.ClearScript.V8;
 using NUnit.Framework;
 using Stride.Core;
 using Vignette.Core.Extensions;
@@ -14,14 +13,12 @@ namespace Vignette.Core.Tests.Extensions
     {
         private ExtensionSystem sys;
         private TestVendorExtension ext;
-        private V8Runtime run;
 
         [SetUp]
         public void SetUp()
         {
-            run = new V8Runtime();
             sys = new ExtensionSystem(new ServiceRegistry());
-            ext = new TestVendorExtension(run);
+            ext = new TestVendorExtension();
         }
 
         [TearDown]
@@ -29,7 +26,6 @@ namespace Vignette.Core.Tests.Extensions
         {
             ext?.Dispose();
             sys?.Dispose();
-            run?.Dispose();
         }
 
         [Test]
@@ -37,9 +33,11 @@ namespace Vignette.Core.Tests.Extensions
         {
             ext.Code = @"import { vignette } from 'vignette';
 
-vignette.extension.onActivate(() => {
+export function activate() {
     vignette.commands.register('testCommand', () => true);
-});
+};
+
+export function deactivate() { }
 
 ";
 
@@ -55,15 +53,17 @@ vignette.extension.onActivate(() => {
         {
             ext.Code = @"import { vignette } from 'vignette';
 
-vignette.extension.onActivate(() => {
+export function activate() {
     vignette.commands.register('testCommand', () => vignette.commands.dispatch('Test:sayHello', [ 'World' ]));
-});
+};
+
+export function deactivate() { }
 
 ";
 
             sys.Load(new TestHostExtension());
             sys.Load(ext);
-            Assert.That(ext.Dispatch(null, "testCommand", "World"), Is.EqualTo("Hello World from Test"));
+            Assert.That(ext.Dispatch(null, "testCommand"), Is.EqualTo("Hello World from Test"));
         }
     }
 }

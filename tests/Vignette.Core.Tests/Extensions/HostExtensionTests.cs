@@ -11,11 +11,12 @@ namespace Vignette.Core.Tests.Extensions
     public class BuiltInExtensionTests
     {
         private TestHostExtension ext;
+        private ExtensionSystem sys;
 
         [SetUp]
         public void SetUp()
         {
-            var sys = new ExtensionSystem(new ServiceRegistry());
+            sys = new ExtensionSystem(new ServiceRegistry());
             ext = new TestHostExtension();
             sys.Load(ext);
         }
@@ -23,7 +24,7 @@ namespace Vignette.Core.Tests.Extensions
         [TearDown]
         public void TearDown()
         {
-            ext = null;
+            sys.Dispose();
         }
 
         [Test]

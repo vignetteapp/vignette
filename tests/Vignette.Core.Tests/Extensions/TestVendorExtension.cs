@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.ClearScript;
-using Microsoft.ClearScript.JavaScript;
-using Microsoft.ClearScript.V8;
 using Vignette.Core.Extensions.Vendor;
 
 namespace Vignette.Core.Tests.Extensions
@@ -14,15 +12,11 @@ namespace Vignette.Core.Tests.Extensions
         public string Code { get; set; }
         public new IReadOnlyDictionary<string, object> Channels => base.Channels;
 
-        public TestVendorExtension(V8Runtime runtime)
-            : base(runtime, new VendorExtensionMetadata())
+        public TestVendorExtension()
+            : base(new VendorExtensionMetadata())
         {
         }
 
-        protected override DocumentInfo GetDocumentInfo(out string code)
-        {
-            code = Code;
-            return new DocumentInfo(Name) { Category = ModuleCategory.Standard };
-        }
+        protected override string GetDocumentContent(DocumentInfo documentInfo) => Code;
     }
 }

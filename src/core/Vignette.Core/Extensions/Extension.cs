@@ -107,6 +107,8 @@ namespace Vignette.Core.Extensions
 
         public override int GetHashCode()
             => HashCode.Combine(Name, Author, Description, Identifier, Version);
+
+        public override string ToString() => $@"{Identifier} ({Version.ToString(3)})";
     }
 
     public class ChannelNotFoundException : Exception
