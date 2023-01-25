@@ -1,0 +1,14 @@
+<Project>
+    <PropertyGroup Label="NuGet">
+        <Authors>The Vignette Authors</Authors>
+        <Description>The open source toolkit for VTubers.</Description>
+        <Copyright>2022 The Vignette Authors</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/vignetteapp/vignette</PackageProjectUrl>
+    </PropertyGroup>
+    <ItemGroup Label="Code Analysis">
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)analysis\BannedSymbols.txt"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" PrivateAssets="All"/>
+    </ItemGroup>
+</Project>
