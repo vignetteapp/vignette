@@ -18,7 +18,11 @@
   "mounts": [
     // Xauth cookies must be shared to the container.
     // This is to prevent authentication errors when launching the application.
-    "source=${localEnv:XAUTHORITY},target=/home/vscode/.Xauthority,type=bind,consistency=cached"
+    "source=${localEnv:XAUTHORITY},target=/home/vscode/.Xauthority,type=bind,consistency=cached",
+
+    // Share NuGet config and packages
+    "source=${localEnv:HOME}/.nuget/NuGet/NuGet.Config,target=/home/vscode/.nuget/NuGet/NuGet.Config,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.nuget/packages,target=/home/vscode/.nuget/packages,type=bind"
   ],
   "remoteEnv": {
     "DISPLAY": "${localEnv:DISPLAY}"
