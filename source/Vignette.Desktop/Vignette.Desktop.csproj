@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Vignette/Vignette.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sekai.Desktop" Version="0.1.0-alpha.1" />
+  </ItemGroup>
+
+</Project>

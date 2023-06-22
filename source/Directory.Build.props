@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Title>Vignette</Title>
+    <Description>The open source VTuber software.</Description>
+    <Authors>Cosyne</Authors>
+    <Copyright>Copyright (c) 2023 Cosyne</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/vignetteapp/vignette</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(SolutionDir)LICENSE" Pack="True" PackagePath=""/>
+    <None Include="$(SolutionDir)README.md" Pack="True" PackagePath=""/>
+  </ItemGroup>
+</Project>

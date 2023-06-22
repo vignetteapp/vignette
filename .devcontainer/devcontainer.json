@@ -1,0 +1,30 @@
+{
+  "name": "Sekai",
+  "context": "..",
+  "dockerFile": "../.codespaces.dockerfile",
+  "privileged": true,
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "formulahendry.dotnet-test-explorer",
+        "ryanluker.vscode-coverage-gutters",
+        "editorconfig.editorconfig",
+        "patcx.vscode-nuget-gallery"
+      ]
+    }
+  },
+  "mounts": [
+    // Xauth cookies must be shared to the container.
+    // This is to prevent authentication errors when launching the application.
+    "source=${localEnv:XAUTHORITY},target=/home/vscode/.Xauthority,type=bind,consistency=cached"
+  ],
+  "remoteEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}"
+  },
+  "runArgs": [
+    "--net=host"
+  ],
+  "postAttachCommand": "dotnet build"
+}
