@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sekai.Desktop" Version="0.1.0-alpha.1" />
+    <PackageReference Include="Sekai.Desktop" Version="0.1.0-alpha.8" />
   </ItemGroup>
 
 </Project>
