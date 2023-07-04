@@ -56,9 +56,9 @@ public struct Mesh : IPrimitive, IEquatable<Mesh>
     public readonly bool Equals(Mesh other)
     {
         return Mode == other.Mode &&
-               Format == other.Format &&
-               indices is not null && ((IStructuralEquatable)indices).Equals(other.indices, EqualityComparer<short>.Default) &&
-               vertices is not null && ((IStructuralEquatable)vertices).Equals(other.vertices, EqualityComparer<byte>.Default);
+                Format == other.Format &&
+                indices is not null && ((IStructuralEquatable)indices).Equals(other.indices, EqualityComparer<short>.Default) &&
+                vertices is not null && ((IStructuralEquatable)vertices).Equals(other.vertices, EqualityComparer<byte>.Default);
     }
 
     public override readonly bool Equals([NotNullWhen(true)] object? obj)
