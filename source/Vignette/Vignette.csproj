@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sekai" Version="0.1.0-alpha.1" />
+    <PackageReference Include="Sekai" Version="0.1.0-alpha.8" />
   </ItemGroup>
 
 </Project>
