@@ -28,7 +28,7 @@
     "DISPLAY": "${localEnv:DISPLAY}"
   },
   "runArgs": [
-    "--net=host"
+    "--network=host"
   ],
   "postAttachCommand": "dotnet build"
 }
