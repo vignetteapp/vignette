@@ -108,6 +108,22 @@ public sealed class Renderer
             currentMaterialID = materialID;
         }
 
+        foreach (var property in renderObject.Material.Properties)
+        {
+            if (property is UniformProperty uniform)
+            {
+                if (uniform.Uniform is not null)
+                {
+                    device.SetUniformBuffer(uniform.Uniform, (uint)uniform.Slot);
+                }
+            }
+
+            if (property is TextureProperty texture)
+            {
+                device.SetTexture(texture.Texture ?? WhitePixel, texture.Sampler ?? SamplerPoint, (uint)texture.Slot);
+            }
+        }
+
         device.SetVertexBuffer(renderObject.VertexBuffer, currentLayout);
         device.SetIndexBuffer(renderObject.IndexBuffer, renderObject.IndexType);
         device.DrawIndexed(renderObject.Material.Primitives, (uint)renderObject.IndexCount);
@@ -164,22 +180,6 @@ public sealed class Renderer
         }
 
         device.SetDepthStencilState(depthStencilState, material.Stencil);
-
-        foreach (var property in material.Properties)
-        {
-            if (property is UniformProperty uniform)
-            {
-                if (uniform.Uniform is not null)
-                {
-                    device.SetUniformBuffer(uniform.Uniform, (uint)uniform.Slot);
-                }
-            }
-
-            if (property is TextureProperty texture)
-            {
-                device.SetTexture(texture.Texture ?? WhitePixel, texture.Sampler ?? SamplerPoint, (uint)texture.Slot);
-            }
-        }
     }
 
     private IDictionary<T, U> getCache<T, U>()
