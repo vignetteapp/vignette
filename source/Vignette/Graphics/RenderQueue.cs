@@ -38,7 +38,7 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
     /// <param name="renderObject">The render object to be enqueued.</param>
     public void Enqueue(IProjector projector, IWorld world, RenderObject renderObject)
     {
-        if ((projector.Groups & renderObject.Groups) == 0)
+        if ((projector.Groups & renderObject.Groups) != 0)
         {
             return;
         }
@@ -85,7 +85,7 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
 
     private struct Enumerator : IEnumerator<RenderData>
     {
-        public readonly RenderData Current => renderables[renderOrders[index].Renderable];
+        public RenderData Current { get; private set; }
 
         private int index;
         private readonly IReadOnlyList<RenderData> renderables;
@@ -101,10 +101,12 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
         {
             if (index >= renderOrders.Count)
             {
+                Current = default;
                 return false;
             }
             else
             {
+                Current = renderables[renderOrders[index].Renderable];
                 index += 1;
                 return true;
             }
@@ -113,6 +115,7 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
         public void Reset()
         {
             index = 0;
+            Current = default;
         }
 
         public readonly void Dispose()

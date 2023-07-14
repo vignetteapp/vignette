@@ -9,7 +9,7 @@ namespace Vignette.Graphics;
 /// <summary>
 /// An object that can be drawn.
 /// </summary>
-public abstract class RenderObject
+public class RenderObject
 {
     /// <summary>
     /// The bounding box of this <see cref="RenderObject"/>.

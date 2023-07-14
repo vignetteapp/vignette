@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Numerics;
 using Sekai.Mathematics;
 using Vignette.Collections;
 using Vignette.Graphics;
@@ -12,10 +13,12 @@ using Vignette.Graphics;
 namespace Vignette;
 
 /// <summary>
-/// A node that represents the world.
+/// A <see cref="Node"/> that presents and processes its children.
 /// </summary>
 public class World : Behavior
 {
+    protected override Matrix4x4 WorldMatrix => LocalMatrix;
+
     private readonly SortedFilteredCollection<Behavior> behaviors = new
     (
         Comparer<Behavior>.Default,
@@ -64,7 +67,6 @@ public class World : Behavior
         {
             node.Load();
             add(node, worlds);
-            add(node, cameras);
             add(node, behaviors);
             add(node, drawables);
         }
@@ -73,7 +75,6 @@ public class World : Behavior
         {
             node.Load();
             rem(node, worlds);
-            rem(node, cameras);
             rem(node, behaviors);
             rem(node, drawables);
         }
@@ -113,16 +114,18 @@ public class World : Behavior
             world.Draw(renderer);
         }
 
+        // Shadow Map Pass
+
         foreach (var camera in cameras)
         {
             foreach (var light in lights)
             {
-                renderQueue.Clear();
-
                 if (BoundingFrustum.Contains(camera.Frustum, light.Frustum) == Containment.Disjoint)
                 {
                     continue;
                 }
+
+                renderQueue.Clear();
 
                 foreach (var drawable in drawables)
                 {
@@ -132,6 +135,8 @@ public class World : Behavior
                 renderer.Draw(renderQueue);
             }
         }
+
+        // Lighting Pass
 
         foreach (var camera in cameras)
         {
@@ -150,25 +155,64 @@ public class World : Behavior
     {
         if (args.Action == NotifyCollectionChangedAction.Add)
         {
-            foreach (var node in args.NewItems!.Cast<Behavior>())
+            foreach (var node in args.NewItems!.OfType<Node>())
             {
-                load(node);
+                if (node is Behavior behavior)
+                {
+                    load(behavior);
+                }
+
+                if (node is Light light)
+                {
+                    lights.Add(light);
+                }
+
+                if (node is Camera camera)
+                {
+                    cameras.Add(camera);
+                }
             }
         }
 
         if (args.Action == NotifyCollectionChangedAction.Remove)
         {
-            foreach (var node in args.OldItems!.Cast<Behavior>())
+            foreach (var node in args.OldItems!.OfType<Node>())
             {
-                unload(node);
+                if (node is Behavior behavior)
+                {
+                    unload(behavior);
+                }
+
+                if (node is Light light)
+                {
+                    lights.Remove(light);
+                }
+
+                if (node is Camera camera)
+                {
+                    cameras.Remove(camera);
+                }
             }
         }
 
         if (args.Action == NotifyCollectionChangedAction.Reset)
         {
-            foreach (var node in GetNodes<Behavior>())
+            foreach (var node in this)
             {
-                unload(node);
+                if (node is Behavior behavior)
+                {
+                    unload(behavior);
+                }
+
+                if (node is Light light)
+                {
+                    lights.Remove(light);
+                }
+
+                if (node is Camera camera)
+                {
+                    cameras.Remove(camera);
+                }
             }
         }
     }

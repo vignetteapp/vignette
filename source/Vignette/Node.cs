@@ -9,10 +9,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Vignette.Graphics;
 
 namespace Vignette;
 
-public abstract class Node : INotifyCollectionChanged, ICollection<Node>, IEquatable<Node>
+/// <summary>
+/// The base class of everything that resides inside the node graph. It can be a child of
+/// another <see cref="Node"/> and can contain its own children <see cref="Node"/>s.
+/// </summary>
+public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquatable<Node>
 {
     /// <summary>
     /// The <see cref="Node"/>'s unique identifier.
@@ -50,10 +55,40 @@ public abstract class Node : INotifyCollectionChanged, ICollection<Node>, IEquat
     public Vector3 Rotation { get; set; }
 
     /// <summary>
+    /// The node's scaling.
+    /// </summary>
+    public Vector3 Scale { get; set; } = Vector3.One;
+
+    /// <summary>
+    /// The node's shearing.
+    /// </summary>
+    public Vector3 Shear
+    {
+        get => new(shear[0, 1], shear[0, 2], shear[1, 2]);
+        set
+        {
+            shear[0, 1] = value.X;
+            shear[0, 2] = value.Y;
+            shear[1, 2] = value.Z;
+        }
+    }
+
+    /// <summary>
+    /// The node's local matrix.
+    /// </summary>
+    protected virtual Matrix4x4 LocalMatrix => shear * Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) * Matrix4x4.CreateTranslation(Position);
+
+    /// <summary>
+    /// The node's world matrix.
+    /// </summary>
+    protected virtual Matrix4x4 WorldMatrix => Parent is not IWorld provider ? LocalMatrix : provider.LocalMatrix * LocalMatrix;
+
+    /// <summary>
     /// Called when the <see cref="Node"/>'s children has been changed.
     /// </summary>
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
+    private Matrix4x4 shear = Matrix4x4.Identity;
     private readonly Dictionary<string, Node> nodes = new();
 
     /// <summary>
@@ -390,6 +425,8 @@ public abstract class Node : INotifyCollectionChanged, ICollection<Node>, IEquat
     }
 
     bool ICollection<Node>.IsReadOnly => false;
+    Matrix4x4 IWorld.LocalMatrix => LocalMatrix;
+    Matrix4x4 IWorld.WorldMatrix => WorldMatrix;
 
     private const string node_scheme = "node";
     private static readonly NotifyCollectionChangedEventArgs reset_args = new(NotifyCollectionChangedAction.Reset);

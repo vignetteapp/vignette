@@ -40,7 +40,10 @@ public sealed class Renderer
     {
         ubo = device.CreateBuffer<Matrix4x4>(BufferType.Uniform, 3, true);
 
+        Span<byte> whitePixel = stackalloc byte[] { 255, 255, 255, 255 };
+
         WhitePixel = device.CreateTexture(new(1, 1, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.Resource));
+        WhitePixel.SetData((ReadOnlySpan<byte>)whitePixel, 0, 0, 0, 0, 0, 1, 1, 0);
 
         SamplerPoint = device.CreateSampler(new(TextureFilter.MinMagMipPoint, TextureAddress.Repeat, TextureAddress.Repeat, TextureAddress.Repeat, 0, Color.White, 0, 0, 0));
         SamplerLinear = device.CreateSampler(new(TextureFilter.MinMagMipLinear, TextureAddress.Repeat, TextureAddress.Repeat, TextureAddress.Repeat, 0, Color.White, 0, 0, 0));
@@ -78,7 +81,7 @@ public sealed class Renderer
                 mvp[2] = data.World.WorldMatrix;
             }
 
-            device.SetUniformBuffer(ubo, 89);
+            device.SetUniformBuffer(ubo, Effect.GLOBAL_TRANSFORM_ID);
 
             if (target is not null)
             {

@@ -50,6 +50,8 @@ public readonly struct Effect : IEquatable<Effect>
     /// <returns>A new <see cref="Effect"/>.</returns>
     internal static Effect From(string code, out InputLayoutDescription layout, out IProperty[] properties)
     {
+        code = sh_common + code;
+
         var shVert = ShaderCode.From(code, ShaderStage.Vertex, sh_vert, ShaderLanguage.HLSL);
         var shFrag = ShaderCode.From(code, ShaderStage.Fragment, sh_frag, ShaderLanguage.HLSL);
 
@@ -72,30 +74,49 @@ public readonly struct Effect : IEquatable<Effect>
             layout = new();
         }
 
-        var props = new List<IProperty>();
+        var textures = new List<ShaderReflection.Resource>();
+        var uniforms = new List<ShaderReflection.Resource>();
 
         if (shVertReflect.Uniforms is not null)
         {
-            foreach (var uniform in shVertReflect.Uniforms)
-                props.Add(new UniformProperty(uniform.Name, uniform.Binding));
+            uniforms.AddRange(shVertReflect.Uniforms);
         }
 
         if (shVertReflect.Textures is not null)
         {
-            foreach (var texture in shVertReflect.Textures)
-                props.Add(new TextureProperty(texture.Name, texture.Binding));
+            textures.AddRange(shVertReflect.Textures);
         }
 
         if (shFragReflect.Uniforms is not null)
         {
-            foreach (var uniform in shFragReflect.Uniforms)
-                props.Add(new UniformProperty(uniform.Name, uniform.Binding));
+            uniforms.AddRange(shFragReflect.Uniforms);
         }
 
         if (shFragReflect.Textures is not null)
         {
-            foreach (var texture in shFragReflect.Textures)
-                props.Add(new TextureProperty(texture.Name, texture.Binding));
+            textures.AddRange(shFragReflect.Textures);
+        }
+
+        var props = new List<IProperty>();
+
+        foreach (var uniform in uniforms)
+        {
+            if (uniform.Name.StartsWith(sh_global))
+            {
+                continue;
+            }
+
+            props.Add(new UniformProperty(uniform.Name, uniform.Binding));
+        }
+
+        foreach (var texture in textures)
+        {
+            if (texture.Name.StartsWith(sh_global))
+            {
+                continue;
+            }
+
+            props.Add(new TextureProperty(texture.Name, texture.Binding));
         }
 
         properties = props.ToArray();
@@ -115,8 +136,27 @@ public readonly struct Effect : IEquatable<Effect>
 
     public static explicit operator ShaderCode[](Effect effect) => effect.shaderCodes;
 
+    public const int GLOBAL_TRANSFORM_ID = 89;
+
     private const string sh_vert = "Vertex";
     private const string sh_frag = "Pixel";
+    private const string sh_global = "g_internal_";
+
+    private static readonly string sh_common =
+@$"
+#define P_MATRIX g_internal_ProjMatrix
+#define V_MATRIX g_internal_ViewMatrix
+#define M_MATRIX g_internal_ModelMatrix
+#define OBJECT_TO_CLIP(a) mul(mul(V_MATRIX, M_MATRIX), a)
+#define OBJECT_TO_VIEW(a) mul(P_MATRIX, OBJECT_TO_CLIP(a))
+
+cbuffer g_internal_Transform : register(b{GLOBAL_TRANSFORM_ID})
+{{
+    float4x4 g_internal_ProjMatrix;
+    float4x4 g_internal_ViewMatrix;
+    float4x4 g_internal_ModelMatrix;
+}};
+";
 
     private static readonly IReadOnlyDictionary<string, InputLayoutMember> format_members = ImmutableDictionary.CreateRange
     (
