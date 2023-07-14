@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace Vignette;
 
@@ -37,6 +38,16 @@ public abstract class Node : INotifyCollectionChanged, ICollection<Node>, IEquat
     /// The parent <see cref="Node"/>.
     /// </summary>
     public Node? Parent { get; private set; }
+
+    /// <summary>
+    /// The node's position.
+    /// </summary>
+    public Vector3 Position { get; set; }
+
+    /// <summary>
+    /// The node's rotation.
+    /// </summary>
+    public Vector3 Rotation { get; set; }
 
     /// <summary>
     /// Called when the <see cref="Node"/>'s children has been changed.

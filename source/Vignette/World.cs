@@ -14,7 +14,7 @@ namespace Vignette;
 /// <summary>
 /// A node that represents the world.
 /// </summary>
-public class World : Renderable
+public class World : Behavior
 {
     private readonly SortedFilteredCollection<Behavior> behaviors = new
     (

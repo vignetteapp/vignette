@@ -52,16 +52,6 @@ public class Camera : Node, IProjector
     public CameraProjectionMode ProjectionMode = CameraProjectionMode.OrthographicOffCenter;
 
     /// <summary>
-    /// The camera's position.
-    /// </summary>
-    public Vector3 Position { get; set; }
-
-    /// <summary>
-    /// The camera's rotation.
-    /// </summary>
-    public Vector3 Rotation  { get; set; }
-
-    /// <summary>
     /// The camera's rendering groups.
     /// </summary>
     public RenderGroup Groups { get; set; } = RenderGroup.Default;
