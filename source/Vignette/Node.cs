@@ -40,6 +40,11 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     public int Count => nodes.Count;
 
     /// <summary>
+    /// The <see cref="Node"/>'s services.
+    /// </summary>
+    public virtual IServiceLocator Services => Parent is not null ? Parent.Services : throw new InvalidOperationException("Services are unavailable");
+
+    /// <summary>
     /// The parent <see cref="Node"/>.
     /// </summary>
     public Node? Parent { get; private set; }
@@ -95,7 +100,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// Creates a new <see cref="Node"/>.
     /// </summary>
     /// <param name="name">The optional name for this <see cref="Node"/>.</param>
-    protected Node(string? name = null)
+    public Node(string? name = null)
         : this(Guid.NewGuid(), name)
     {
     }
