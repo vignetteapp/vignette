@@ -70,6 +70,19 @@ public sealed class UnlitMaterial : IMaterial
     {
     }
 
+    public UnlitMaterial(Texture texture)
+        : this(false)
+    {
+        Texture = texture;
+    }
+
+    public UnlitMaterial(Texture texture, Sampler sampler)
+        : this(false)
+    {
+        Texture = texture;
+        Sampler = sampler;
+    }
+
     private UnlitMaterial(bool isDefault)
     {
         effect = Effect.From(shader, out layout, out properties);
