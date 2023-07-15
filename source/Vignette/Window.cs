@@ -8,7 +8,10 @@ namespace Vignette;
 /// </summary>
 public sealed class Window : World
 {
-    internal Window()
+    public override IServiceLocator Services { get; }
+
+    internal Window(IServiceLocator services)
     {
+        Services = services;
     }
 }
