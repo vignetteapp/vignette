@@ -66,44 +66,16 @@ public class World : Behavior
         while (behaviorLoadQueue.TryDequeue(out var node))
         {
             node.Load();
-            add(node, worlds);
-            add(node, behaviors);
-            add(node, drawables);
         }
 
         while (behaviorUnloadQueue.TryDequeue(out var node))
         {
-            node.Load();
-            rem(node, worlds);
-            rem(node, behaviors);
-            rem(node, drawables);
+            node.Unload();
         }
 
         foreach (var behavior in behaviors)
         {
             behavior.Update(elapsed);
-        }
-
-        static void add<T>(Node node, ICollection<T> target)
-            where T : Node
-        {
-            if (node is not T typed)
-            {
-                return;
-            }
-
-            target.Add(typed);
-        }
-
-        static void rem<T>(Node node, ICollection<T> target)
-            where T : Node
-        {
-            if (node is not T typed)
-            {
-                return;
-            }
-
-            target.Remove(typed);
         }
     }
 
@@ -157,20 +129,7 @@ public class World : Behavior
         {
             foreach (var node in args.NewItems!.OfType<Node>())
             {
-                if (node is Behavior behavior)
-                {
-                    load(behavior);
-                }
-
-                if (node is Light light)
-                {
-                    lights.Add(light);
-                }
-
-                if (node is Camera camera)
-                {
-                    cameras.Add(camera);
-                }
+                load(node);
             }
         }
 
@@ -178,20 +137,7 @@ public class World : Behavior
         {
             foreach (var node in args.OldItems!.OfType<Node>())
             {
-                if (node is Behavior behavior)
-                {
-                    unload(behavior);
-                }
-
-                if (node is Light light)
-                {
-                    lights.Remove(light);
-                }
-
-                if (node is Camera camera)
-                {
-                    cameras.Remove(camera);
-                }
+                unload(node);
             }
         }
 
@@ -199,51 +145,84 @@ public class World : Behavior
         {
             foreach (var node in this)
             {
-                if (node is Behavior behavior)
-                {
-                    unload(behavior);
-                }
-
-                if (node is Light light)
-                {
-                    lights.Remove(light);
-                }
-
-                if (node is Camera camera)
-                {
-                    cameras.Remove(camera);
-                }
+                unload(node);
             }
         }
     }
 
-    private void load(Behavior node)
+    private void load(Node node)
     {
         foreach (var child in node.GetNodes<Behavior>())
         {
             load(child);
         }
 
-        if (node is not World)
+        if (node is Behavior behavior)
+        {
+            behaviors.Add(behavior);
+            behaviorLoadQueue.Enqueue(behavior);
+        }
+
+        if (node is Drawable drawable)
+        {
+            drawables.Add(drawable);
+        }
+
+        if (node is Light light)
+        {
+            lights.Add(light);
+        }
+
+        if (node is Camera camera)
+        {
+            cameras.Add(camera);
+        }
+
+        if (node is World world)
+        {
+            worlds.Add(world);
+        }
+        else
         {
             node.CollectionChanged += handleCollectionChanged;
         }
-
-        behaviorLoadQueue.Enqueue(node);
     }
 
-    private void unload(Behavior node)
+    private void unload(Node node)
     {
         foreach (var child in node.GetNodes<Behavior>())
         {
             unload(child);
         }
 
-        if (node is not World)
+        if (node is Behavior behavior)
+        {
+            behaviors.Remove(behavior);
+            behaviorUnloadQueue.Enqueue(behavior);
+        }
+
+        if (node is Drawable drawable)
+        {
+            drawables.Remove(drawable);
+        }
+
+        if (node is Light light)
+        {
+            lights.Remove(light);
+        }
+
+        if (node is Camera camera)
+        {
+            cameras.Remove(camera);
+        }
+
+        if (node is World world)
+        {
+            worlds.Add(world);
+        }
+        else
         {
             node.CollectionChanged -= handleCollectionChanged;
         }
-
-        behaviorUnloadQueue.Enqueue(node);
     }
 }
