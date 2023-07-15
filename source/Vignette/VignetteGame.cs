@@ -3,18 +3,34 @@
 
 using System;
 using Sekai;
+using Vignette.Content;
 using Vignette.Graphics;
 
 namespace Vignette;
 
 public sealed class VignetteGame : Game
 {
+    private Window root = null!;
+    private Camera camera = null!;
     private Renderer renderer = null!;
-    private readonly Window root = new();
+    private ContentManager content = null!;
+    private ServiceLocator services = null!;
 
     public override void Load()
     {
+        content = new(Storage);
+        content.Add(new ShaderLoader(), ".hlsl");
+        content.Add(new TextureLoader(Graphics), ".png", ".jpg", ".jpeg", ".bmp", ".gif");
+
         renderer = new(Graphics);
+
+        services = new();
+        services.Add(content);
+
+        root = new(services)
+        {
+            (camera = new Camera { ProjectionMode = CameraProjectionMode.OrthographicOffCenter })
+        };
     }
 
     public override void Draw()
@@ -24,6 +40,7 @@ public sealed class VignetteGame : Game
 
     public override void Update(TimeSpan elapsed)
     {
+        camera.ViewSize = Window.Size;
         root.Update(elapsed);
     }
 
