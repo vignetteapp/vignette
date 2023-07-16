@@ -21,7 +21,6 @@ public sealed class VignetteGame : Game
     public override void Load()
     {
         audio = new(Audio);
-
         content = new(Storage);
         content.Add(new ShaderLoader(), ".hlsl");
         content.Add(new TextureLoader(Graphics), ".png", ".jpg", ".jpeg", ".bmp", ".gif");
@@ -46,7 +45,6 @@ public sealed class VignetteGame : Game
     public override void Update(TimeSpan elapsed)
     {
         camera.ViewSize = Window.Size;
-
         audio.Update();
         root.Update(elapsed);
     }
