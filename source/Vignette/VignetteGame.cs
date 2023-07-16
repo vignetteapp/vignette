@@ -3,6 +3,7 @@
 
 using System;
 using Sekai;
+using Vignette.Audio;
 using Vignette.Content;
 using Vignette.Graphics;
 
@@ -13,11 +14,13 @@ public sealed class VignetteGame : Game
     private Window root = null!;
     private Camera camera = null!;
     private Renderer renderer = null!;
+    private AudioManager audio = null!;
     private ContentManager content = null!;
     private ServiceLocator services = null!;
 
     public override void Load()
     {
+        audio = new(Audio);
         content = new(Storage);
         content.Add(new ShaderLoader(), ".hlsl");
         content.Add(new TextureLoader(Graphics), ".png", ".jpg", ".jpeg", ".bmp", ".gif");
@@ -25,6 +28,7 @@ public sealed class VignetteGame : Game
         renderer = new(Graphics);
 
         services = new();
+        services.Add(audio);
         services.Add(content);
 
         root = new(services)
@@ -41,6 +45,7 @@ public sealed class VignetteGame : Game
     public override void Update(TimeSpan elapsed)
     {
         camera.ViewSize = Window.Size;
+        audio.Update();
         root.Update(elapsed);
     }
 
