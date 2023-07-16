@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sekai" Version="0.1.0-alpha.8" />
+    <PackageReference Include="Sekai" Version="0.1.0-alpha.9" />
   </ItemGroup>
 
 </Project>
