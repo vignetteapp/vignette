@@ -19,7 +19,7 @@ public interface IProjector
     /// <summary>
     /// The projector's rotation.
     /// </summary>
-    Vector3 Rotation  { get; }
+    Vector3 Rotation { get; }
 
     /// <summary>
     /// The projector's view matrix.

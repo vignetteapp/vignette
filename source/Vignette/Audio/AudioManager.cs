@@ -166,7 +166,7 @@ public sealed class AudioManager : IObjectPool<AudioBuffer>
 
             source.Stop();
 
-            while(source.TryDequeue(out var buffer))
+            while (source.TryDequeue(out var buffer))
             {
                 bufferPool.Return(buffer);
             }
