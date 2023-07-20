@@ -1,9 +1,9 @@
-// Copyright (c) Cosyne 
+// Copyright (c) Cosyne
 // Licensed under GPL 3.0 with SDK Exception. See LICENSE for details.
 
-using craftersmine.Asar.Net;
 using System;
 using System.IO;
+using craftersmine.Asar.Net;
 
 namespace Vignette.Content;
 internal class AsarLoader : IContentLoader<AsarArchive>
