@@ -113,13 +113,9 @@ public sealed class ContentManager
                 continue;
             }
 
-            try
+            if (typedLoader.TryLoad(bytes, out result))
             {
-                result = typedLoader.Load(bytes);
                 break;
-            }
-            catch
-            {
             }
         }
 
@@ -131,20 +127,15 @@ public sealed class ContentManager
         return result;
     }
 
-    /// <summary>
-    /// Adds a content loader to the content manager.
-    /// </summary>
-    /// <param name="loader">The content loader to add.</param>
-    /// <param name="extensions">The file extensions supported by this loader.</param>
-    /// <exception cref="InvalidOperationException">Thrown when </exception>
-    internal void Add(IContentLoader loader, params string[] extensions)
+    private void add(IContentLoader loader, params string[] extensions)
     {
         foreach (string extension in extensions)
         {
             string ext = extension.StartsWith(ext_separator) ? extension : ext_separator + extension;
-            this.loaders.Add(loader);
             this.extensions.Add(ext);
         }
+
+        loaders.Add(loader);
     }
 
     private const char ext_separator = '.';

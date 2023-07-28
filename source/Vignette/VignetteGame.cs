@@ -2,54 +2,42 @@
 // Licensed under GPL 3.0 with SDK Exception. See LICENSE for details.
 
 using System;
+using Jint;
 using Sekai;
-using Vignette.Audio;
-using Vignette.Content;
 using Vignette.Graphics;
+using Vignette.Scripting;
 
 namespace Vignette;
 
 public sealed class VignetteGame : Game
 {
-    private Window root = null!;
-    private Camera camera = null!;
-    private Renderer renderer = null!;
-    private AudioManager audio = null!;
-    private ContentManager content = null!;
-    private ServiceLocator services = null!;
+    private readonly World root;
+    private readonly Engine engine;
+    private readonly Renderer renderer;
 
-    public override void Load()
+    public VignetteGame(VignetteGameOptions options)
+        : base(options)
     {
-        audio = new(Audio);
-        content = new(Storage);
-        content.Add(new ShaderLoader(), ".hlsl");
-        content.Add(new TextureLoader(Graphics), ".png", ".jpg", ".jpeg", ".bmp", ".gif");
+        options.Engine.Strict = true;
+        options.Engine.Modules.ModuleLoader = new ScriptModuleLoader(Storage);
 
-        renderer = new(Graphics);
-
-        services = new();
-        services.Add(audio);
-        services.Add(content);
-
-        root = new(services)
-        {
-            (camera = new Camera { ProjectionMode = CameraProjectionMode.OrthographicOffCenter })
-        };
+        root = new World();
+        engine = new Engine(options.Engine);
+        renderer = new Renderer(Graphics);
     }
 
-    public override void Draw()
+    protected override void Draw()
     {
         root.Draw(renderer);
     }
 
-    public override void Update(TimeSpan elapsed)
+    protected override void Update(TimeSpan elapsed)
     {
-        camera.ViewSize = Window.Size;
-        audio.Update();
+        engine.Advanced.ProcessTasks();
         root.Update(elapsed);
     }
 
-    public override void Unload()
+    protected override void Unload()
     {
         root.Clear();
     }

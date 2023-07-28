@@ -32,13 +32,13 @@ public sealed class Renderer
     /// </summary>
     public Sampler SamplerAniso4x { get; }
 
-    private readonly GraphicsBuffer ubo;
+    private readonly GraphicsBuffer buffer;
     private readonly GraphicsDevice device;
     private readonly Dictionary<Type, IDictionary> caches = new();
 
-    internal Renderer(GraphicsDevice device)
+    public Renderer(GraphicsDevice device)
     {
-        ubo = device.CreateBuffer<Matrix4x4>(BufferType.Uniform, 3, true);
+        buffer = device.CreateBuffer<Matrix4x4>(BufferType.Uniform, 3, true);
 
         Span<byte> whitePixel = stackalloc byte[] { 255, 255, 255, 255 };
 
@@ -53,16 +53,6 @@ public sealed class Renderer
     }
 
     /// <summary>
-    /// Draws a single <paramref name="renderable"/> to <paramref name="target"/>.
-    /// </summary>
-    /// <param name="renderable">The renderable to draw.</param>
-    /// <param name="target">The target to draw to. A value of <see langword="null"/> to draw to the backbuffer.</param>
-    public void Draw(RenderData renderable, RenderTarget? target = null)
-    {
-        Draw(new[] { renderable }, target);
-    }
-
-    /// <summary>
     /// Draws <paramref name="renderables"/> to <paramref name="target"/>.
     /// </summary>
     /// <param name="renderables">The renderables to draw.</param>
@@ -74,14 +64,14 @@ public sealed class Renderer
 
         foreach (var data in renderables)
         {
-            using (var mvp = ubo.Map<Matrix4x4>(MapMode.Write))
+            using (var mvp = buffer.Map<Matrix4x4>(MapMode.Write))
             {
                 mvp[0] = data.Projector.ProjMatrix;
                 mvp[1] = data.Projector.ViewMatrix;
-                mvp[2] = data.World.WorldMatrix;
+                mvp[2] = data.Spatial.Matrix;
             }
 
-            device.SetUniformBuffer(ubo, Effect.GLOBAL_TRANSFORM_ID);
+            device.SetUniformBuffer(buffer, Effect.GLOBAL_TRANSFORM_ID);
 
             if (target is not null)
             {

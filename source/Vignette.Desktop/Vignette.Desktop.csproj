@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sekai.OpenGL" Version="0.1.0-alpha.9" />
-    <PackageReference Include="Sekai.OpenAL" Version="0.1.0-alpha.9" />
-    <PackageReference Include="Sekai.Desktop" Version="0.1.0-alpha.9" />
+    <PackageReference Include="Sekai.GLFW" Version="0.1.0-alpha.10" />
+    <PackageReference Include="Sekai.OpenGL" Version="0.1.0-alpha.10" />
+    <PackageReference Include="Sekai.OpenAL" Version="0.1.0-alpha.10" />
   </ItemGroup>
 
 </Project>
