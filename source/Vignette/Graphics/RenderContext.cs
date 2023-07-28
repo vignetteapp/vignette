@@ -1,6 +1,8 @@
 // Copyright (c) Cosyne
 // Licensed under GPL 3.0 with SDK Exception. See LICENSE for details.
 
+using Vignette.Scripting;
+
 namespace Vignette.Graphics;
 
 /// <summary>
@@ -8,11 +10,11 @@ namespace Vignette.Graphics;
 /// </summary>
 public readonly struct RenderContext
 {
-    private readonly IWorld world;
+    private readonly ISpatialObject world;
     private readonly RenderQueue queue;
     private readonly IProjector projector;
 
-    internal RenderContext(RenderQueue queue, IProjector projector, IWorld world)
+    internal RenderContext(RenderQueue queue, IProjector projector, ISpatialObject world)
     {
         this.queue = queue;
         this.world = world;
@@ -23,6 +25,7 @@ public readonly struct RenderContext
     /// Draws a render object.
     /// </summary>
     /// <param name="renderObject">The <see cref="RenderObject"/> to draw.</param>
+    [ScriptVisible]
     public void Draw(RenderObject renderObject)
     {
         queue.Enqueue(projector, world, renderObject);

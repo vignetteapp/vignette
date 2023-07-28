@@ -9,7 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Jint.Native;
 using Vignette.Graphics;
+using Vignette.Scripting;
 
 namespace Vignette;
 
@@ -17,7 +19,7 @@ namespace Vignette;
 /// The base class of everything that resides inside the node graph. It can be a child of
 /// another <see cref="Node"/> and can contain its own children <see cref="Node"/>s.
 /// </summary>
-public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquatable<Node>
+public class Node : ScriptObject, IPointObject, INotifyCollectionChanged, ICollection<Node>, IEquatable<Node>
 {
     /// <summary>
     /// The <see cref="Node"/>'s unique identifier.
@@ -27,11 +29,13 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// <summary>
     /// The <see cref="Node"/>'s name.
     /// </summary>
-    public string Name { get; }
+    [ScriptVisible]
+    public string Name { get; set; }
 
     /// <summary>
     /// The depth of this <see cref="Node"/> relative to the root.
     /// </summary>
+    [ScriptVisible]
     public int Depth { get; private set; }
 
     /// <summary>
@@ -40,75 +44,48 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     public int Count => nodes.Count;
 
     /// <summary>
-    /// The <see cref="Node"/>'s services.
-    /// </summary>
-    public virtual IServiceLocator Services => Parent is not null ? Parent.Services : throw new InvalidOperationException("Services are unavailable");
-
-    /// <summary>
     /// The parent <see cref="Node"/>.
     /// </summary>
+    [ScriptVisible]
     public Node? Parent { get; private set; }
 
     /// <summary>
     /// The node's position.
     /// </summary>
+    [ScriptVisible]
     public Vector3 Position { get; set; }
 
     /// <summary>
     /// The node's rotation.
     /// </summary>
+    [ScriptVisible]
     public Vector3 Rotation { get; set; }
-
-    /// <summary>
-    /// The node's scaling.
-    /// </summary>
-    public Vector3 Scale { get; set; } = Vector3.One;
-
-    /// <summary>
-    /// The node's shearing.
-    /// </summary>
-    public Vector3 Shear
-    {
-        get => new(shear[0, 1], shear[0, 2], shear[1, 2]);
-        set
-        {
-            shear[0, 1] = value.X;
-            shear[0, 2] = value.Y;
-            shear[1, 2] = value.Z;
-        }
-    }
-
-    /// <summary>
-    /// The node's local matrix.
-    /// </summary>
-    protected virtual Matrix4x4 LocalMatrix => shear * Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) * Matrix4x4.CreateTranslation(Position);
-
-    /// <summary>
-    /// The node's world matrix.
-    /// </summary>
-    protected virtual Matrix4x4 WorldMatrix => Parent is not IWorld provider ? LocalMatrix : provider.LocalMatrix * LocalMatrix;
 
     /// <summary>
     /// Called when the <see cref="Node"/>'s children has been changed.
     /// </summary>
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
-    private Matrix4x4 shear = Matrix4x4.Identity;
-    private readonly Dictionary<string, Node> nodes = new();
+    /// <summary>
+    /// The node's local matrix.
+    /// </summary>
+    protected virtual Matrix4x4 Matrix => Matrix4x4.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) * Matrix4x4.CreateTranslation(Position);
+
+    private readonly List<Node> nodes = new();
 
     /// <summary>
     /// Creates a new <see cref="Node"/>.
     /// </summary>
-    /// <param name="name">The optional name for this <see cref="Node"/>.</param>
-    public Node(string? name = null)
-        : this(Guid.NewGuid(), name)
+    /// <param name="name">The name for this <see cref="Node"/>.</param>
+    public Node()
+        : this(Guid.NewGuid())
     {
     }
 
-    private Node(Guid id, string? name = null)
+    private Node(Guid id)
     {
         Id = id;
-        Name = name ?? id.ToString();
+        Name = id.ToString();
     }
 
     /// <summary>
@@ -116,6 +93,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// </summary>
     protected virtual void Enter()
     {
+        Invoke(enter);
     }
 
     /// <summary>
@@ -123,6 +101,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// </summary>
     protected virtual void Leave()
     {
+        Invoke(leave);
     }
 
     /// <summary>
@@ -173,7 +152,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// <returns>The number of removed children.</returns>
     public int RemoveRange(Predicate<Node> predicate)
     {
-        var selected = nodes.Values.Where(n => predicate(n)).ToArray();
+        var selected = nodes.Where(n => predicate(n)).ToArray();
 
         foreach (var node in selected)
         {
@@ -212,7 +191,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// </summary>
     public void Clear()
     {
-        var copy = nodes.Values.ToArray();
+        var copy = nodes.ToArray();
 
         foreach (var node in copy)
         {
@@ -229,7 +208,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     /// <returns><see langword="true"/> if the <paramref name="node"/> is a child of this node or <see langword="false"/> if not.</returns>
     public bool Contains(Node node)
     {
-        return nodes.ContainsValue(node);
+        return nodes.Contains(node);
     }
 
     /// <summary>
@@ -246,29 +225,6 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
         }
 
         return current;
-    }
-
-    /// <summary>
-    /// Gets the nearest <typeparamref name="T"/> node.
-    /// </summary>
-    /// <typeparam name="T">The node type to search for.</typeparam>
-    /// <returns>The nearest node.</returns>
-    public T? GetNearest<T>()
-        where T : Node
-    {
-        var current = this;
-
-        while (current.Parent is not null)
-        {
-            current = current.Parent;
-
-            if (current is T)
-            {
-                break;
-            }
-        }
-
-        return current as T;
     }
 
     /// <summary>
@@ -293,14 +249,28 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
         var current = uri.IsAbsoluteUri ? GetRoot() : this;
         string[] cm = uri.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped).Split(Path.AltDirectorySeparatorChar, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
+        var lookup = new Dictionary<string, Node>();
+
         foreach (string part in cm)
         {
-            if (!current.nodes.ContainsKey(part))
+            lookup.Clear();
+
+            foreach (var node in current)
+            {
+                if (lookup.ContainsKey(node.Name))
+                {
+                    continue;
+                }
+
+                lookup[node.Name] = node;
+            }
+
+            if (!lookup.TryGetValue(part, out var next))
             {
                 throw new KeyNotFoundException($"The node \"{part}\" was not found.");
             }
 
-            current = current.nodes[part];
+            current = next;
         }
 
         return current;
@@ -339,7 +309,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
 
     public IEnumerator<Node> GetEnumerator()
     {
-        return nodes.Values.GetEnumerator();
+        return nodes.GetEnumerator();
     }
 
     public bool Equals(Node? node)
@@ -389,7 +359,7 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
             throw new ArgumentException("Cannot add a node that already has a parent.", nameof(node));
         }
 
-        if (nodes.ContainsKey(node.Name))
+        if (Contains(node))
         {
             throw new ArgumentException($"There is already a child with the name \"{node.Name}\".", nameof(node));
         }
@@ -397,14 +367,14 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
         node.Depth = Depth + 1;
         node.Parent = this;
 
-        nodes.Add(node.Name, node);
+        nodes.Add(node);
 
         node.Enter();
     }
 
     private bool remove(Node node)
     {
-        if (!nodes.ContainsKey(node.Name))
+        if (!nodes.Contains(node))
         {
             return false;
         }
@@ -414,14 +384,14 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
         node.Depth = 0;
         node.Parent = null;
 
-        nodes.Remove(node.Name);
+        nodes.Remove(node);
 
         return true;
     }
 
     void ICollection<Node>.CopyTo(Node[] array, int arrayIndex)
     {
-        nodes.Values.CopyTo(array, arrayIndex);
+        nodes.CopyTo(array, arrayIndex);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -430,9 +400,10 @@ public class Node : IWorld, INotifyCollectionChanged, ICollection<Node>, IEquata
     }
 
     bool ICollection<Node>.IsReadOnly => false;
-    Matrix4x4 IWorld.LocalMatrix => LocalMatrix;
-    Matrix4x4 IWorld.WorldMatrix => WorldMatrix;
+    Matrix4x4 IPointObject.Matrix => Parent is not ISpatialObject parent ? Matrix : parent.Matrix * Matrix;
 
     private const string node_scheme = "node";
+    private static readonly JsValue enter = new JsString("enter");
+    private static readonly JsValue leave = new JsString("leave");
     private static readonly NotifyCollectionChangedEventArgs reset_args = new(NotifyCollectionChangedAction.Reset);
 }

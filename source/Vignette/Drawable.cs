@@ -2,18 +2,22 @@
 // Licensed under GPL 3.0 with SDK Exception. See LICENSE for details.
 
 using System;
+using System.Numerics;
+using Jint.Native;
 using Vignette.Graphics;
+using Vignette.Scripting;
 
 namespace Vignette;
 
 /// <summary>
-/// A <see cref="Node"/> that is capable of drawing.
+/// A <see cref="Node"/> that can be drawn.
 /// </summary>
-public abstract class Drawable : Behavior
+public class Drawable : Behavior, ISpatialObject
 {
     /// <summary>
-    /// Whether this <see cref="Drawable"/> should be drawn or not.
+    /// Whether this <see cref="Node"/> should perform <see cref="Draw()"/> calls.
     /// </summary>
+    [ScriptVisible]
     public bool Visible
     {
         get => visible;
@@ -30,17 +34,47 @@ public abstract class Drawable : Behavior
     }
 
     /// <summary>
+    /// The node's scaling.
+    /// </summary>
+    [ScriptVisible]
+    public Vector3 Scale { get; set; } = Vector3.One;
+
+    /// <summary>
+    /// The node's shearing.
+    /// </summary>
+    [ScriptVisible]
+    public Vector3 Shear
+    {
+        get => new(shear[0, 1], shear[0, 2], shear[1, 2]);
+        set
+        {
+            shear[0, 1] = value.X;
+            shear[0, 2] = value.Y;
+            shear[1, 2] = value.Z;
+        }
+    }
+
+    /// <summary>
     /// Called when <see cref="Visible"/> has been changed.
     /// </summary>
     public event EventHandler? VisibleChanged;
 
-    private bool visible = true;
+    private bool visible = false;
+    private Matrix4x4 shear = Matrix4x4.Identity;
 
     /// <summary>
-    /// Called every frame to perform drawing operations on this <see cref="Drawable"/>.
+    /// The node's matrix.
     /// </summary>
-    /// <param name="context">The drawable rendering context.</param>
+    protected override Matrix4x4 Matrix => shear * Matrix4x4.CreateScale(Scale) * base.Matrix;
+
+    /// <summary>
+    /// Called when performing draw operations.
+    /// </summary>
+    /// <param name="context">The rendering context.</param>
     public virtual void Draw(RenderContext context)
     {
+        Invoke(draw, context);
     }
+
+    private static readonly JsValue draw = new JsString("draw");
 }

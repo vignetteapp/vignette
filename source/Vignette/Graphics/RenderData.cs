@@ -11,7 +11,7 @@ public readonly struct RenderData
     /// <summary>
     /// The world.
     /// </summary>
-    public IWorld World { get; }
+    public ISpatialObject Spatial { get; }
 
     /// <summary>
     /// The projector.
@@ -23,9 +23,9 @@ public readonly struct RenderData
     /// </summary>
     public RenderObject Renderable { get; }
 
-    public RenderData(IProjector projector, IWorld world, RenderObject renderable)
+    public RenderData(IProjector projector, ISpatialObject spatial, RenderObject renderable)
     {
-        World = world;
+        Spatial = spatial;
         Projector = projector;
         Renderable = renderable;
     }

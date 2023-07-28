@@ -9,18 +9,8 @@ namespace Vignette.Graphics;
 /// <summary>
 /// An interface for objects providing clip space info.
 /// </summary>
-public interface IProjector
+public interface IProjector : IPointObject
 {
-    /// <summary>
-    /// The projector's position.
-    /// </summary>
-    Vector3 Position { get; }
-
-    /// <summary>
-    /// The projector's rotation.
-    /// </summary>
-    Vector3 Rotation  { get; }
-
     /// <summary>
     /// The projector's view matrix.
     /// </summary>

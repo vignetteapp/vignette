@@ -20,8 +20,8 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
     /// </summary>
     public int Count => renderables.Count;
 
+    private readonly List<RenderKey> renderOrders = new();
     private readonly List<RenderData> renderables = new();
-    private readonly List<RenderOrder> renderOrders = new();
 
     /// <summary>
     /// Creates a new render queue.
@@ -34,9 +34,9 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
     /// Enqueues a <see cref="RenderObject"/> to this queue.
     /// </summary>
     /// <param name="projector">The projector used.</param>
-    /// <param name="world">The model used.</param>
+    /// <param name="spatial">The model used.</param>
     /// <param name="renderObject">The render object to be enqueued.</param>
-    public void Enqueue(IProjector projector, IWorld world, RenderObject renderObject)
+    public void Enqueue(IProjector projector, ISpatialObject spatial, RenderObject renderObject)
     {
         if ((projector.Groups & renderObject.Groups) != 0)
         {
@@ -53,9 +53,9 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
 
         int renderable = renderables.Count;
         int materialID = renderObject.Material.GetMaterialID();
-        float distance = Vector3.Distance((renderObject.Bounds.Center * world.Scale) + world.Position, projector.Position);
+        float distance = Vector3.Distance((renderObject.Bounds.Center * spatial.Scale) + spatial.Position, projector.Position);
 
-        renderables.Add(new RenderData(projector, world, renderObject));
+        renderables.Add(new RenderData(projector, spatial, renderObject));
         renderOrders.Add(new(renderable, materialID, distance));
     }
 
@@ -88,10 +88,10 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
         public RenderData Current { get; private set; }
 
         private int index;
+        private readonly IReadOnlyList<RenderKey> renderOrders;
         private readonly IReadOnlyList<RenderData> renderables;
-        private readonly IReadOnlyList<RenderOrder> renderOrders;
 
-        public Enumerator(IReadOnlyList<RenderOrder> renderOrders, IReadOnlyList<RenderData> renderables)
+        public Enumerator(IReadOnlyList<RenderKey> renderOrders, IReadOnlyList<RenderData> renderables)
         {
             this.renderables = renderables;
             this.renderOrders = renderOrders;
@@ -125,20 +125,20 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
         readonly object IEnumerator.Current => Current;
     }
 
-    private readonly struct RenderOrder : IEquatable<RenderOrder>, IComparable<RenderOrder>
+    private readonly struct RenderKey : IEquatable<RenderKey>, IComparable<RenderKey>
     {
         public int Renderable { get; }
         public int MaterialID { get; }
         public float Distance { get; }
 
-        public RenderOrder(int renderable, int materialID, float distance)
+        public RenderKey(int renderable, int materialID, float distance)
         {
             Distance = distance;
             Renderable = renderable;
             MaterialID = materialID;
         }
 
-        public readonly int CompareTo(RenderOrder other)
+        public readonly int CompareTo(RenderKey other)
         {
             if (Equals(other))
             {
@@ -155,14 +155,14 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
             return MaterialID.CompareTo(other.MaterialID);
         }
 
-        public readonly bool Equals(RenderOrder other)
+        public readonly bool Equals(RenderKey other)
         {
             return Renderable.Equals(other.Renderable) && MaterialID.Equals(other.MaterialID) && Distance.Equals(other.Distance);
         }
 
         public override readonly bool Equals([NotNullWhen(true)] object? obj)
         {
-            return obj is RenderOrder order && Equals(order);
+            return obj is RenderKey order && Equals(order);
         }
 
         public override readonly int GetHashCode()
@@ -170,32 +170,32 @@ public sealed class RenderQueue : IReadOnlyCollection<RenderData>
             return HashCode.Combine(Renderable, MaterialID, Distance);
         }
 
-        public static bool operator ==(RenderOrder left, RenderOrder right)
+        public static bool operator ==(RenderKey left, RenderKey right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(RenderOrder left, RenderOrder right)
+        public static bool operator !=(RenderKey left, RenderKey right)
         {
             return !(left == right);
         }
 
-        public static bool operator <(RenderOrder left, RenderOrder right)
+        public static bool operator <(RenderKey left, RenderKey right)
         {
             return left.CompareTo(right) < 0;
         }
 
-        public static bool operator <=(RenderOrder left, RenderOrder right)
+        public static bool operator <=(RenderKey left, RenderKey right)
         {
             return left.CompareTo(right) <= 0;
         }
 
-        public static bool operator >(RenderOrder left, RenderOrder right)
+        public static bool operator >(RenderKey left, RenderKey right)
         {
             return left.CompareTo(right) > 0;
         }
 
-        public static bool operator >=(RenderOrder left, RenderOrder right)
+        public static bool operator >=(RenderKey left, RenderKey right)
         {
             return left.CompareTo(right) >= 0;
         }
@@ -208,11 +208,11 @@ internal static class RenderQueueExtensions
     /// Begins a rendering context.
     /// </summary>
     /// <param name="queue">The render queue.</param>
-    /// <param name="projector">The projector used.</param>
-    /// <param name="world">The model used.</param>
+    /// <param name="projector">The projector.</param>
+    /// <param name="spatial">The spatial object.</param>
     /// <returns>A new render context.</returns>
-    internal static RenderContext Begin(this RenderQueue queue, IProjector projector, IWorld world)
+    internal static RenderContext Begin(this RenderQueue queue, IProjector projector, ISpatialObject spatial)
     {
-        return new RenderContext(queue, projector, world);
+        return new RenderContext(queue, projector, spatial);
     }
 }

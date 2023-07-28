@@ -29,6 +29,11 @@ public sealed class AudioManager : IObjectPool<AudioBuffer>
     /// <returns>An audio controller.</returns>
     public IAudioController GetController(AudioStream stream)
     {
+        if (device is null)
+        {
+            throw new InvalidOperationException("The audio manager has not yet been initialized.");
+        }
+
         return new StreamingAudioController(device.CreateSource(), stream, this);
     }
 
@@ -61,6 +66,11 @@ public sealed class AudioManager : IObjectPool<AudioBuffer>
 
     AudioBuffer IObjectPool<AudioBuffer>.Get()
     {
+        if (device is null)
+        {
+            throw new InvalidOperationException("The audio manager has not yet been initialized.");
+        }
+
         if (!bufferPool.TryTake(out var buffer))
         {
             buffer = device.CreateBuffer();
@@ -102,13 +112,13 @@ public sealed class AudioManager : IObjectPool<AudioBuffer>
         private const int max_buffer_stream = 4;
         private readonly AudioSource source;
         private readonly AudioStream stream;
-        private readonly IObjectPool<AudioBuffer> bufferPool;
+        private readonly IObjectPool<AudioBuffer> buffer;
 
-        public StreamingAudioController(AudioSource source, AudioStream stream, IObjectPool<AudioBuffer> bufferPool)
+        public StreamingAudioController(AudioSource source, AudioStream stream, IObjectPool<AudioBuffer> buffer)
         {
             this.source = source;
             this.stream = stream;
-            this.bufferPool = bufferPool;
+            this.buffer = buffer;
         }
 
         public void Play()
@@ -119,14 +129,15 @@ public sealed class AudioManager : IObjectPool<AudioBuffer>
 
                 for (int i = 0; i < max_buffer_stream; i++)
                 {
-                    var buffer = bufferPool.Get();
+                    var b = buffer.Get();
 
-                    if (!allocate(buffer))
+                    if (!allocate(b))
                     {
+                        buffer.Return(b);
                         break;
                     }
 
-                    source.Enqueue(buffer);
+                    source.Enqueue(b);
                 }
             }
 
@@ -168,7 +179,7 @@ public sealed class AudioManager : IObjectPool<AudioBuffer>
 
             while(source.TryDequeue(out var buffer))
             {
-                bufferPool.Return(buffer);
+                this.buffer.Return(buffer);
             }
 
             source.Dispose();

@@ -2,17 +2,20 @@
 // Licensed under GPL 3.0 with SDK Exception. See LICENSE for details.
 
 using System;
+using Jint.Native;
+using Vignette.Scripting;
 
 namespace Vignette;
 
 /// <summary>
-/// A <see cref="Node"/> that processes itself per-frame.
+/// A <see cref="Node"/> that has behavior.
 /// </summary>
-public abstract class Behavior : Node, IComparable<Behavior>
+public class Behavior : Node, IComparable<Behavior>
 {
     /// <summary>
-    /// The processing order for this <see cref="Behavior"/>.
+    /// The processing order for this <see cref="Node"/>.
     /// </summary>
+    [ScriptVisible]
     public int Order
     {
         get => order;
@@ -29,8 +32,9 @@ public abstract class Behavior : Node, IComparable<Behavior>
     }
 
     /// <summary>
-    /// Whether this <see cref="Behavior"/> should be enabled or not affecting <see cref="Update(TimeSpan)"/> calls.
+    /// Whether this <see cref="Node"/> should perform <see cref="Update(double)"/> calls.
     /// </summary>
+    [ScriptVisible]
     public bool Enabled
     {
         get => enabled;
@@ -57,31 +61,34 @@ public abstract class Behavior : Node, IComparable<Behavior>
     public event EventHandler? EnabledChanged;
 
     private int order;
-    private bool enabled = true;
+    private bool enabled = false;
 
     /// <summary>
-    /// Called once in the update loop after the <see cref="Node"/> has entered the node graph.
+    /// Called once after entering a world.
     /// </summary>
     public virtual void Load()
     {
+        Invoke(load);
     }
 
     /// <summary>
-    /// Called every frame to perform updates on this <see cref="Behavior"/>.
+    /// Called every frame.
     /// </summary>
-    /// <param name="elapsed">The time elapsed between frames.</param>
+    /// <param name="elapsed">The elapsed time between frames.</param>
     public virtual void Update(TimeSpan elapsed)
     {
+        Invoke(update, elapsed.TotalSeconds);
     }
 
     /// <summary>
-    /// Called once in the update loop before the <see cref="Node"/> exits the node graph.
+    /// Called once before leaving a world.
     /// </summary>
     public virtual void Unload()
     {
+        Invoke(unload);
     }
 
-    public int CompareTo(Behavior? other)
+    int IComparable<Behavior>.CompareTo(Behavior? other)
     {
         if (other is null)
         {
@@ -97,4 +104,8 @@ public abstract class Behavior : Node, IComparable<Behavior>
 
         return Order.CompareTo(other.Order);
     }
+
+    private static readonly JsValue load = new JsString("load");
+    private static readonly JsValue update = new JsString("update");
+    private static readonly JsValue unload = new JsString("unload");
 }
